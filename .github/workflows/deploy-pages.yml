@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - index.html
+      - tests/**
       - .github/workflows/deploy-pages.yml
   workflow_dispatch:
 
@@ -27,6 +28,14 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Set up Node for regression tests
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify location and generation behavior before deployment
+        run: node --test tests/*.test.mjs
 
       - name: Create minimal site artifact
         run: |
