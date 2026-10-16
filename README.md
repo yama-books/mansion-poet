@@ -7,6 +7,18 @@
 
 マンション広告のように無駄にスタイリッシュな画面と、驚くほど荘厳な言葉を楽しむ創作・パロディ作品です。実際の物件の広告・紹介ではありません。
 
+## ブラウザで使う
+
+**[マンションポエムメーカーを開く](https://yama-books.github.io/mansion-poet/)**
+
+GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開ける静的Webアプリです。
+
+- 配信方式：GitHub Actionsで `main/index.html` をGitHub Pagesに公開
+- 自動公開：`index.html` または `.github/workflows/deploy-pages.yml` を変更したとき
+- 公開用ワークフロー：[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)
+
+2026-10-17：初回Actionsデプロイが成功し、実際の公開URLからHTTP 200、画面テキスト・地図タイル・主要操作ボタンの表示を確認しました。**検索・OpenPOI通信とポエム生成の端末別クリック操作は引き続き検証対象**です。
+
 ## 使い方
 
 1. [`index.html`](index.html) をブラウザで開きます。Python、Node.js、ビルド操作、APIキーは不要です。
@@ -76,7 +88,7 @@ mansion-poet/
 
 開発正本：**[yama-books/mansion-poet](https://github.com/yama-books/mansion-poet)**
 
-現段階はソース保存を優先しており、GitHubリポジトリの公開と、GitHub Pagesでサイトを配信することは別の設定です。
+GitHub Pages公開済み（初回公開はGitHub Actions成功）。公開URL： https://yama-books.github.io/mansion-poet/
 
 ---
 *Making absolutely everything sound prestigious.*
