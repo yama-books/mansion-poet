@@ -1,0 +1,16 @@
+ad_id,page_role,url,http_status_observed,accessed_on,text_reviewed,method,visual_reviewed,notes
+S09,top,https://sumai.tokyu-land.co.jp/branz/odori-higashi/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S09,concept,https://sumai.tokyu-land.co.jp/branz/odori-higashi/concept/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S09,location,https://sumai.tokyu-land.co.jp/branz/odori-higashi/location/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S10,top,https://www.kyoto-coco-city.jp/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S10,concept,https://kyoto-coco-city.jp/about.html,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S10,location,https://kyoto-coco-city.jp/location.html,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S11,top,https://www.en-hd.jp/gardenfukuoka/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S11,concept,https://www.en-hd.jp/gardenfukuoka/concept/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S11,location,https://www.en-hd.jp/gardenfukuoka/location/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S12,top,https://www.anabuki-style.com/nahamatsuo/,200,2026-10-17,yes,web_open_after_firecrawl_timeout,no,Firecrawl timed out; public page read via web.open
+S12,concept,https://www.anabuki-style.com/nahamatsuo/concept_design/concept/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S12,location,https://www.anabuki-style.com/nahamatsuo/location,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S13,top,https://gp-shikina.jp/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S13,concept,https://gp-shikina.jp/concept/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S13,location,https://gp-shikina.jp/location/,200,2026-10-17,yes,firecrawl_live_scrape,no,
