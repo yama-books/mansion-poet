@@ -23,7 +23,8 @@
 - [x] OpenPOIの近傍検索・テーマ語検索（認証不要）を追加
 - [x] OpenPOIとOSMのフォールバック・テーマ分類・重複除去・出典表示
 - [x] OpenPOIの座標距離によるフィルタリング（850m以内）
-- [x] JavaScript構文確認とPOI分類・距離のモックテスト
+- [x] JavaScript構文確認とPOI分類・距離・座標順・通信失敗時のモックテスト
+- [x] OpenPOIの実APIへのHTTP GET・200応答・JSON内容確認（神保町座標）
 - [ ] GitHub Pagesの公開確認（リポジトリ格納とサイト公開は別作業）
 - [ ] iPhone Safari / Android Chrome / Windows Chrome・Edgeでの実機検証
 - [ ] OpenPOIとOverpassのブラウザ実通信・接続障害・CORS挙動の検証
