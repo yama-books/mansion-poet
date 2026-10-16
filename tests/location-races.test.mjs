@@ -147,6 +147,7 @@ test('older POI request cannot rewrite a poem for a newer location',async()=>{
   await newer;
   const latestProperty=ui.el('#poemProperty').textContent;
   assert.equal(latestProperty,'THE KYOTO RESIDENCE');
+  assert.match(ui.el('#generatedStatus').textContent,/周辺施設\s+\d+件を参照/, 'New selection should use retrieved POIs, not silently fall back to place only');
   slow.resolve(response({results:poiRows}));
   await older;
   assert.equal(ui.el('#poemProperty').textContent,'THE KYOTO RESIDENCE');
