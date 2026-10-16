@@ -32,7 +32,7 @@
 <section class="section" id="discover"><div class="section-top"><div><div class="eyebrow section-label">01 / DISCOVER THE LOCATION</div><h2 class="section-title">場所を選ぶ。<br>格が、生まれる。</h2></div><p class="section-intro">駅前の喧騒も、名もない路地も、土地の個性になる。検索または地図から好きな場所を選び、都市の記憶を言葉に変換してください。</p></div>
 <div class="workspace"><div class="control-pane"><label class="field-label" for="placeInput">LOCATION / 住所・地名 <span>01</span></label><div class="searchbar"><input id="placeInput" value="東京都千代田区神保町" placeholder="地名や住所を入力" autocomplete="off"><button id="searchBtn" type="button">検索 ↗</button></div><div class="results" id="searchResults" aria-live="polite"></div><p class="note" id="searchStatus">地名を検索するか、地図上の好きな地点をクリック。</p><div class="examples"><button class="chip active" type="button" data-preset="jimbocho">神保町</button><button class="chip" type="button" data-preset="nakano">中野</button><button class="chip" type="button" data-preset="kyoto">京都</button><button class="chip" type="button" data-preset="kanazawa">金沢</button><button class="chip" type="button" data-preset="yokohama">横浜</button></div><div class="controls-divider"></div><div class="field-label">STYLE / 邸宅思想を選ぶ <span>02</span></div><div class="mode-list" role="group" aria-label="ポエムの文体"><button class="mode-btn active" data-style="heritage" type="button"><span>Heritage</span><small>伝統・格式</small></button><button class="mode-btn" data-style="urban" type="button"><span>Metropolis</span><small>都市・先進</small></button><button class="mode-btn" data-style="nature" type="button"><span>Sanctuary</span><small>自然・静寂</small></button></div><div class="range-block"><div class="range-head"><label class="field-label" for="density">POETRY INDEX / ポエム濃度 <span>03</span></label><strong id="densityValue">85</strong></div><input id="density" class="range" type="range" min="0" max="100" step="5" value="85"><div class="range-ticks"><span>REALISTIC</span><span>TRANSCENDENT</span></div></div><button class="main-button" type="button" id="generateBtn"><span id="generateText">この街を、詩にする</span><span>↗</span></button><div class="location-readout"><div><div class="eyebrow" style="color:#a39172;margin-bottom:8px">CURRENTLY SELECTED</div><span class="selected-place" id="selectedPlace">東京都千代田区神保町</span></div><span class="coords" id="selectedCoords">35.6960° N<br>139.7570° E</span></div></div><div class="map-pane"><svg class="map-placeholder" aria-hidden="true" viewBox="0 0 690 550" preserveAspectRatio="xMidYMid slice"><rect width="690" height="550" fill="#d7ddd5"/><path class="water" d="M650-40C570 125 670 235 525 330S375 520 415 600H600L760 400V-20Z"/><path class="road" d="M-60 140L680 375M60-35L550 580M-40 350L730 130M190-30L250 580M-30 480L710 480"/><path class="minor" d="M-20 50L650 290M0 235L630 420M-10 540L520 20M100-30L390 540M570-30L80 560"/><g opacity=".45"><rect class="plot" x="80" y="80" width="77" height="39"/><rect class="plot" x="265" y="70" width="86" height="49"/><rect class="plot" x="335" y="226" width="99" height="70"/><rect class="plot" x="70" y="350" width="84" height="60"/><rect class="plot" x="250" y="430" width="95" height="60"/></g><circle class="pin" cx="345" cy="265" r="12"/></svg><div id="map" role="application" aria-label="場所を選択する地図"></div><div class="map-title"><i></i> SELECT A POINT / 地図上で選択</div><div class="map-corner" id="mapStatus">地図データ：国土地理院 / 読み込み中</div></div></div></section>
 <section class="output-wrap" id="poem"><div class="output-overline"><div class="eyebrow">02 / THE GENERATED RESIDENCE</div><div class="eyebrow">AN EXERCISE IN EXCESSIVE ELEGANCE</div></div><div class="output-grid"><div class="output-text"><div><div class="output-number">No. 001 / POÈME</div><h2 class="output-header" id="poemHeadline">知の深奥に、<br>邸の答えを。</h2><p class="output-body" id="poemBody">幾千の物語が息づく、その名を神保町という。<br>街が纏う記憶を、住まいの誇りへ。<br>選ばれた座標に、人生の新たな頁がひらかれる。</p></div><div class="output-english"><strong id="poemProperty">THE JIMBOCHO RESIDENCE</strong><span>NON-EXISTENT<br>ESTATE / 001</span></div></div><div class="output-art"><svg class="building-illustration" aria-hidden="true" viewBox="0 0 820 1100" preserveAspectRatio="xMidYMid slice"><use href="#unused"/><defs><linearGradient id="artBg" x1="0" x2="1" y2="1"><stop stop-color="#57645a"/><stop offset="1" stop-color="#111814"/></linearGradient><pattern id="win2" width="51" height="32" patternUnits="userSpaceOnUse"><rect width="51" height="32" fill="#27352e"/><rect x="4" y="4" width="43" height="24" fill="#0f1814"/><path d="M0 1H51M0 31H51M2 0V32M49 0V32" stroke="#9aa89b" stroke-width="2" opacity=".5"/></pattern></defs><rect width="820" height="1100" fill="url(#artBg)"/><path d="M90 1100L202 245 497 85 815 260 815 1100Z" fill="#202a23"/><path d="M202 245L497 85 815 260V1100H202Z" fill="url(#win2)"/><path d="M202 245L497 85 815 260" fill="none" stroke="#a2b5a0" stroke-width="5" opacity=".65"/><path d="M490 88V1100M198 240V1100M280 204V1100M362 160V1100M585 130V1100M679 189V1100M771 236V1100" stroke="#a8b4aa" stroke-width="8" opacity=".3"/><path d="M202 325L813 347M196 399L810 418M190 472L810 489M180 550L809 565M173 630L810 644M165 720L810 734M157 811L810 819M149 899L813 914" stroke="#bdcabb" stroke-width="6" opacity=".3"/></svg><div class="output-art-caption">THIS IMAGE DOES NOT REPRESENT A REAL PROPERTY.</div></div></div><div class="output-actions"><button id="copyBtn" class="line-button" type="button">COPY THE POEM ↗</button><button id="regenerateBtn" class="line-button" type="button">REGENERATE ↻</button><button id="printBtn" class="line-button" type="button">PRINT / PDF ↗</button><span class="status-pill" id="generatedStatus">サンプル表示：神保町の地名をもとに作成</span></div><div class="evidence" id="about"><div><div class="eyebrow" style="color:#a79879;margin-bottom:9px">THE EVIDENCE</div><div class="evidence-title">Beyond the words.</div></div><div><p class="evidence-copy" id="evidenceText">土地の特徴は、地名検索と周辺施設の公開データをもとに抽出します。ここに表示される情報は広告文の根拠となる素材であり、建物の実在や眺望・徒歩分数を保証するものではありません。</p><div class="evidence-tags" id="evidenceTags"><span class="evidence-tag">初期サンプル：神保町（地名）</span><span class="evidence-tag">架空物件／創作コピー</span></div></div></div></section>
-</main><footer class="footer"><div><div class="footer-brand">POÈME / ESTATE</div><div class="fine" style="color:#8f988e">Making absolutely everything sound prestigious.</div></div><div class="footer-note">これはマンション広告を模した創作アプリです。実在の物件・取引を案内しません。<br>地図：<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">国土地理院</a> ／ 施設情報：<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>（取得可能な場合）</div></footer>
+</main><footer class="footer"><div><div class="footer-brand">POÈME / ESTATE</div><div class="fine" style="color:#8f988e">Making absolutely everything sound prestigious.</div></div><div class="footer-note">これはマンション広告を模した創作アプリです。実在の物件・取引を案内しません。<br>地図：<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">国土地理院</a> ／ 施設：<a href="https://openpoiapi.com/attribution.html" target="_blank" rel="noopener">OpenPOI API</a>・<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>（取得時）</div></footer>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (()=>{'use strict';
@@ -88,11 +88,103 @@ function initMap() {
 async function search(){const q=$('#placeInput').value.trim();if(!q){setStatus('地名または住所を入力してください。');return;}const thisSearch=++searchToken;$('#searchResults').innerHTML='';setStatus('全国の地名を検索しています…');$('#searchBtn').disabled=true;try{const url=`https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(q)}`;const response=await fetch(url,{signal:AbortSignal.timeout(8500)});if(!response.ok)throw Error('Geocoder unavailable');const rows=(await response.json()).filter(x=>x.geometry?.coordinates?.length===2).slice(0,7);if(thisSearch!==searchToken)return;if(!rows.length){setStatus('一致する候補がありません。別の表記でもお試しください。');return;}const panel=$('#searchResults');panel.innerHTML='';rows.forEach(item=>{const [lon,lat]=item.geometry.coordinates;const name=item.properties?.title||q;const b=document.createElement('button');b.className='result-item';b.type='button';b.textContent=name;b.addEventListener('click',()=>{updateSelected({label:name,short:toTitle(name),en:'THE LOCATION',lat,lon});panel.innerHTML='';setStatus('地点を選択しました。地図と設定を確認してください。')});panel.appendChild(b)});setStatus(`${rows.length}件の候補が見つかりました。候補を選択してください。`)}catch{setStatus('検索サービスに接続できません。下の地名サンプル、または地図から場所を指定できます。')}finally{$('#searchBtn').disabled=false}}
 const poiConfig=[['leisure','park','緑地・公園','green'],['amenity','library','図書館','knowledge'],['amenity','university','大学','knowledge'],['amenity','school','学校','knowledge'],['historic',null,'史跡・歴史','history'],['tourism','museum','博物館','culture'],['tourism','gallery','文化施設','culture'],['railway','station','鉄道駅','transport'],['natural','water','水辺','water'],['waterway','river','水辺','water']];
 function tagPOI(tags){for(const [key,value,label,theme] of poiConfig){if(tags[key]&&(value===null||tags[key]===value))return {category:label,theme}}return null}
-async function fetchPOIs(){const {lat,lon}=selected;const query=`[out:json][timeout:14];(nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["leisure"="park"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["amenity"~"^(library|university|school)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["historic"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["tourism"~"^(museum|gallery)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["railway"="station"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["natural"="water"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["waterway"="river"];);out center 35;`;
-const c=new AbortController(),timeout=setTimeout(()=>c.abort(),7500);try{const res=await fetch('https://overpass.kumi.systems/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query),signal:c.signal});if(!res.ok)throw Error('Overpass error '+res.status);const json=await res.json();return (json.elements||[]).filter(v=>v.tags&&v.tags.name&&tagPOI(v.tags)).map(v=>({name:v.tags['name:ja']||v.tags.name,...tagPOI(v.tags)})).filter((v,i,arr)=>arr.findIndex(y=>y.name===v.name)===i).slice(0,12)}finally{clearTimeout(timeout)}}
-const motifs={green:{label:'緑の余白',short:'緑',phrase:'都市のただ中に息づく、緑の余白'},knowledge:{label:'知の集積',short:'知',phrase:'学びと知性の気配を宿す街'},history:{label:'時の重層',short:'時',phrase:'歳月が描いてきた街の輪郭'},culture:{label:'文化の深奥',short:'文化',phrase:'暮らしの奥に息づく文化の気配'},transport:{label:'都市の結節点',short:'都市',phrase:'人々の営みが交差する都市の座標'},water:{label:'水の風景',short:'水辺',phrase:'水の気配が織りなす景観'}};
+function distanceMeters(lat1,lon1,lat2,lon2){
+ const radians=n=>n*Math.PI/180;
+ const dlat=radians(lat2-lat1),dlon=radians(lon2-lon1);
+ const a=Math.sin(dlat/2)**2+Math.cos(radians(lat1))*Math.cos(radians(lat2))*Math.sin(dlon/2)**2;
+ return 6371000*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function classifyOpenPOI(record){
+ const name=String(record.name||'').trim();
+ const type=[record.category,record.business_type].filter(Boolean).join(' ').toLowerCase();
+ if(!name||name.length>80) return null;
+ const match=(typePattern,namePattern)=>typePattern.test(type)||namePattern.test(name);
+ if(match(/library|bookstore|book_shop|university|college|school|education/,/図書館|書店|本屋|大学|高等学校|専門学校|学園|文庫/)) return {category:'文教・書物',theme:'knowledge'};
+ if(match(/museum|gallery|theatre|theater|arts?_center|cultural/,/美術館|博物館|資料館|記念館|劇場|文化会館|ギャラリー/)) return {category:'文化・芸術',theme:'culture'};
+ if(match(/park|garden|botanical|nature_reserve/,/公園|庭園|植物園|自然公園/)) return {category:'緑地・公園',theme:'green'};
+ if(match(/temple|shrine|historic|heritage|castle/,/神社|神宮|寺院|寺$|史跡|城跡|旧跡/)) return {category:'史跡・歴史',theme:'history'};
+ if(match(/railway_station|train_station|transit_station|station/,/駅$|停留場$/)) return {category:'鉄道・交通',theme:'transport'};
+ if(match(/harbor|harbour|marina|river|waterfront/,/港$|海岸|運河|川$|湾$/)) return {category:'水辺・港',theme:'water'};
+ if(match(/shopping_mall|department_store|supermarket|market|shopping_center|grocery/,/商店街|百貨店|デパート|スーパー|市場$/)) return {category:'商業・街並み',theme:'commerce'};
+ if(match(/cafe|coffee_shop|restaurant|bakery|food_court/,/喫茶|カフェ|ベーカリー|珈琲/)) return {category:'食と街の営み',theme:'dining'};
+ return null;
+}
+function normalizeOpenPOI(rows,origin){
+ if(!Array.isArray(rows)) return [];
+ return rows.map(item=>{
+   const lat=Number(item.lat),lon=Number(item.lng),kind=classifyOpenPOI(item);
+   if(!kind||!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return null;
+   const distance=distanceMeters(origin.lat,origin.lon,lat,lon);
+   // 公開データには別の街に紐づいた誤座標もあるため、必ず中心点との距離を再検査する。
+   if(distance>850)return null;
+   return {name:String(item.name).trim(),...kind,source:'OpenPOI',distance,
+     licenses:Array.isArray(item.licenses)?item.licenses:[],
+     attributions:Array.isArray(item.attributions)?item.attributions:[]};
+ }).filter(Boolean);
+}
+async function fetchOpenPOI(origin){
+ const center=`${origin.lon.toFixed(6)},${origin.lat.toFixed(6)}`;
+ const queryStrings=['', '図書館 美術館 博物館 公園 大学 神社 寺 書店 駅 劇場'];
+ const jobs=queryStrings.map(async(q)=>{
+   const url=new URL('https://api.openpoiapi.com/v1/search');
+   url.searchParams.set('center',center);
+   url.searchParams.set('radius','850');
+   url.searchParams.set('limit',q?'100':'180');
+   if(q)url.searchParams.set('q',q);
+   const res=await fetch(url.toString(),{signal:AbortSignal.timeout(5500)});
+   if(!res.ok)throw new Error(`OpenPOI HTTP ${res.status}`);
+   const json=await res.json();
+   if(!Array.isArray(json.results))throw new Error('OpenPOI response is invalid');
+   return json.results;
+ });
+ const outcomes=await Promise.allSettled(jobs);
+ const passed=outcomes.filter(x=>x.status==='fulfilled');
+ if(!passed.length)throw new Error('OpenPOI is unavailable');
+ return normalizeOpenPOI(passed.flatMap(x=>x.value),origin);
+}
+function choosePOIs(items){
+ const unique=new Map();
+ for(const poi of items){
+   const key=poi.name.normalize('NFKC').toLowerCase().replace(/\s+/g,'');
+   if(key&&!unique.has(key))unique.set(key,poi);
+ }
+ const priorities=style==='nature'?
+   ['green','water','history','culture','knowledge','transport','commerce','dining']:
+   style==='urban'?
+   ['transport','culture','commerce','knowledge','dining','history','green','water']:
+   ['history','knowledge','culture','green','transport','water','commerce','dining'];
+ const groups=new Map(priorities.map(key=>[key,[]]));
+ for(const poi of unique.values()){
+   if(groups.has(poi.theme))groups.get(poi.theme).push(poi);
+ }
+ for(const group of groups.values())group.sort((a,b)=>(a.distance??9999)-(b.distance??9999));
+ const result=[];
+ // 各テーマ最大2件。距離の近さだけで飲食店が埋め尽くすのを避ける。
+ for(let round=0;round<2;round++){
+   for(const kind of priorities){
+     const poi=groups.get(kind)[round];
+     if(poi)result.push(poi);
+     if(result.length===12)return result;
+   }
+ }
+ return result;
+}
+async function fetchOSMPOIs(origin){const {lat,lon}=origin;const query=`[out:json][timeout:14];(nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["leisure"="park"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["amenity"~"^(library|university|school)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["historic"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["tourism"~"^(museum|gallery)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["railway"="station"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["natural"="water"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["waterway"="river"];);out center 35;`;
+const c=new AbortController(),timeout=setTimeout(()=>c.abort(),7500);try{const res=await fetch('https://overpass.kumi.systems/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query),signal:c.signal});if(!res.ok)throw Error('Overpass error '+res.status);const json=await res.json();return (json.elements||[]).filter(v=>v.tags&&v.tags.name&&tagPOI(v.tags)).map(v=>({name:v.tags['name:ja']||v.tags.name,...tagPOI(v.tags),source:"OSM"})).filter((v,i,arr)=>arr.findIndex(y=>y.name===v.name)===i).slice(0,12)}finally{clearTimeout(timeout)}}
+
+async function fetchPOIs(origin){
+ let open=[],osm=[];
+ try{open=await fetchOpenPOI(origin)}catch(e){console.info('OpenPOIから周辺施設を取得できませんでした',e)}
+ const uniqueThemes=new Set(open.map(x=>x.theme));
+ // OpenPOIが苦手な自然・史跡カテゴリはOverpassも参照する。
+ if(!open.length||open.length<4||!uniqueThemes.has('green')||style==='nature'){
+   try{osm=await fetchOSMPOIs(origin)}catch(e){console.info('OpenStreetMap補完が利用できませんでした',e)}
+ }
+ return choosePOIs([...open,...osm]);
+}
+const motifs={commerce:{label:'都市の豊穣',short:'都市',phrase:'街の営みが重なり合う、都市の豊穣'},dining:{label:'日常の饗宴',short:'賑わい',phrase:'食の風景が息づく、暮らしの交差点'},green:{label:'緑の余白',short:'緑',phrase:'都市のただ中に息づく、緑の余白'},knowledge:{label:'知の集積',short:'知',phrase:'学びと知性の気配を宿す街'},history:{label:'時の重層',short:'時',phrase:'歳月が描いてきた街の輪郭'},culture:{label:'文化の深奥',short:'文化',phrase:'暮らしの奥に息づく文化の気配'},transport:{label:'都市の結節点',short:'都市',phrase:'人々の営みが交差する都市の座標'},water:{label:'水の風景',short:'水辺',phrase:'水の気配が織りなす景観'}};
 const head={heritage:['この地に、\n邸宅の答えを。','その名は、\n時代を超える。','地の記憶を、\n邸の誇りへ。'],urban:['都市は、\nここから変わる。','その座標が、\n未来を指す。','この街を、\n超えてゆく。'],nature:['静けさこそ、\n至高の贅。','余白を、\n住まう。','風景と、\nひとつになる。']};
-const extraHead={green:['緑陰の先に、\n邸の哲学を。','緑の余白に、\n永遠を住まう。'],knowledge:['知の深奥に、\n邸の答えを。','叡智という、\n新しい住所。'],history:['時の深層に、\n邸宅を刻む。','百年の先へ、\n名を継ぐ。'],culture:['文化を纏い、\n都市を住まう。'],water:['水脈の記憶を、\n暮らしの誇りへ。'],transport:['都市の結節に、\n未来の邸を。']};
+const extraHead={green:['緑陰の先に、\n邸の哲学を。','緑の余白に、\n永遠を住まう。'],knowledge:['知の深奥に、\n邸の答えを。','叡智という、\n新しい住所。'],history:['時の深層に、\n邸宅を刻む。','百年の先へ、\n名を継ぐ。'],culture:['文化を纏い、\n都市を住まう。'],water:['水脈の記憶を、\n暮らしの誇りへ。'],transport:['都市の結節に、\n未来の邸を。'],commerce:['街の豊穣を、\n私邸の思想へ。'],dining:['日常の賑わいに、\n新しい格を。']};
 function shortName(){return selected.short||toTitle(selected.label)||'この地'}
 function pick(list,n){return list[((n%list.length)+list.length)%list.length]}
 function poemWrite(pois,verified){const short=shortName(),site=selected.label,chief=pois[0],motif=chief?motifs[chief.theme]:null;
@@ -109,9 +201,49 @@ else{text=`${short}の空気に、暮らしの輪郭を重ねる。\n${motif?mot
 const prop=selected.en&&selected.en!=='THE LOCATION'?`THE ${selected.en} RESIDENCE`:`THE RESIDENCE · ${short.toUpperCase()}`;
 $('#poemHeadline').textContent=title;$('#poemBody').textContent=text;$('#poemProperty').textContent=prop;$('#generatedStatus').textContent=verified?`周辺施設 ${pois.length}件を参照して生成`:'地名のみで生成（周辺施設は未取得）';
 const tagArea=$('#evidenceTags');tagArea.innerHTML='';const addTag=t=>{const el=document.createElement('span');el.className='evidence-tag';el.textContent=t;tagArea.appendChild(el)};
-addTag(`指定地点：${site}`);if(verified&&pois.length){pois.slice(0,6).forEach(p=>addTag(`${p.category}｜${p.name}`));$('#evidenceText').textContent='OpenStreetMapの周辺約850mに登録された施設名を素材に生成しました。未登録・古い情報もあり得ます。徒歩時間、眺望、歴史的評価、物件の存在を保証するものではありません。'}else{addTag('地名のみで創作');$('#evidenceText').textContent='周辺施設データが得られなかったため、入力した地名だけを材料にした創作文です。実在施設・地形・文化財についての事実確認は行っていません。'}
+addTag(`指定地点：${site}`);
+if(verified&&pois.length){
+ const sourceNames=[...new Set(pois.map(p=>p.source==='OpenPOI'?'OpenPOI API':'OpenStreetMap'))];
+ pois.slice(0,7).forEach(p=>addTag(`${p.category}｜${p.name}（${p.source==='OpenPOI'?'OpenPOI':'OSM'}）`));
+ $('#evidenceText').textContent=`${sourceNames.join('・')}の周辺約850mに登録された施設名を素材に生成しました。元データには位置ずれ・閉業・未登録などがあります。徒歩時間、眺望、歴史的評価、物件の存在は保証しません。出典はページ下部をご覧ください。`;
+}else{
+ addTag('地名のみで創作');
+ $('#evidenceText').textContent='周辺施設データが得られなかったため、入力した地名だけを材料にした創作文です。実在施設・地形・文化財についての事実確認は行っていません。';
 }
-async function generate(regen=false){if(apiBusy)return;if($('#placeInput').value.trim()!==selected.label){setStatus('入力した地名を先に検索し、候補を選択してください。');document.querySelector('#discover').scrollIntoView({behavior:'smooth',block:'start'});return;}apiBusy=true;$('#generateBtn').disabled=true;$('#generateText').textContent='土地の気配を読み解いています…';$('#generatedStatus').textContent='周辺の公開データを確認中…';try{let verified=false,pois=[];const currentKey=`${selected.lat.toFixed(5)},${selected.lon.toFixed(5)}`;if(regen&&lastKey===currentKey){pois=lastPOIs;verified=lastSource==='OSM'}else{try{pois=await fetchPOIs();verified=pois.length>0;}catch(e){console.info('施設データを取得できませんでした。地名のみで生成します。')}lastPOIs=pois;lastSource=verified?'OSM':'地名のみ';lastKey=currentKey;}generation++;poemWrite(pois,verified);document.querySelector('#poem').scrollIntoView({behavior:'smooth',block:'start'});}finally{apiBusy=false;$('#generateBtn').disabled=false;$('#generateText').textContent='この街を、詩にする'}}
+}
+async function generate(regen=false){
+ if(apiBusy)return;
+ if($('#placeInput').value.trim()!==selected.label){
+   setStatus('入力した地名を先に検索し、候補を選択してください。');
+   document.querySelector('#discover').scrollIntoView({behavior:'smooth',block:'start'});
+   return;
+ }
+ apiBusy=true;$('#generateBtn').disabled=true;
+ $('#generateText').textContent='土地の気配を読み解いています…';
+ $('#generatedStatus').textContent='周辺の公開データを確認中…';
+ try{
+   let pois=[];
+   const origin={lat:selected.lat,lon:selected.lon};
+   const currentKey=`${origin.lat.toFixed(5)},${origin.lon.toFixed(5)}`;
+   if(regen&&lastKey===currentKey)pois=lastPOIs;
+   else{
+     pois=await fetchPOIs(origin);
+     lastPOIs=pois;
+     lastSource=[...new Set(pois.map(p=>p.source))].join('＋')||'地名のみ';
+     lastKey=currentKey;
+   }
+   if(`${selected.lat.toFixed(5)},${selected.lon.toFixed(5)}`!==currentKey){
+     setStatus('地点が変更されました。もう一度生成してください。');
+     return;
+   }
+   generation++;
+   poemWrite(pois,pois.length>0);
+   document.querySelector('#poem').scrollIntoView({behavior:'smooth',block:'start'});
+ }finally{
+   apiBusy=false;$('#generateBtn').disabled=false;
+   $('#generateText').textContent='この街を、詩にする';
+ }
+}
 function copy(){const txt=[`【${$('#poemProperty').textContent}】`,$('#poemHeadline').textContent,$('#poemBody').textContent,'※架空の物件を題材にした創作広告です。'].join('\n\n');const btn=$('#copyBtn');if(navigator.clipboard?.writeText){navigator.clipboard.writeText(txt).then(()=>{btn.textContent='COPIED ✓';setTimeout(()=>btn.textContent='COPY THE POEM ↗',2000)}).catch(()=>fallbackCopy(txt))}else fallbackCopy(txt)}
 function fallbackCopy(txt){const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();$('#copyBtn').textContent=ok?'COPIED ✓':'COPY FAILED';setTimeout(()=>$('#copyBtn').textContent='COPY THE POEM ↗',2000)}
 $$('[data-preset]').forEach(b=>b.addEventListener('click',()=>{updateSelected(presets[b.dataset.preset]);$('#searchResults').innerHTML='';setStatus('サンプル地点を選択しました。周辺施設は生成ボタンで取得します。')}));
