@@ -25,9 +25,9 @@
 - [x] OpenPOIの座標距離によるフィルタリング（850m以内）
 - [x] JavaScript構文確認とPOI分類・距離・座標順・通信失敗時のモックテスト
 - [x] OpenPOIの実APIへのHTTP GET・200応答・JSON内容確認（神保町座標）
-- [ ] GitHub Pagesの公開確認（リポジトリ格納とサイト公開は別作業）
-- [ ] iPhone Safari / Android Chrome / Windows Chrome・Edgeでの実機検証
-- [ ] OpenPOIとOverpassのブラウザ実通信・接続障害・CORS挙動の検証
+- [x] GitHub Pagesの初回公開確認（2026-10-17、Actions成功、公開URLのHTTP 200とページ表示を確認）
+- [ ] iPhone Safari / Android Chrome / Windows Chrome・Edgeでの各種端末のクリック操作を実機検証
+- [ ] 公開WebページからOpenPOIとOverpassへのブラウザ実通信・接続障害・CORS挙動の検証
 - [ ] OpenPOIの地域別データ品質検証（都心／郊外／地方都市／山間部／離島）
 
 ## v0.2：言葉の品質と利用体験（優先）
