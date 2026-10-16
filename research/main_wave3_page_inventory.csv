@@ -1,0 +1,10 @@
+ad_id,page_role,url,http_status_observed,accessed_on,text_reviewed,method,visual_reviewed,notes
+S17,top,https://nankaifd.co.jp/verite_mansion/kobe/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S17,concept_or_design,https://nankaifd.co.jp/verite_mansion/kobe/design,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S17,location,https://nankaifd.co.jp/verite_mansion/kobe/location,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S18,top,https://polestar-m.jp/1008/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S18,concept_or_design,https://polestar-m.jp/1008/design_landplan/design,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S18,location,https://polestar-m.jp/1008/location,,2026-10-17,yes,web_open_after_rate_limit,no,Full webpage content accessible; HTTP status not explicitly supplied by the reader
+S19,top,https://www.hoo-sumai.com/project/okayama-omotecho/,,2026-10-17,yes,web_open_after_rate_limit,no,Full webpage content accessible; HTTP status not explicitly supplied by the reader
+S19,concept_or_design,https://www.hoo-sumai.com/project/okayama-omotecho/design,,2026-10-17,yes,web_open_after_rate_limit,no,Full webpage content accessible; HTTP status not explicitly supplied by the reader
+S19,location,https://www.hoo-sumai.com/project/okayama-omotecho/location,,2026-10-17,yes,web_open_after_rate_limit,no,Full webpage content accessible; HTTP status not explicitly supplied by the reader
