@@ -18,6 +18,7 @@
 - [Pilotの画面・モーション監査](PILOT_VISUAL_MOTION_AUDIT.md)：PCトップ6件の視覚観察とHTMLの再生設定（実動作とは区別）。
 - [広告分類コードブック v0.1](AD_CODING_GUIDE_V1.md)：P/L/R/Vの採点規則と2件の非盲検再採点。
 - [Main調査 Wave 1](MAIN_WAVE1_AD_ANALYSIS.md)：札幌・京都・福岡・那覇5物件・15公式ページと住環境への示唆。
+- [Main調査 Wave 2](MAIN_WAVE2_AD_ANALYSIS.md)：広島・金沢・高松3物件・9公式ページ、観光×生活と芸術×自然の構文を比較。
 - [住環境機能仕様](LIVING_ENVIRONMENT_SPEC.md)：THE DREAM / THE REALITY、買い物・駅などの施設アクセス。
 
 ## リリース状態
@@ -42,7 +43,8 @@
 - [x] RES-01モーション技術調査（部分）：8物件のトップHTMLについて動画のautoplay属性・関連ライブラリの有無を調査。**映像やスクロール演出の実際の時間・動きは未測定**。
 - [ ] RES-01残：S07・S08の直接画面確認、全8物件のスマホ・モーション動作確認、時期を空けたまたは別担当者によるブラインド再採点。**2026-10-17にOpera接続不調と代替ブラウザのタイムアウトを再確認、スクリーンショット取得のみで直接視覚評価はできず。Pilotの品質確認は進行中。**
 - [x] RES-02第1弾：札幌・京都・福岡・那覇の5物件×3ページを追加調査。Pilotと合わせ**13/30物件・39/90ページ**を一次分析。S12 TOPはFirecrawl障害によりWebページを別経路で確認。資料：[Main Wave 1](MAIN_WAVE1_AD_ANALYSIS.md)、[比較CSV](../research/ad_corpus_main_wave1.csv)、[15URL台帳](../research/main_wave1_page_inventory.csv)。
-- [ ] RES-02継続：残り17物件・51ページの対象を選定・比較。地方偏重の解消と低ポエム広告の対照例をさらに4件以上追加する。
+- [x] RES-02第2弾：広島・金沢・高松の3物件×3公式ページを追加調査。累計 **16/30物件・48/90ページ**。出典・販売状況・未検証の視覚項目を分けて保存：[Wave 2報告](MAIN_WAVE2_AD_ANALYSIS.md)、[比較CSV](../research/ad_corpus_main_wave2.csv)、[9URL台帳](../research/main_wave2_page_inventory.csv)。
+- [ ] RES-02継続：残り14物件・42ページ。未調査地域と、P0〜1の生活情報中心広告を追加して比較を補正する。
 - [ ] RES-04：先行 [Play Toolsマンションポエム ジェネレーター](https://play-tools.com/mansion-poem) の3種の生成結果を比較する。
 - [ ] LIFE-00：OpenPOIとOSMの施設分類を踏まえ、食料品・コンビニ・駅・公園・文化施設の生活情報取得条件を確定する。
 - [ ] LIFE-01以降：詩（DREAM）と現実の周辺施設（REALITY）を対比する画面を段階実装する。
