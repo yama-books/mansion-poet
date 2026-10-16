@@ -53,6 +53,8 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | 高級マンション広告風のUI・タイポグラフィ・モーション仕様 |
 | [docs/GENERATION_ENGINE.md](docs/GENERATION_ENGINE.md) | 土地特徴からのポエム生成、文体・濃度、禁則・品質評価 |
 | [docs/QUALITY_TEST_PLAN.md](docs/QUALITY_TEST_PLAN.md) | 地域別テスト、API異常・競合・スマホ・文章品質の受入条件 |
+| [docs/ADVERTISEMENT_RESEARCH_PLAN.md](docs/ADVERTISEMENT_RESEARCH_PLAN.md) | **実在マンション広告30物件・約90ページの分析計画**と先行ジェネレーター比較 |
+| [docs/LIVING_ENVIRONMENT_SPEC.md](docs/LIVING_ENVIRONMENT_SPEC.md) | **THE DREAM / THE REALITY**。近隣施設・交通・買い物の生活アクセス仕様 |
 
 ## v0.1.2 安定化の進捗（2026-10-17）
 
@@ -64,6 +66,17 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 ## 次の開発計画
 
 現状はブラウザで動く基礎が完成した段階です。**v0.1.2の競合対策とキャッシュ修正に着手済み**で、残るPOI信頼性改善を続けます。その後は**v0.2のUI洗練**、**v0.3〜0.4の土地特徴・文章生成の品質**、**v0.5の広告画像出力**へ進みます。 [マスタープラン](docs/DEVELOPMENT_PLAN.md) が実装・完了判定の正本です。設計書にある未着手の機能は現行版には含まれません。
+
+## 新しい研究・将来機能の設計（未実装）
+
+2026-10-17に、実在のマンション広告30物件・約90ページを調べる計画と、詩（THE DREAM）から実際の施設・距離（THE REALITY）を見比べる構想を追加しました。[広告研究計画](docs/ADVERTISEMENT_RESEARCH_PLAN.md)／[生活アクセス仕様](docs/LIVING_ENVIRONMENT_SPEC.md)を参照してください。現在の公開版に生活アクセス画面はまだ実装されていません。
+
+### 関連する先行作品
+
+- [マンションポエム ジェネレーター（Play Tools）](https://play-tools.com/mansion-poem) ｜ [作者の開発紹介](https://note.com/hal_bit/n/n8f372ac08635) （別作者による独立した作品・非提携）
+- [マンションポエム徹底分析！（デイリーポータルZ／大山顕）](https://dailyportalz.jp/kiji/170728200270) （研究参考）
+
+アプリ本体のフッターにも関連作品への控えめなリンクを追加する計画です。ソースに記載したことと、公開画面に掲載したことは区別して管理します。
 
 ## デザインコンセプト
 
