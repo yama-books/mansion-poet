@@ -39,12 +39,14 @@
 const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
 const presets={jimbocho:{label:'東京都千代田区神保町',short:'神保町',en:'JIMBOCHO',lat:35.696,lon:139.757,motifs:['書物','知']},nakano:{label:'東京都中野区中野',short:'中野',en:'NAKANO',lat:35.7074,lon:139.6659,motifs:[]},kyoto:{label:'京都府京都市中京区',short:'京都・中京',en:'KYOTO',lat:35.0093,lon:135.767,motifs:[]},kanazawa:{label:'石川県金沢市東山',short:'金沢・東山',en:'KANAZAWA',lat:36.5721,lon:136.6674,motifs:[]},yokohama:{label:'神奈川県横浜市みなとみらい',short:'みなとみらい',en:'MINATOMIRAI',lat:35.4585,lon:139.6329,motifs:[]}};
 let selected={...presets.jimbocho},style='heritage',intensity=85,generation=0,map=null,marker=null,lastPOIs=[],lastSource='地名のみ',apiBusy=false,searchToken=0,lastKey='';
-let selectionVersion=0,generationVersion=0,searchController=null,reverseController=null;
+let selectionVersion=0,generationVersion=0,searchController=null,reverseController=null,generationController=null;
 const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const setStatus=s=>$('#searchStatus').textContent=s;
 function toTitle(name){return String(name).replace(/^.{0,5}?(都|道|府|県)/,'').split(/[、,]/)[0].slice(-15)||'選ばれし地';}
 function cancelPendingGeneration(){
  generationVersion++;
+ generationController?.abort();
+ generationController=null;
  apiBusy=false;
  $('#generateBtn').disabled=false;
  $('#generateText').textContent='この街を、詩にする';
@@ -187,7 +189,17 @@ function normalizeOpenPOI(rows,origin){
      attributions:Array.isArray(item.attributions)?item.attributions:[]};
  }).filter(Boolean);
 }
-async function fetchOpenPOI(origin){
+// A request ends on timeout or when its generation is superseded.
+async function fetchWithCancellation(url,options,parentSignal,milliseconds){
+ const requestController=new AbortController();
+ const stop=()=>requestController.abort();
+ if(parentSignal?.aborted)stop();
+ else parentSignal?.addEventListener('abort',stop,{once:true});
+ const timeout=setTimeout(stop,milliseconds);
+ try{return await fetch(url,{...options,signal:requestController.signal})}
+ finally{clearTimeout(timeout);parentSignal?.removeEventListener('abort',stop)}
+}
+async function fetchOpenPOI(origin,signal){
  const center=`${origin.lon.toFixed(6)},${origin.lat.toFixed(6)}`;
  const queryStrings=['', '図書館 美術館 博物館 公園 大学 神社 寺 書店 駅 劇場'];
  const jobs=queryStrings.map(async(q)=>{
@@ -196,13 +208,14 @@ async function fetchOpenPOI(origin){
    url.searchParams.set('radius','850');
    url.searchParams.set('limit',q?'100':'180');
    if(q)url.searchParams.set('q',q);
-   const res=await fetch(url.toString(),{signal:AbortSignal.timeout(5500)});
+   const res=await fetchWithCancellation(url.toString(),{},signal,5500);
    if(!res.ok)throw new Error(`OpenPOI HTTP ${res.status}`);
    const json=await res.json();
    if(!Array.isArray(json.results))throw new Error('OpenPOI response is invalid');
    return json.results;
  });
  const outcomes=await Promise.allSettled(jobs);
+ signal?.throwIfAborted();
  const passed=outcomes.filter(x=>x.status==='fulfilled');
  if(!passed.length)throw new Error('OpenPOI is unavailable');
  return normalizeOpenPOI(passed.flatMap(x=>x.value),origin);
@@ -234,17 +247,27 @@ function choosePOIs(items){
  }
  return result;
 }
-async function fetchOSMPOIs(origin){const {lat,lon}=origin;const query=`[out:json][timeout:14];(nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["leisure"="park"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["amenity"~"^(library|university|school)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["historic"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["tourism"~"^(museum|gallery)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["railway"="station"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["natural"="water"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["waterway"="river"];);out center 35;`;
-const c=new AbortController(),timeout=setTimeout(()=>c.abort(),7500);try{const res=await fetch('https://overpass.kumi.systems/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query),signal:c.signal});if(!res.ok)throw Error('Overpass error '+res.status);const json=await res.json();return (json.elements||[]).filter(v=>v.tags&&v.tags.name&&tagPOI(v.tags)).map(v=>({name:v.tags['name:ja']||v.tags.name,...tagPOI(v.tags),source:"OSM"})).filter((v,i,arr)=>arr.findIndex(y=>y.name===v.name)===i).slice(0,12)}finally{clearTimeout(timeout)}}
+async function fetchOSMPOIs(origin,signal){const {lat,lon}=origin;const query=`[out:json][timeout:14];(nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["leisure"="park"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["amenity"~"^(library|university|school)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["historic"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["tourism"~"^(museum|gallery)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["railway"="station"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["natural"="water"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["waterway"="river"];);out center 35;`;
+const res=await fetchWithCancellation('https://overpass.kumi.systems/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query)},signal,7500);if(!res.ok)throw Error('Overpass error '+res.status);const json=await res.json();return (json.elements||[]).filter(v=>v.tags&&v.tags.name&&tagPOI(v.tags)).map(v=>({name:v.tags['name:ja']||v.tags.name,...tagPOI(v.tags),source:"OSM"})).filter((v,i,arr)=>arr.findIndex(y=>y.name===v.name)===i).slice(0,12)}
 
-async function fetchPOIs(origin){
+async function fetchPOIs(origin,signal){
  let open=[],osm=[];
- try{open=await fetchOpenPOI(origin)}catch(e){console.info('OpenPOIから周辺施設を取得できませんでした',e)}
+ try{open=await fetchOpenPOI(origin,signal)}
+ catch(e){
+  signal?.throwIfAborted();
+  console.info('OpenPOIから周辺施設を取得できませんでした',e);
+ }
+ signal?.throwIfAborted();
  const uniqueThemes=new Set(open.map(x=>x.theme));
  // OpenPOIが苦手な自然・史跡カテゴリはOverpassも参照する。
  if(!open.length||open.length<4||!uniqueThemes.has('green')||style==='nature'){
-   try{osm=await fetchOSMPOIs(origin)}catch(e){console.info('OpenStreetMap補完が利用できませんでした',e)}
+  try{osm=await fetchOSMPOIs(origin,signal)}
+  catch(e){
+   signal?.throwIfAborted();
+   console.info('OpenStreetMap補完が利用できませんでした',e);
+  }
  }
+ signal?.throwIfAborted();
  return [...open,...osm]; // 施設の正規化済み生データをキャッシュし、作品ごとに順位を選び直す。
 }
 const motifs={commerce:{label:'都市の豊穣',short:'都市',phrase:'街の営みが重なり合う、都市の豊穣'},dining:{label:'日常の饗宴',short:'賑わい',phrase:'食の風景が息づく、暮らしの交差点'},green:{label:'緑の余白',short:'緑',phrase:'都市のただ中に息づく、緑の余白'},knowledge:{label:'知の集積',short:'知',phrase:'学びと知性の気配を宿す街'},history:{label:'時の重層',short:'時',phrase:'歳月が描いてきた街の輪郭'},culture:{label:'文化の深奥',short:'文化',phrase:'暮らしの奥に息づく文化の気配'},transport:{label:'都市の結節点',short:'都市',phrase:'人々の営みが交差する都市の座標'},water:{label:'水の風景',short:'水辺',phrase:'水の気配が織りなす景観'}};
@@ -283,6 +306,8 @@ async function generate(regen=false){
   document.querySelector('#discover').scrollIntoView({behavior:'smooth',block:'start'});return;
  }
  const version=++generationVersion;
+ const controller=new AbortController();
+ generationController=controller;
  const place={...selected};
  const selectionAtStart=selectionVersion;
  const currentKey=`${place.lat.toFixed(5)},${place.lon.toFixed(5)},850,${style}`; // 自然モードではOSM補完を増やすため、文体もキャッシュ条件に含める。
@@ -294,18 +319,19 @@ async function generate(regen=false){
    pois=lastPOIs;verified=pois.length>0;
   }else{
    try{
-    pois=await fetchPOIs(place);
+    pois=await fetchPOIs(place,controller.signal);
     verified=pois.length>0;
-   }catch(e){console.info('施設データを取得できませんでした。地名のみで生成します。',e);}
+   }catch(e){if(controller.signal.aborted)return;console.info('施設データを取得できませんでした。地名のみで生成します。',e);}
   }
   // 地名・文体が新しく選択された場合、古い取得結果を表示・キャッシュしない。
-  if(version!==generationVersion||selectionAtStart!==selectionVersion)return;
+  if(version!==generationVersion||selectionAtStart!==selectionVersion||controller.signal.aborted)return;
   if(!(regen&&lastKey===currentKey)){lastPOIs=pois;lastSource=verified?'OpenPOI/OSM':'地名のみ';lastKey=currentKey;}
   const rankedPOIs=choosePOIs(pois); // styleごとに評価し直す。
   generation++;poemWrite(rankedPOIs,rankedPOIs.length>0);
   document.querySelector('#poem').scrollIntoView({behavior:'smooth',block:'start'});
  }finally{
   if(version===generationVersion){
+   generationController=null;
    apiBusy=false;$('#generateBtn').disabled=false;$('#generateText').textContent='この街を、詩にする';
   }
  }
