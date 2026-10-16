@@ -27,7 +27,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 4. 「この街を、詩にする」を押します。
 5. コピー、再生成、ブラウザの印刷／PDF保存を行えます。
 
-### v0.1.1の機能（OpenPOI接続版）
+### 現行版 v0.1.1の機能（OpenPOI接続版）
 
 - 地名・住所検索：国土地理院の公開地名検索
 - 地図から地点を選択：Leaflet＋地理院タイル
@@ -49,6 +49,14 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [docs/CONCEPT.md](docs/CONCEPT.md) | プロダクト構想、体験設計、UIデザイン、生成方式、将来機能 |
 | [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) | 現在の地理・施設データ取得先、制約、追加候補、出典管理方針 |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | v0.1の到達点、検証項目、v0.2以降の段階的開発計画 |
+| [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md) | **2026-10-17からの開発マスタープラン**。優先順位・実装順・完了条件・直近PR |
+| [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | 高級マンション広告風のUI・タイポグラフィ・モーション仕様 |
+| [docs/GENERATION_ENGINE.md](docs/GENERATION_ENGINE.md) | 土地特徴からのポエム生成、文体・濃度、禁則・品質評価 |
+| [docs/QUALITY_TEST_PLAN.md](docs/QUALITY_TEST_PLAN.md) | 地域別テスト、API異常・競合・スマホ・文章品質の受入条件 |
+
+## 次の開発計画
+
+現状はブラウザで動く基礎が完成した段階です。次は **v0.1.2の競合・POI信頼性改善** を先行し、**v0.2のUI洗練**、**v0.3〜0.4の土地特徴・文章生成の品質**、**v0.5の広告画像出力**へ進みます。 [マスタープラン](docs/DEVELOPMENT_PLAN.md) が実装・完了判定の正本です。設計書にある未着手の機能は現行版には含まれません。
 
 ## デザインコンセプト
 
@@ -80,7 +88,7 @@ mansion-poet/
 - 外部APIの制約や停止により検索・地図・施設取得が失敗する場合があります。外部接続できない時には地名ベースでの生成に切り替えます。
 - 地名・座標などは、ユーザーの操作によって外部の地理データサービスへ送信される場合があります。
 - 公開APIやCDNの利用条件、提供側のアクセス制限、著作権・帰属表示は公開運用前に再確認してください。
-- **OpenPOIとOverpassの実ブラウザでの通信確認、およびGitHub Pages公開確認は別途必要**です。
+- **GitHub Pagesでの公開、地名検索、OpenPOIとの通信およびポエム生成は実ブラウザで確認済み**です。Overpass障害時とiPhone/Android実機による操作性は未検証です。
 
 地図：© 国土地理院（地理院タイル）／施設データ：[OpenPOI APIの出典・ライセンス](https://openpoiapi.com/attribution.html) ／ [© OpenStreetMap contributors](https://www.openstreetmap.org/copyright)（取得できた場合）。
 
