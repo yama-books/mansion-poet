@@ -2,7 +2,7 @@
 
 更新日：2026-10-17
 対象：POÈME / ESTATE（yama-books/mansion-poet）
-状態：**Pilot 8件＋Main Wave 1の5件＋Wave 2の3件＋Wave 3の3件＝19物件・57ページの一次文面分析済み。PCトップの直接視覚確認はPilot 6物件。全30件、モーション実測、ブラインド再採点は未完了。**
+状態：**Pilot 8件＋Main Wave 1〜4の計14件＝22物件・66ページの一次文面分析済み。PCトップの直接視覚確認はPilot 6物件。全30件、モーション実測、ブラインド再採点は未完了。**
 
 ## 1. 研究課題と成果
 
@@ -49,6 +49,7 @@ Pilotの実データ：[research/ad_corpus_pilot.csv](../research/ad_corpus_pilo
 Main Wave 1（5物件・15ページ）：[MAIN_WAVE1_AD_ANALYSIS.md](MAIN_WAVE1_AD_ANALYSIS.md)、[ad_corpus_main_wave1.csv](../research/ad_corpus_main_wave1.csv)、[URL台帳](../research/main_wave1_page_inventory.csv)
 Main Wave 2（3物件・9ページ）：[MAIN_WAVE2_AD_ANALYSIS.md](MAIN_WAVE2_AD_ANALYSIS.md)、[ad_corpus_main_wave2.csv](../research/ad_corpus_main_wave2.csv)、[URL台帳](../research/main_wave2_page_inventory.csv)
 Main Wave 3（3物件・9ページ）：[MAIN_WAVE3_AD_ANALYSIS.md](MAIN_WAVE3_AD_ANALYSIS.md)、[ad_corpus_main_wave3.csv](../research/ad_corpus_main_wave3.csv)、[URL台帳](../research/main_wave3_page_inventory.csv)
+Main Wave 4（3物件・9ページ）：[MAIN_WAVE4_AD_ANALYSIS.md](MAIN_WAVE4_AD_ANALYSIS.md)、[ad_corpus_main_wave4.csv](../research/ad_corpus_main_wave4.csv)、[URL台帳](../research/main_wave4_page_inventory.csv)
 PCトップと動きの技術調査：[PILOT_VISUAL_MOTION_AUDIT.md](PILOT_VISUAL_MOTION_AUDIT.md)
 分類基準（Pilot v0.1）：[AD_CODING_GUIDE_V1.md](AD_CODING_GUIDE_V1.md)
 本調査への拡張候補：research/ad_corpus.csv、research/notes/AD-001.mdなど（**未作成**）。
@@ -146,7 +147,8 @@ Pilot中2物件を一定時間を置いて再評価し、判断が不安定な�
 - [x] Pilotに加えて札幌・京都・福岡・那覇5物件・15ページのMain Wave 1を調査済み（S09〜S13）。
 - [x] Main Wave 2（広島・金沢・高松）の3物件・9ページを追加。Operaを使わず、公式サイトの文章・施設情報を確認。
 - [x] Main Wave 3（神戸・盛岡・岡山）の3物件・9ページを追加調査。公開取得APIの短時間上限を別の閲覧手段で補完した。
-- [ ] 全30物件へ拡大する残り11物件・33ページを調査（RES-02）。低ポエム度（P0〜1）の比較対象を重点追加する。
+- [x] Main Wave 4（宇都宮・福井・鹿児島）の3物件・9ページを一次調査。うち1ページは公開Web閲覧で補完。
+- [ ] 全30物件へ拡大する残り8物件・24ページを調査（RES-02）。低ポエム度（P0〜1）の比較対象は今回も補充できておらず、残りの優先課題。
 
 ### タスク順序
 
