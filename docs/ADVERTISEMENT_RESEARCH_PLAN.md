@@ -2,7 +2,7 @@
 
 更新日：2026-10-17
 対象：POÈME / ESTATE（yama-books/mansion-poet）
-状態：**Pilot 8物件＋Main Wave 1の5物件＝13物件・39ページの文面分析済み。PCトップの直接視覚確認はPilot 6物件。全30物件、モーション実測、ブラインド再採点は未完了。**
+状態：**Pilot 8件＋Main Wave 1の5件＋Main Wave 2の3件＝16物件・48ページの一次文面分析済み。PCトップの直接視覚確認はPilot 6物件。全30件、モーション実測、ブラインド再採点は未完了。**
 
 ## 1. 研究課題と成果
 
@@ -47,6 +47,7 @@ Pilotの実データ：[research/ad_corpus_pilot.csv](../research/ad_corpus_pilo
 閲覧済みページの一覧：[research/pilot_page_inventory.csv](../research/pilot_page_inventory.csv)
 詳細な比較報告：[PILOT_8_AD_ANALYSIS.md](PILOT_8_AD_ANALYSIS.md)
 Main Wave 1（5物件・15ページ）：[MAIN_WAVE1_AD_ANALYSIS.md](MAIN_WAVE1_AD_ANALYSIS.md)、[ad_corpus_main_wave1.csv](../research/ad_corpus_main_wave1.csv)、[URL台帳](../research/main_wave1_page_inventory.csv)
+Main Wave 2（3物件・9ページ）：[MAIN_WAVE2_AD_ANALYSIS.md](MAIN_WAVE2_AD_ANALYSIS.md)、[ad_corpus_main_wave2.csv](../research/ad_corpus_main_wave2.csv)、[URL台帳](../research/main_wave2_page_inventory.csv)
 PCトップと動きの技術調査：[PILOT_VISUAL_MOTION_AUDIT.md](PILOT_VISUAL_MOTION_AUDIT.md)
 分類基準（Pilot v0.1）：[AD_CODING_GUIDE_V1.md](AD_CODING_GUIDE_V1.md)
 本調査への拡張候補：research/ad_corpus.csv、research/notes/AD-001.mdなど（**未作成**）。
@@ -142,7 +143,8 @@ Pilot中2物件を一定時間を置いて再評価し、判断が不安定な�
 - [ ] 残り2物件（S07・S08）の直接視覚確認。8物件すべてのモバイル・モーション実動作は未確認。
 - [ ] 時期を空けるか別担当者によるブラインド再採点で分類ルールの安定性を検証する。従ってRES-01はまだ完了扱いにしない。
 - [x] Pilotに加えて札幌・京都・福岡・那覇5物件・15ページのMain Wave 1を調査済み（S09〜S13）。
-- [ ] 全30物件へ拡大する残り17物件・51ページを調査（RES-02）。
+- [x] Main Wave 2（広島・金沢・高松）の3物件・9ページを追加。Operaを使わず、公式サイトの文章・施設情報を確認。
+- [ ] 全30物件へ拡大する残り14物件・42ページを調査（RES-02）。
 
 ### タスク順序
 
