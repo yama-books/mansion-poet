@@ -1,0 +1,10 @@
+ad_id,page_role,url,http_status_observed,accessed_on,text_reviewed,method,visual_reviewed,notes
+S23,top,https://www.presis.com/saitama/kawaguchinamikimotomachi_572643/,200,2026-10-17,yes,firecrawl_live_scrape_and_web_open,no,Live HTTP 200 verified for TOP
+S23,concept_or_design,https://www.presis.com/saitama/kawaguchinamikimotomachi_572643/design.html,,2026-10-17,yes,web_open_recent_public_page,no,Web page text available; live HTTP status not independently recorded.
+S23,location,https://www.presis.com/saitama/kawaguchinamikimotomachi_572643/location.html,,2026-10-17,yes,web_open_recent_public_page,no,Web page text available; live HTTP status not independently recorded.
+S24,top,https://www.anabuki-style.com/kitanagano/,,2026-10-17,yes,web_open_recent_public_page,no,Firecrawl live fetch DNS resolution failed; separate public web extraction succeeded. HTTP status unverified.
+S24,concept_or_design,https://www.anabuki-style.com/kitanagano/concept_design/concept/,,2026-10-17,yes,web_open_recent_public_page,no,Web page text available; live HTTP status not independently recorded.
+S24,location,https://www.anabuki-style.com/kitanagano/location/,,2026-10-17,yes,web_open_recent_public_page,no,Web page text available; live HTTP status not independently recorded.
+S25,top,https://rexia-tamukae2.jp/,200,2026-10-17,yes,firecrawl_live_scrape_and_web_open,no,Live HTTP 200 verified for TOP
+S25,concept_or_design,https://rexia-tamukae2.jp/concept/,,2026-10-17,yes,web_open_recent_public_page,no,Web page text available; live HTTP status not independently recorded.
+S25,location,https://rexia-tamukae2.jp/location/,,2026-10-17,yes,web_open_recent_public_page,no,Web page text available; live HTTP status not independently recorded.
