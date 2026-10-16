@@ -1,0 +1,10 @@
+ad_id,page_role,url,http_status_observed,accessed_on,text_reviewed,method,visual_reviewed,notes
+S20,top,https://www.anabuki-style.com/sakuradori-jumonji/,,2026-10-17,yes,web_open_after_scrape_timeout,no,Publisher page text verified through web; HTTP status not explicitly recorded
+S20,concept_or_design,https://www.anabuki-style.com/sakuradori-jumonji/concept,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S20,location,https://www.anabuki-style.com/sakuradori-jumonji/location,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S21,top,https://polestar-m.jp/1026/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S21,concept_or_design,https://polestar-m.jp/1026/design,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S21,location,https://polestar-m.jp/1026/location,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S22,top,https://eir.co.jp/uearata/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S22,concept_or_design,https://eir.co.jp/uearata/concept.html,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S22,location,https://eir.co.jp/uearata/location.html,200,2026-10-17,yes,firecrawl_live_scrape,no,
