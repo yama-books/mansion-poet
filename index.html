@@ -245,7 +245,7 @@ async function fetchPOIs(origin){
  if(!open.length||open.length<4||!uniqueThemes.has('green')||style==='nature'){
    try{osm=await fetchOSMPOIs(origin)}catch(e){console.info('OpenStreetMap補完が利用できませんでした',e)}
  }
- return choosePOIs([...open,...osm]);
+ return [...open,...osm]; // 施設の正規化済み生データをキャッシュし、作品ごとに順位を選び直す。
 }
 const motifs={commerce:{label:'都市の豊穣',short:'都市',phrase:'街の営みが重なり合う、都市の豊穣'},dining:{label:'日常の饗宴',short:'賑わい',phrase:'食の風景が息づく、暮らしの交差点'},green:{label:'緑の余白',short:'緑',phrase:'都市のただ中に息づく、緑の余白'},knowledge:{label:'知の集積',short:'知',phrase:'学びと知性の気配を宿す街'},history:{label:'時の重層',short:'時',phrase:'歳月が描いてきた街の輪郭'},culture:{label:'文化の深奥',short:'文化',phrase:'暮らしの奥に息づく文化の気配'},transport:{label:'都市の結節点',short:'都市',phrase:'人々の営みが交差する都市の座標'},water:{label:'水の風景',short:'水辺',phrase:'水の気配が織りなす景観'}};
 const head={heritage:['この地に、\n邸宅の答えを。','その名は、\n時代を超える。','地の記憶を、\n邸の誇りへ。'],urban:['都市は、\nここから変わる。','その座標が、\n未来を指す。','この街を、\n超えてゆく。'],nature:['静けさこそ、\n至高の贅。','余白を、\n住まう。','風景と、\nひとつになる。']};
@@ -285,7 +285,7 @@ async function generate(regen=false){
  const version=++generationVersion;
  const place={...selected};
  const selectionAtStart=selectionVersion;
- const currentKey=`${place.lat.toFixed(5)},${place.lon.toFixed(5)}`;
+ const currentKey=`${place.lat.toFixed(5)},${place.lon.toFixed(5)},850,${style}`; // 自然モードではOSM補完を増やすため、文体もキャッシュ条件に含める。
  apiBusy=true;$('#generateBtn').disabled=true;$('#generateText').textContent='土地の気配を読み解いています…';
  $('#generatedStatus').textContent='周辺の公開データを確認中…';
  try{
@@ -294,14 +294,15 @@ async function generate(regen=false){
    pois=lastPOIs;verified=pois.length>0;
   }else{
    try{
-    pois=await fetchPOIs();
+    pois=await fetchPOIs(place);
     verified=pois.length>0;
    }catch(e){console.info('施設データを取得できませんでした。地名のみで生成します。',e);}
   }
   // 地名・文体が新しく選択された場合、古い取得結果を表示・キャッシュしない。
   if(version!==generationVersion||selectionAtStart!==selectionVersion)return;
   if(!(regen&&lastKey===currentKey)){lastPOIs=pois;lastSource=verified?'OpenPOI/OSM':'地名のみ';lastKey=currentKey;}
-  generation++;poemWrite(pois,verified);
+  const rankedPOIs=choosePOIs(pois); // styleごとに評価し直す。
+  generation++;poemWrite(rankedPOIs,rankedPOIs.length>0);
   document.querySelector('#poem').scrollIntoView({behavior:'smooth',block:'start'});
  }finally{
   if(version===generationVersion){
