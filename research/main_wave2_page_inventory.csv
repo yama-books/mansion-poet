@@ -1,0 +1,10 @@
+ad_id,page_role,url,http_status_observed,accessed_on,text_reviewed,method,visual_reviewed,notes
+S14,top,https://www.florence-m.jp/hijiyama/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S14,concept_or_design,https://www.florence-m.jp/hijiyama/design/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S14,location,https://www.florence-m.jp/hijiyama/location/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S15,top,https://www.yueg.co.jp/mansion/kanazawa/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S15,concept_or_design,https://www.yueg.co.jp/mansion/kanazawa/special/kanazawalife/,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S15,location,https://www.yueg.co.jp/mansion/kanazawa/location/index02.html,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S16,top,https://www.384.co.jp/fuseishi/,200,2026-10-17,yes,firecrawl_live_scrape,no,Official site displays sold-out notice
+S16,concept_or_design,https://www.384.co.jp/fuseishi/design.html,200,2026-10-17,yes,firecrawl_live_scrape,no,
+S16,location,https://www.384.co.jp/fuseishi/location.html,200,2026-10-17,yes,firecrawl_live_scrape,no,
