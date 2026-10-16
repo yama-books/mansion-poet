@@ -294,7 +294,7 @@ async function generate(regen=false){
    pois=lastPOIs;verified=pois.length>0;
   }else{
    try{
-    pois=await fetchPOIs();
+    pois=await fetchPOIs(place);
     verified=pois.length>0;
    }catch(e){console.info('施設データを取得できませんでした。地名のみで生成します。',e);}
   }
