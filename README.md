@@ -17,7 +17,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 - 自動公開：`index.html` または `.github/workflows/deploy-pages.yml` を変更したとき
 - 公開用ワークフロー：[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)
 
-2026-10-17：初回Actionsデプロイが成功し、実際の公開URLからHTTP 200、画面テキスト・地図タイル・主要操作ボタンの表示を確認しました。**検索・OpenPOI通信とポエム生成の端末別クリック操作は引き続き検証対象**です。
+2026-10-17：初回Actionsデプロイが成功し、実際の公開URLからHTTP 200、画面テキスト・地図タイル・主要操作ボタンの表示を確認しました。さらに公開ブラウザ上で「中野」サンプル選択→生成（OpenPOIで施設8件）と、荻窪の地名検索→候補選択→生成（施設10件）を確認しました。iPhone/Androidなど個別端末の実機操作は引き続き検証対象です。
 
 ## 使い方
 
