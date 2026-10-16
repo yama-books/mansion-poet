@@ -183,3 +183,104 @@ test('changing style refreshes ranking and caches only same-style raw POIs',asyn
  await ui.el('#regenerateBtn').fire();
  assert.equal(apiRequests,afterNature,'Regenerating with same place and style should reuse normalized POIs');
 });
+
+
+test('changing location aborts both pending OpenPOI searches and allows another generation',async()=>{
+ const inFlight=[];
+ const ui=makeUI((url,options={})=>{
+  const value=String(url);
+  if(value.includes('openpoiapi.com')){
+   const center=new URL(value).searchParams.get('center');
+   if(center.includes('139.665900')){
+    const operation=deferred();
+    const signal=options.signal;
+    inFlight.push(signal);
+    signal.addEventListener('abort',()=>operation.reject(new Error('request was aborted')),{once:true});
+    return operation.promise;
+   }
+   const [lon,lat]=center.split(',').map(Number);
+   return Promise.resolve(response({results:rowsFor(lat,lon)}));
+  }
+  if(value.includes('overpass'))return Promise.resolve(response({elements:[]}));
+  throw Error('Unexpected URL: '+value);
+ });
+ await ui.presets[1].fire();
+ const oldGeneration=ui.el('#generateBtn').fire();
+ assert.equal(inFlight.length,2,'Both OpenPOI calls should start');
+ assert.ok(inFlight.every(signal=>!signal.aborted));
+ await ui.presets[2].fire();
+ assert.ok(inFlight.every(signal=>signal.aborted),'Old OpenPOI requests must be cancelled');
+ await oldGeneration;
+ await ui.el('#generateBtn').fire();
+ assert.equal(ui.el('#poemProperty').textContent,'THE KYOTO RESIDENCE');
+ assert.match(ui.el('#generatedStatus').textContent,/周辺施設\s+\d+件を参照/);
+});
+
+test('switching style aborts a pending Overpass fallback without misleading place-only output',async()=>{
+ let overpassSignal;
+ const ui=makeUI((url,options={})=>{
+  const value=String(url);
+  if(value.includes('openpoiapi.com'))return Promise.resolve(response({results:[]}));
+  if(value.includes('overpass')){
+   const operation=deferred();
+   overpassSignal=options.signal;
+   overpassSignal.addEventListener('abort',()=>operation.reject(new Error('overpass cancelled')),{once:true});
+   return operation.promise;
+  }
+  throw Error('Unexpected URL: '+value);
+ });
+ await ui.presets[1].fire();
+ const generation=ui.el('#generateBtn').fire();
+ // Let OpenPOI promises settle so the missing-POI path starts Overpass.
+ for(let n=0;n<8&&!overpassSignal;n++)await new Promise(resolve=>setImmediate(resolve));
+ assert.ok(overpassSignal,'Overpass fallback should start when OpenPOI returns no facilities');
+ await ui.modes[2].fire();
+ assert.equal(overpassSignal.aborted,true);
+ await generation;
+ assert.equal(ui.el('#generateBtn').disabled,false);
+ assert.equal(ui.el('#generatedStatus').textContent,'周辺の公開データを確認中…');
+});
+
+test('ordinary OpenPOI failure still falls back to OSM and yields a poem',async()=>{
+ const ui=makeUI(url=>{
+  const value=String(url);
+  if(value.includes('openpoiapi.com'))return Promise.reject(new Error('OpenPOI unavailable'));
+  if(value.includes('overpass')){
+   return Promise.resolve(response({elements:[{tags:{name:'テスト公園',leisure:'park'}}]}));
+  }
+  throw Error('Unexpected URL: '+value);
+ });
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.match(ui.el('#generatedStatus').textContent,/周辺施設\s+1件を参照/);
+ assert.ok(ui.el('#poemBody').textContent);
+});
+
+
+test('location changes can abort OpenPOI response bodies after HTTP headers arrive',async()=>{
+ const bodies=[];
+ const ui=makeUI((url,{signal}={})=>{
+  if(String(url).includes('openpoiapi.com')){
+   return Promise.resolve({
+    ok:true,
+    json(){
+     const d=deferred();
+     bodies.push({signal,request:d});
+     signal.addEventListener('abort',()=>d.reject(new Error('cancelled while loading JSON')),{once:true});
+     return d.promise;
+    }
+   });
+  }
+  if(String(url).includes('overpass'))return Promise.resolve(response({elements:[]}));
+  throw Error('Unexpected URL '+url);
+ });
+ await ui.presets[1].fire();
+ const oldGeneration=ui.el('#generateBtn').fire();
+ for(let i=0;i<8&&bodies.length!==2;i++)await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(bodies.length,2,'Both OpenPOI responses should have started JSON parsing');
+ await ui.presets[2].fire();
+ assert.ok(bodies.every(x=>x.signal.aborted),'JSON response reads should be abortable');
+ await oldGeneration;
+ assert.equal(ui.el('#selectedPlace').textContent,'京都府京都市中京区');
+ assert.equal(ui.el('#generateBtn').disabled,false);
+});
