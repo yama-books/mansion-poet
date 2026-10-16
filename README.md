@@ -55,6 +55,8 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [docs/QUALITY_TEST_PLAN.md](docs/QUALITY_TEST_PLAN.md) | 地域別テスト、API異常・競合・スマホ・文章品質の受入条件 |
 | [docs/ADVERTISEMENT_RESEARCH_PLAN.md](docs/ADVERTISEMENT_RESEARCH_PLAN.md) | **実在マンション広告30物件・約90ページの分析計画**と先行ジェネレーター比較 |
 | [docs/PILOT_8_AD_ANALYSIS.md](docs/PILOT_8_AD_ANALYSIS.md) | **Pilot調査の一次成果**：実際の広告8物件・24ページの比較、8つの広告構文の仮説 |
+| [docs/PILOT_VISUAL_MOTION_AUDIT.md](docs/PILOT_VISUAL_MOTION_AUDIT.md) | **PC広告画面の視覚比較**：直接観察した6物件と未検証項目の区別 |
+| [docs/AD_CODING_GUIDE_V1.md](docs/AD_CODING_GUIDE_V1.md) | **広告研究の採点ルール**：P/L/R/Vの判定基準と2件の再採点 |
 | [docs/LIVING_ENVIRONMENT_SPEC.md](docs/LIVING_ENVIRONMENT_SPEC.md) | **THE DREAM / THE REALITY**。近隣施設・交通・買い物の生活アクセス仕様 |
 
 ## v0.1.2 安定化の進捗（2026-10-17）
@@ -70,7 +72,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 
 ## 新しい研究・将来機能の設計（未実装）
 
-2026-10-17に、実在のマンション広告30物件・約90ページを調べる計画と、詩（THE DREAM）から実際の施設・距離（THE REALITY）を見比べる構想を追加しました。 **予備調査として8物件×3ページの公式サイトを読み、広告表現と生活施設表示を比較した報告を保存しました。** 実際のビジュアルを画面で確認できたのは心斎橋とBLUE FORESTのトップ2件で、残る6物件の画像・モーションと再採点はこれからです。[広告研究計画](docs/ADVERTISEMENT_RESEARCH_PLAN.md)／[生活アクセス仕様](docs/LIVING_ENVIRONMENT_SPEC.md)を参照してください。現在の公開版に生活アクセス画面はまだ実装されていません。
+2026-10-17に、実在のマンション広告30物件・約90ページを調べる計画と、詩（THE DREAM）から実際の施設・距離（THE REALITY）を見比べる構想を追加しました。 **予備調査として8物件×3ページの公式サイトを読み、広告表現と生活施設表示を比較した報告を保存しました。** 実際のビジュアルを画面で直接確認したのは8物件中6件のPCトップ画面です。残るS07・S08の視覚確認、全8件のスマートフォン画面とモーションの実動作確認は未完了です。S03・S06は同一担当者による再採点を実施しましたが、盲検での再現性検証ではありません。[広告研究計画](docs/ADVERTISEMENT_RESEARCH_PLAN.md)／[生活アクセス仕様](docs/LIVING_ENVIRONMENT_SPEC.md)を参照してください。現在の公開版に生活アクセス画面はまだ実装されていません。
 
 ### 関連する先行作品
 
