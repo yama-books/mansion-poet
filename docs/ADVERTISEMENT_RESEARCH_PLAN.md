@@ -2,7 +2,7 @@
 
 更新日：2026-10-17
 対象：POÈME / ESTATE（yama-books/mansion-poet）
-状態：**予備閲覧と研究計画の策定段階。本調査の30物件コーパスは未作成。**
+状態：**Pilot 8物件×3ページの一次文面分析と暫定採点を記録済み。ビジュアル6物件・再採点・本調査30物件は未完了。**
 
 ## 1. 研究課題と成果
 
@@ -43,9 +43,10 @@ Pilot終了後に分類ルールを整理。30件終了時、後半10件に新�
 
 ## 3. 記録方式と分類コード
 
-将来的なメタデータ正本案：research/ad_corpus.csv
-将来的な個別メモ案：research/notes/AD-001.md など
-上記は**提案パスであり、まだデータファイルを作成していない**。
+Pilotの実データ：[research/ad_corpus_pilot.csv](../research/ad_corpus_pilot.csv)
+閲覧済みページの一覧：[research/pilot_page_inventory.csv](../research/pilot_page_inventory.csv)
+詳細な比較報告：[PILOT_8_AD_ANALYSIS.md](PILOT_8_AD_ANALYSIS.md)
+本調査への拡張候補：research/ad_corpus.csv、research/notes/AD-001.mdなど（**未作成**）。
 
 記録列：
 ~~~
@@ -73,7 +74,7 @@ nearby_facility_display,source_notes,researcher_notes,rights_status
 
 Pilot中2物件を一定時間を置いて再評価し、判断が不安定な項目を定義し直す。3項目以上の大きな食い違いが生じる場合はコードブックを改訂する。最終的には実装前に人手で適用例と反例を作る。
 
-## 4. 2026-10-17 予備閲覧済みの実在物件（正式採点は未実施）
+## 4. 2026-10-17 Pilotの実在物件（文章・情報構造の一次採点済み）
 
 | ID | 物件・公式URL | 現時点の予備観察 |
 | --- | --- | --- |
@@ -81,7 +82,7 @@ Pilot中2物件を一定時間を置いて再評価し、判断が不安定な�
 | AD-S02 | [パークコート ザ・三番町ハウス](https://www.31sumai.com/mfr/X2116/) | 江戸からの街の継承と邸宅の格式 |
 | AD-S03 | [ザ・パークハウス 心斎橋タワー](https://www.mecsumai.com/tph-shinsaibashi-tower/) | 独立心・自己宣言調の長文ポエム |
 | AD-S04 | [ザ・パークハウス 覚王山](https://www.mecsumai.com/kakuouzan/) | 場所の記憶と人の記憶、邸宅の伝統 |
-| AD-S05 | [プラウド光が丘アベニュー](https://www.proud-web.jp/mansion/c117330/) | 森・ゆとり・人生、日本語の縦組み |
+| AD-S05 | [BLUE FOREST RESIDENCE MINAMI-FUNABASHI](https://www.proud-web.jp/mansion/b117680/) | 完売画面になった光が丘から差替え。海・空・森、生活施設の用途別表示 |
 | AD-S06 | [プラウド五橋](https://www.proud-web.jp/mansion/s145500/concept/) | 仙台・五橋の文教と内側の品質 |
 | AD-S07 | [プラウド新丸子エアリーコート](https://www.proud-web.jp/mansion/c117590/) | 具体的な駅・設備・生活アクセスが前面 |
 | AD-S08 | [ザ・パークハウス 武蔵小杉タワーズ](https://www.mecsumai.com/tph-musashikosugi-towers/) | 建築意匠・樹木のコンセプト・街の風景 |
@@ -125,6 +126,17 @@ Pilot中2物件を一定時間を置いて再評価し、判断が不安定な�
 - 都心・生活型広告の**具体的な施設情報の出し方を5物件以上比較**して、[LIVING_ENVIRONMENT_SPEC.md](LIVING_ENVIRONMENT_SPEC.md)の住環境表示へフィードバックする。
 - 旧生成器と新しい構文を同じ代表地点でブラインド評価する。指標は広告らしさ、土地固有性、日本語の自然さ、誤情報の少なさ、再生成の多様性。
 - 著作権配慮：広告写真やサイト画面を無断で公開GitHubに保存しない。必要な最小限の短い引用とリンク・分析を中心にする。機械的な大量収集、robots.txt違反、ログイン・アクセス制限回避をしない。
+
+### Pilot完了範囲（2026-10-17）
+
+- [x] 8物件×3ページ、公式24URLからHTTP 200で本文・見出し・生活情報を調査
+- [x] 売切れとなった光が丘をBLUE FORESTへ差替え、元候補を履歴に残す
+- [x] 詩的表現・土地固有性・生活情報の3軸を一次採点
+- [x] 8つの構文・表現類型を仮説化し、出典ページと対応づける
+- [x] Operaで心斎橋とBLUE FORESTのトップ画面を直接閲覧し、視覚軸を2件だけ評価
+- [ ] ほか6物件の視覚軸・モバイル・モーション確認
+- [ ] 再採点による分類ルールの安定性検証。従ってRES-01はまだ完了扱いにしない
+- [ ] 続く22物件の選定・調査（RES-02）
 
 ### タスク順序
 
