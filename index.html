@@ -98,8 +98,10 @@ function classifyOpenPOI(record){
  const name=String(record.name||'').trim();
  const type=[record.category,record.business_type].filter(Boolean).join(' ').toLowerCase();
  if(!name||name.length>80) return null;
+ // カテゴリが明示された飲食店等を、施設名中の『神社』『美術館』などで誤分類しない。
+ if(/cafe|coffee_shop|restaurant|bakery|food_court/.test(type))return {category:'食と街の営み',theme:'dining'};
  const match=(typePattern,namePattern)=>typePattern.test(type)||namePattern.test(name);
- if(match(/library|bookstore|book_shop|university|college|school|education/,/図書館|書店|本屋|大学|高等学校|専門学校|学園|文庫/)) return {category:'文教・書物',theme:'knowledge'};
+ if(match(/library|bookstore|book_shop|university|college|school|education/,/図書館|書店|書房|古書|本屋|大学|高等学校|専門学校|学園|文庫/)) return {category:'文教・書物',theme:'knowledge'};
  if(match(/museum|gallery|theatre|theater|arts?_center|cultural/,/美術館|博物館|資料館|記念館|劇場|文化会館|ギャラリー/)) return {category:'文化・芸術',theme:'culture'};
  if(match(/park|garden|botanical|nature_reserve/,/公園|庭園|植物園|自然公園/)) return {category:'緑地・公園',theme:'green'};
  if(match(/temple|shrine|historic|heritage|castle/,/神社|神宮|寺院|寺$|史跡|城跡|旧跡/)) return {category:'史跡・歴史',theme:'history'};
