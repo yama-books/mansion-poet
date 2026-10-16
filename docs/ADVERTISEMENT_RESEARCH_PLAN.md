@@ -2,7 +2,7 @@
 
 更新日：2026-10-17
 対象：POÈME / ESTATE（yama-books/mansion-poet）
-状態：**Pilot8件＋Main Wave1〜5の17件＝25物件・75ページの一次文面分析済み。PCトップの直接視覚確認はPilot6物件。全30件、モーション実測、ブラインド再採点は未完了。**
+状態：**Pilot8件＋Main Wave1〜6の22件＝30物件・90ページの一次文章と生活情報の調査を収録済み。PCトップの直接視覚確認6/30、モーション実測・ブラインド再採点・低ポエム対照標本は未完了。研究全体とアプリ実装が完了したわけではない。**
 
 ## 1. 研究課題と成果
 
@@ -51,6 +51,8 @@ Main Wave 2（3物件・9ページ）：[MAIN_WAVE2_AD_ANALYSIS.md](MAIN_WAVE2_A
 Main Wave 3（3物件・9ページ）：[MAIN_WAVE3_AD_ANALYSIS.md](MAIN_WAVE3_AD_ANALYSIS.md)、[ad_corpus_main_wave3.csv](../research/ad_corpus_main_wave3.csv)、[URL台帳](../research/main_wave3_page_inventory.csv)
 Main Wave 4（3物件・9ページ）：[MAIN_WAVE4_AD_ANALYSIS.md](MAIN_WAVE4_AD_ANALYSIS.md)、[ad_corpus_main_wave4.csv](../research/ad_corpus_main_wave4.csv)、[URL台帳](../research/main_wave4_page_inventory.csv)
 Main Wave 5（3物件・9ページ）：[MAIN_WAVE5_AD_ANALYSIS.md](MAIN_WAVE5_AD_ANALYSIS.md)、[評価CSV](../research/ad_corpus_main_wave5.csv)、[9ページURL台帳](../research/main_wave5_page_inventory.csv)、[ページ別P_page](../research/wave5_page_role_scores.csv)
+Main Wave 6（5物件・15ページ）：[MAIN_WAVE6_AD_ANALYSIS.md](MAIN_WAVE6_AD_ANALYSIS.md)、[評価CSV](../research/ad_corpus_main_wave6.csv)、[15ページURL台帳](../research/main_wave6_page_inventory.csv)、[ページ別P_page](../research/wave6_page_role_scores.csv)
+一次調査の全体総括：[CORPUS_30_SYNTHESIS.md](CORPUS_30_SYNTHESIS.md)
 PCトップと動きの技術調査：[PILOT_VISUAL_MOTION_AUDIT.md](PILOT_VISUAL_MOTION_AUDIT.md)
 分類基準（Pilot v0.1）：[AD_CODING_GUIDE_V1.md](AD_CODING_GUIDE_V1.md)
 本調査への拡張候補：research/ad_corpus.csv、research/notes/AD-001.mdなど（**未作成**）。
@@ -150,7 +152,8 @@ Pilot中2物件を一定時間を置いて再評価し、判断が不安定な�
 - [x] Main Wave 3（神戸・盛岡・岡山）の3物件・9ページを追加調査。公開取得APIの短時間上限を別の閲覧手段で補完した。
 - [x] Main Wave 4（宇都宮・福井・鹿児島）の3物件・9ページを一次調査。うち1ページは公開Web閲覧で補完。
 - [x] Main Wave 5（川口・北長野・熊本）の3物件・9ページを一次調査。TOP2件のHTTP200確認、その他7ページのWeb閲覧。ページ別P_pageの補助指標を追加。
-- [ ] 全30物件へ拡大する残り5物件・15ページを調査（RES-02）。P0〜1の物件はS23が境界事例で、低ポエム対象の充足は未達。独立採点と媒体種別による対照サンプルの扱いを検討する。
+- [x] 全30物件・90ページの一次文面調査を収録済み（RES-02の収集マイルストーン）。
+- [ ] P0〜1の低ポエム標本5件の目標は暫定3件で未達（S23は境界）。分類の独立採点、ビジュアル・モーション実測、施設現況の裏付けを次段階で実施する。
 
 ### タスク順序
 
