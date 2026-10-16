@@ -196,8 +196,16 @@ async function fetchWithCancellation(url,options,parentSignal,milliseconds){
  if(parentSignal?.aborted)stop();
  else parentSignal?.addEventListener('abort',stop,{once:true});
  const timeout=setTimeout(stop,milliseconds);
- try{return await fetch(url,{...options,signal:requestController.signal})}
- finally{clearTimeout(timeout);parentSignal?.removeEventListener('abort',stop)}
+ try{
+  const response=await fetch(url,{...options,signal:requestController.signal});
+  if(!response.ok)throw new Error('HTTP '+response.status);
+  const json=await response.json();
+  requestController.signal.throwIfAborted();
+  return json;
+ }finally{
+  clearTimeout(timeout);
+  parentSignal?.removeEventListener('abort',stop);
+ }
 }
 async function fetchOpenPOI(origin,signal){
  const center=`${origin.lon.toFixed(6)},${origin.lat.toFixed(6)}`;
@@ -208,9 +216,7 @@ async function fetchOpenPOI(origin,signal){
    url.searchParams.set('radius','850');
    url.searchParams.set('limit',q?'100':'180');
    if(q)url.searchParams.set('q',q);
-   const res=await fetchWithCancellation(url.toString(),{},signal,5500);
-   if(!res.ok)throw new Error(`OpenPOI HTTP ${res.status}`);
-   const json=await res.json();
+   const json=await fetchWithCancellation(url.toString(),{},signal,5500);
    if(!Array.isArray(json.results))throw new Error('OpenPOI response is invalid');
    return json.results;
  });
@@ -248,7 +254,7 @@ function choosePOIs(items){
  return result;
 }
 async function fetchOSMPOIs(origin,signal){const {lat,lon}=origin;const query=`[out:json][timeout:14];(nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["leisure"="park"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["amenity"~"^(library|university|school)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["historic"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["tourism"~"^(museum|gallery)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["railway"="station"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["natural"="water"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["waterway"="river"];);out center 35;`;
-const res=await fetchWithCancellation('https://overpass.kumi.systems/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query)},signal,7500);if(!res.ok)throw Error('Overpass error '+res.status);const json=await res.json();return (json.elements||[]).filter(v=>v.tags&&v.tags.name&&tagPOI(v.tags)).map(v=>({name:v.tags['name:ja']||v.tags.name,...tagPOI(v.tags),source:"OSM"})).filter((v,i,arr)=>arr.findIndex(y=>y.name===v.name)===i).slice(0,12)}
+const json=await fetchWithCancellation('https://overpass.kumi.systems/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query)},signal,7500);return (json.elements||[]).filter(v=>v.tags&&v.tags.name&&tagPOI(v.tags)).map(v=>({name:v.tags['name:ja']||v.tags.name,...tagPOI(v.tags),source:"OSM"})).filter((v,i,arr)=>arr.findIndex(y=>y.name===v.name)===i).slice(0,12)}
 
 async function fetchPOIs(origin,signal){
  let open=[],osm=[];
