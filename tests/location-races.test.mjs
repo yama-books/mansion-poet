@@ -153,3 +153,32 @@ test('older POI request cannot rewrite a poem for a newer location',async()=>{
   assert.equal(ui.el('#selectedPlace').textContent,'京都府京都市中京区');
   assert.equal(ui.el('#generateBtn').disabled,false);
 });
+
+
+test('changing style refreshes ranking and caches only same-style raw POIs',async()=>{
+ let apiRequests=0;
+ const ui=makeUI(url=>{
+  const address=String(url);
+  if(address.includes('openpoiapi.com')){
+   apiRequests++;
+   return Promise.resolve(response({results:rowsFor(35.7074,139.6659)}));
+  }
+  if(address.includes('overpass'))return Promise.resolve(response({elements:[]}));
+  throw Error('Unexpected URL '+address);
+ });
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ const heritage=ui.el('#poemBody').textContent;
+ assert.ok(heritage.includes('歳月が描いてきた街の輪郭'),heritage);
+ const afterHeritage=apiRequests;
+ assert.ok(afterHeritage>=2);
+ await ui.modes[2].fire();
+ await ui.el('#regenerateBtn').fire();
+ const nature=ui.el('#poemBody').textContent;
+ assert.ok(nature.includes('都市のただ中に息づく、緑の余白'),nature);
+ assert.notEqual(nature,heritage);
+ assert.ok(apiRequests>afterHeritage,'New style should collect any style-specific supplementary evidence');
+ const afterNature=apiRequests;
+ await ui.el('#regenerateBtn').fire();
+ assert.equal(apiRequests,afterNature,'Regenerating with same place and style should reuse normalized POIs');
+});
