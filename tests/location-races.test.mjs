@@ -255,3 +255,32 @@ test('ordinary OpenPOI failure still falls back to OSM and yields a poem',async(
  assert.match(ui.el('#generatedStatus').textContent,/周辺施設\s+1件を参照/);
  assert.ok(ui.el('#poemBody').textContent);
 });
+
+
+test('location changes can abort OpenPOI response bodies after HTTP headers arrive',async()=>{
+ const bodies=[];
+ const ui=makeUI((url,{signal}={})=>{
+  if(String(url).includes('openpoiapi.com')){
+   return Promise.resolve({
+    ok:true,
+    json(){
+     const d=deferred();
+     bodies.push({signal,request:d});
+     signal.addEventListener('abort',()=>d.reject(new Error('cancelled while loading JSON')),{once:true});
+     return d.promise;
+    }
+   });
+  }
+  if(String(url).includes('overpass'))return Promise.resolve(response({elements:[]}));
+  throw Error('Unexpected URL '+url);
+ });
+ await ui.presets[1].fire();
+ const oldGeneration=ui.el('#generateBtn').fire();
+ for(let i=0;i<8&&bodies.length!==2;i++)await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(bodies.length,2,'Both OpenPOI responses should have started JSON parsing');
+ await ui.presets[2].fire();
+ assert.ok(bodies.every(x=>x.signal.aborted),'JSON response reads should be abortable');
+ await oldGeneration;
+ assert.equal(ui.el('#selectedPlace').textContent,'京都府京都市中京区');
+ assert.equal(ui.el('#generateBtn').disabled,false);
+});
