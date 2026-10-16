@@ -62,6 +62,8 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [docs/MAIN_WAVE3_AD_ANALYSIS.md](docs/MAIN_WAVE3_AD_ANALYSIS.md) | **広告本調査 第3弾**：神戸・盛岡・岡山3物件・9ページの文章・生活情報分析 |
 | [docs/MAIN_WAVE4_AD_ANALYSIS.md](docs/MAIN_WAVE4_AD_ANALYSIS.md) | **広告本調査 第4弾**：宇都宮・福井・鹿児島3物件・9ページの文章・生活情報分析 |
 | [docs/MAIN_WAVE5_AD_ANALYSIS.md](docs/MAIN_WAVE5_AD_ANALYSIS.md) | **広告本調査 第5弾**：川口・北長野・熊本3物件・9ページ、ページごとの文体比較 |
+| [docs/MAIN_WAVE6_AD_ANALYSIS.md](docs/MAIN_WAVE6_AD_ANALYSIS.md) | **広告本調査 第6弾**：弘前・徳島・新潟・多摩・宇部5物件・15ページ |
+| [docs/CORPUS_30_SYNTHESIS.md](docs/CORPUS_30_SYNTHESIS.md) | **30物件・90ページの一次総括**：広告構文とDREAM／REALITYへの引継ぎ |
 | [research/wave5_page_role_scores.csv](research/wave5_page_role_scores.csv) | TOP・CONCEPT/DESIGN・LOCATIONのページ別ポエム度（暫定） |
 | [research/ad_corpus_main_wave1.csv](research/ad_corpus_main_wave1.csv) | 本調査の追加5物件の評価・出典データ |
 | [docs/LIVING_ENVIRONMENT_SPEC.md](docs/LIVING_ENVIRONMENT_SPEC.md) | **THE DREAM / THE REALITY**。近隣施設・交通・買い物の生活アクセス仕様 |
@@ -79,7 +81,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 
 ## 新しい研究・将来機能の設計（未実装）
 
-2026-10-17に、実在のマンション広告30物件・約90ページを調べる計画と、詩（THE DREAM）から実際の施設・距離（THE REALITY）を見比べる構想を追加しました。 **予備調査として8物件×3ページの公式サイトを読み、広告表現と生活施設表示を比較した報告を保存しました。** **川口・北長野・熊本の3物件を追加し、合計25物件・75ページの公式広告を一次分析しています。** TOPは実用的でもCONCEPT/DESIGNには詩的表現が現れるため、ページ別ポエム度P_pageを新たな補助評価として記録。低ポエム度の物件全体サンプルは依然として不足し、川口の暫定P1も再採点が必要です。 広告情報の取得に短時間利用上限が生じた場合も、別の公開閲覧手段で確認できたページのみ調査済みとして記録しています。 実際のビジュアルを画面で直接確認したのはPilot 8物件中6件のPCトップ画面です。残るS07・S08の視覚確認、全8件のスマートフォン画面とモーションの実動作確認は未完了です。S03・S06は同一担当者による再採点を実施しましたが、盲検での再現性検証ではありません。[広告研究計画](docs/ADVERTISEMENT_RESEARCH_PLAN.md)／[生活アクセス仕様](docs/LIVING_ENVIRONMENT_SPEC.md)を参照してください。現在の公開版に生活アクセス画面はまだ実装されていません。
+2026-10-17に、実在のマンション広告30物件・約90ページを調べる計画と、詩（THE DREAM）から実際の施設・距離（THE REALITY）を見比べる構想を追加しました。 **予備調査として8物件×3ページの公式サイトを読み、広告表現と生活施設表示を比較した報告を保存しました。** **弘前・徳島・新潟・多摩・宇部の5物件を追加し、当初の30物件・90ページの公式広告について一次文面調査を収録しました。** 実ビジュアルは6物件のPCトップのみ確認、モーション・スマホ版・独立採点と店舗現況照合は未完了です。 TOPは実用的でもCONCEPT/DESIGNには詩的表現が現れるため、ページ別ポエム度P_pageを新たな補助評価として記録。低ポエム度の物件全体サンプルは依然として不足し、川口の暫定P1も再採点が必要です。 広告情報の取得に短時間利用上限が生じた場合も、別の公開閲覧手段で確認できたページのみ調査済みとして記録しています。 実際のビジュアルを画面で直接確認したのはPilot 8物件中6件のPCトップ画面です。残るS07・S08の視覚確認、全8件のスマートフォン画面とモーションの実動作確認は未完了です。S03・S06は同一担当者による再採点を実施しましたが、盲検での再現性検証ではありません。[広告研究計画](docs/ADVERTISEMENT_RESEARCH_PLAN.md)／[生活アクセス仕様](docs/LIVING_ENVIRONMENT_SPEC.md)を参照してください。現在の公開版に生活アクセス画面はまだ実装されていません。
 
 ### 関連する先行作品
 
