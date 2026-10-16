@@ -22,6 +22,8 @@
 - [Main調査 Wave 3](MAIN_WAVE3_AD_ANALYSIS.md)：神戸・盛岡・岡山の3物件・9公式ページ、生活の3視点と店舗／商店街の相違を調査。
 - [Main調査 Wave 4](MAIN_WAVE4_AD_ANALYSIS.md)：宇都宮・福井・鹿児島の3物件・9ページ。将来交通・複合施設内の用途・病院再整備を分類。
 - [Main調査 Wave 5](MAIN_WAVE5_AD_ANALYSIS.md)：川口・北長野・熊本の3物件・9ページ。実用TOPと詩的CONCEPTをページ別に評価。
+- [Main調査 Wave 6](MAIN_WAVE6_AD_ANALYSIS.md)：弘前・徳島・新潟・多摩・宇部の5物件・15ページ。出典の矛盾と最新性に注意。
+- [広告研究30件の総括](CORPUS_30_SYNTHESIS.md)：暫定採点の分布、表現の型、DREAM／REALITYへの引継ぎ。
 - [住環境機能仕様](LIVING_ENVIRONMENT_SPEC.md)：THE DREAM / THE REALITY、買い物・駅などの施設アクセス。
 
 ## リリース状態
@@ -51,7 +53,9 @@
 - [x] RES-02第4弾：宇都宮・福井・鹿児島の3物件×3ページを一次調査。累計 **22/30物件・66/90ページ**。8URLはHTTP 200、宇都宮TOPのみ公開Webページ閲覧で本文確認（応答番号未取得）。[分析](MAIN_WAVE4_AD_ANALYSIS.md)／[評価CSV](../research/ad_corpus_main_wave4.csv)／[9URL台帳](../research/main_wave4_page_inventory.csv)。
 - [x] RES-02第5弾：川口・北長野・熊本の3物件×3ページを一次分析。累計 **25/30物件・75/90ページ**。TOP2URLはHTTP 200確認、その他7URLは公開Web閲覧で本文確認（HTTP番号は未取得）。[比較報告](MAIN_WAVE5_AD_ANALYSIS.md)／[評価CSV](../research/ad_corpus_main_wave5.csv)／[URL台帳](../research/main_wave5_page_inventory.csv)／[ページ別ポエム度](../research/wave5_page_role_scores.csv)。
 - [x] RES-02研究方法の改善：TOPのP1に対しDESIGN/CONCEPTがP2となる役割の違いを発見。[コードブック](AD_CODING_GUIDE_V1.md)へページ別P_pageを補助項目として追加。S23の全体P1は再採点を要する境界例。
-- [ ] RES-02継続：残り5物件・15ページ。P0〜1資料の不足はなお解消していない。恣意的な点数変更は避け、物件広告以外の媒体の対照例は別サンプルとして調査する。
+- [x] RES-02一次コーパス：第6弾で5物件・15ページを追加し、**30/30物件・90/90ページ**の文面・施設説明の一次調査を完了。詳細は[Wave 6](MAIN_WAVE6_AD_ANALYSIS.md)、[集約総括](CORPUS_30_SYNTHESIS.md)、[比較CSV](../research/ad_corpus_main_wave6.csv)、[15ページURL台帳](../research/main_wave6_page_inventory.csv)、[ページ別ポエム度](../research/wave6_page_role_scores.csv)。実装・視覚・モーションは完了扱いにしない。
+- [ ] RES-02検証残：P0〜1が暫定3件にとどまり、5件の対照サンプル目標は未達。S23の採点境界、独立ブラインド再採点、残り24件の視覚・全件のスマホ・実モーションは未実施。
+- [ ] RES-02データ品質：弘前で同じ薬局について距離が二通りある掲載、古い開店予定記載を確認。第三者照合はまだ行っていない。
 - [ ] RES-04：先行 [Play Toolsマンションポエム ジェネレーター](https://play-tools.com/mansion-poem) の3種の生成結果を比較する。
 - [ ] LIFE-00：OpenPOIとOSMの施設分類を踏まえ、食料品・コンビニ・駅・公園・文化施設の生活情報取得条件を確定する。
 - [ ] LIFE-01以降：詩（DREAM）と現実の周辺施設（REALITY）を対比する画面を段階実装する。
