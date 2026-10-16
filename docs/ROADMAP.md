@@ -27,7 +27,9 @@
 - [x] OpenPOIの実APIへのHTTP GET・200応答・JSON内容確認（神保町座標）
 - [x] GitHub Pagesの初回公開確認（2026-10-17、Actions成功、公開URLのHTTP 200とページ表示を確認）
 - [ ] iPhone Safari / Android Chrome / Windows Chrome・Edgeでの各種端末のクリック操作を実機検証
-- [ ] 公開WebページからOpenPOIとOverpassへのブラウザ実通信・接続障害・CORS挙動の検証
+- [x] 公開WebページでOpenPOI通信・施設表示・ポエム生成を実ブラウザで確認（中野・荻窪）
+- [x] 公開Webページで国土地理院の地名検索・候補選択・地点更新を実ブラウザで確認（荻窪）
+- [ ] Overpassとの実ブラウザ通信・障害時フォールバック・CORS挙動を追加検証
 - [ ] OpenPOIの地域別データ品質検証（都心／郊外／地方都市／山間部／離島）
 
 ## v0.2：言葉の品質と利用体験（優先）
