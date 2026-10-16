@@ -1,0 +1,16 @@
+ad_id,page_role,url,http_status_observed,accessed_on,text_reviewed,method,visual_reviewed,notes
+S26,top,https://www.hoo-sumai.com/duohills/hirosaki/,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S26,concept_or_design,https://www.hoo-sumai.com/duohills/hirosaki/design/,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S26,location,https://www.hoo-sumai.com/duohills/hirosaki/location/,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S27,top,https://www.anabuki-style.com/kitatamiya/,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S27,concept_or_design,https://www.anabuki-style.com/kitatamiya/concept_design/concept/,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S27,location,https://www.anabuki-style.com/kitatamiya/location/,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S28,top,https://www.384.co.jp/bandai-c/,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S28,concept_or_design,https://www.384.co.jp/bandai-c/design.html,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S28,location,https://www.384.co.jp/bandai-c/location.html,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S29,top,https://www.ex-ms.com/kn159/,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S29,concept_or_design,https://www.ex-ms.com/kn159/design/,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S29,location,https://www.ex-ms.com/kn159/location/,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S30,top,https://ardent-mansion.com/kuroishi/,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S30,concept_or_design,https://ardent-mansion.com/kuroishi/concept.html,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
+S30,location,https://ardent-mansion.com/kuroishi/view.html,,2026-10-17,yes,public_web_page_reader,no,Official webpage text read; HTTP response code not directly observed. No visual/motion verification.
