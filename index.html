@@ -39,12 +39,33 @@
 const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
 const presets={jimbocho:{label:'東京都千代田区神保町',short:'神保町',en:'JIMBOCHO',lat:35.696,lon:139.757,motifs:['書物','知']},nakano:{label:'東京都中野区中野',short:'中野',en:'NAKANO',lat:35.7074,lon:139.6659,motifs:[]},kyoto:{label:'京都府京都市中京区',short:'京都・中京',en:'KYOTO',lat:35.0093,lon:135.767,motifs:[]},kanazawa:{label:'石川県金沢市東山',short:'金沢・東山',en:'KANAZAWA',lat:36.5721,lon:136.6674,motifs:[]},yokohama:{label:'神奈川県横浜市みなとみらい',short:'みなとみらい',en:'MINATOMIRAI',lat:35.4585,lon:139.6329,motifs:[]}};
 let selected={...presets.jimbocho},style='heritage',intensity=85,generation=0,map=null,marker=null,lastPOIs=[],lastSource='地名のみ',apiBusy=false,searchToken=0,lastKey='';
+let selectionVersion=0,generationVersion=0,searchController=null,reverseController=null;
 const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const setStatus=s=>$('#searchStatus').textContent=s;
 function toTitle(name){return String(name).replace(/^.{0,5}?(都|道|府|県)/,'').split(/[、,]/)[0].slice(-15)||'選ばれし地';}
-function updateSelected(v,center=true){selected={...v};$('#placeInput').value=v.label;$('#selectedPlace').textContent=v.label;$('#selectedCoords').innerHTML=`${Number(v.lat).toFixed(4)}° N<br>${Number(v.lon).toFixed(4)}° E`;
-  $$('.chip').forEach(el=>el.classList.toggle('active',presets[el.dataset.preset]?.label===v.label));
-  if(map&&center){map.setView([v.lat,v.lon],Math.max(map.getZoom(),14));setPin(v.lat,v.lon)};
+function cancelPendingGeneration(){
+ generationVersion++;
+ apiBusy=false;
+ $('#generateBtn').disabled=false;
+ $('#generateText').textContent='この街を、詩にする';
+}
+function cancelPendingSearch(){
+ searchToken++;
+ searchController?.abort();searchController=null;
+ $('#searchBtn').disabled=false;
+ $('#searchResults').innerHTML='';
+}
+function updateSelected(v,center=true){
+ cancelPendingSearch();
+ reverseController?.abort();reverseController=null;
+ cancelPendingGeneration();
+ selectionVersion++;
+ selected={...v};
+ $('#placeInput').value=v.label;$('#selectedPlace').textContent=v.label;
+ $('#selectedCoords').innerHTML=`${Number(v.lat).toFixed(4)}° N<br>${Number(v.lon).toFixed(4)}° E`;
+ $('#generatedStatus').textContent='前の場所の作品を表示中です。新しい場所で再生成してください。';
+ $$('.chip').forEach(el=>el.classList.toggle('active',presets[el.dataset.preset]?.label===v.label));
+ if(map&&center){map.setView([v.lat,v.lon],Math.max(map.getZoom(),14));setPin(v.lat,v.lon);}
 }
 function setPin(lat,lon){if(!map)return;if(marker)map.removeLayer(marker);const icon=L.divIcon({className:'',html:'<div class="pin-dot"></div>',iconSize:[16,16],iconAnchor:[8,8]});marker=L.marker([lat,lon],{icon}).addTo(map)}
 function initMap() {
@@ -62,30 +83,72 @@ function initMap() {
     setPin(selected.lat, selected.lon);
     $('#mapStatus').textContent = '地図クリックで場所を指定 ／ 出典：国土地理院';
     map.on('click', async e => {
-      const {lat, lng:lon} = e.latlng;
-      updateSelected({label:'地図で選択した地点',short:'選択地点',en:'THE LOCATION',lat,lon}, false);
-      setPin(lat,lon);
-      setStatus('選択した地点の地名を確認中…');
-      try {
-        const r = await fetch(`https://mreversegeocoder.gsi.go.jp/reverse-geocoder/LonLatToAddress?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`, {signal:AbortSignal.timeout(6500)});
-        if (!r.ok) throw Error('API response');
-        const j = await r.json();
-        if (j.results?.lv01Nm) {
-          updateSelected({label:j.results.lv01Nm+' 付近（地図指定）',short:j.results.lv01Nm,en:'THE LOCATION',lat,lon}, false);
-          setPin(lat,lon);
-          setStatus('地点を選択しました。生成時に周辺の施設を調べます。');
-        } else {
-          setStatus('地点を選択しました。住所は取得できませんでした。');
-        }
-      } catch {
-        setStatus('地点を選択しました。住所の取得は利用できません。');
-      }
+ const {lat,lng:lon}=e.latlng;
+ updateSelected({label:'地図で選択した地点',short:'選択地点',en:'THE LOCATION',lat,lon},false);
+ setPin(lat,lon);
+ const version=selectionVersion, controller=new AbortController();
+ reverseController=controller;
+ setStatus('選択した地点の地名を確認中…');
+ const timeout=setTimeout(()=>controller.abort(),6500);
+ try{
+  const r=await fetch(`https://mreversegeocoder.gsi.go.jp/reverse-geocoder/LonLatToAddress?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`,{signal:controller.signal});
+  if(!r.ok)throw Error('Reverse lookup unavailable');
+  const j=await r.json();
+  if(version!==selectionVersion||controller.signal.aborted)return;
+  if(j.results?.lv01Nm){
+   updateSelected({label:j.results.lv01Nm+' 付近（地図指定）',short:j.results.lv01Nm,en:'THE LOCATION',lat,lon},false);
+   setPin(lat,lon);
+   setStatus('地点を選択しました。生成時に周辺の施設を調べます。');
+  }else setStatus('地点を選択しました。住所は取得できませんでした。');
+ }catch(e){
+  if(version===selectionVersion&&!controller.signal.aborted)setStatus('地点を選択しました。住所の取得は利用できません。');
+ }finally{
+  clearTimeout(timeout);if(reverseController===controller)reverseController=null;
+ }
+
     });
   } catch(err) {
     $('#mapStatus').textContent='地図が利用できません。地名入力は可能です';
   }
 }
-async function search(){const q=$('#placeInput').value.trim();if(!q){setStatus('地名または住所を入力してください。');return;}const thisSearch=++searchToken;$('#searchResults').innerHTML='';setStatus('全国の地名を検索しています…');$('#searchBtn').disabled=true;try{const url=`https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(q)}`;const response=await fetch(url,{signal:AbortSignal.timeout(8500)});if(!response.ok)throw Error('Geocoder unavailable');const rows=(await response.json()).filter(x=>x.geometry?.coordinates?.length===2).slice(0,7);if(thisSearch!==searchToken)return;if(!rows.length){setStatus('一致する候補がありません。別の表記でもお試しください。');return;}const panel=$('#searchResults');panel.innerHTML='';rows.forEach(item=>{const [lon,lat]=item.geometry.coordinates;const name=item.properties?.title||q;const b=document.createElement('button');b.className='result-item';b.type='button';b.textContent=name;b.addEventListener('click',()=>{updateSelected({label:name,short:toTitle(name),en:'THE LOCATION',lat,lon});panel.innerHTML='';setStatus('地点を選択しました。地図と設定を確認してください。')});panel.appendChild(b)});setStatus(`${rows.length}件の候補が見つかりました。候補を選択してください。`)}catch{setStatus('検索サービスに接続できません。下の地名サンプル、または地図から場所を指定できます。')}finally{$('#searchBtn').disabled=false}}
+async function search(){
+ const q=$('#placeInput').value.trim();
+ if(!q){setStatus('地名または住所を入力してください。');return;}
+ searchController?.abort();
+ const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),8500);
+ searchController=controller;
+ const thisSearch=++searchToken;
+ $('#searchResults').innerHTML='';setStatus('全国の地名を検索しています…');$('#searchBtn').disabled=true;
+ try{
+  const url=`https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(q)}`;
+  const response=await fetch(url,{signal:controller.signal});
+  if(!response.ok)throw Error('Geocoder unavailable');
+  const data=await response.json();
+  if(thisSearch!==searchToken||controller.signal.aborted||$('#placeInput').value.trim()!==q)return;
+  if(!Array.isArray(data))throw Error('Unexpected geocoder response');
+  const rows=data.filter(x=>x.geometry?.coordinates?.length===2).slice(0,7);
+  if(!rows.length){setStatus('一致する候補がありません。別の表記でもお試しください。');return;}
+  const panel=$('#searchResults');panel.innerHTML='';
+  rows.forEach(item=>{
+   const [lon,lat]=item.geometry.coordinates;
+   if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
+   const name=item.properties?.title||q;
+   const b=document.createElement('button');b.className='result-item';b.type='button';b.textContent=name;
+   b.addEventListener('click',()=>{
+    if(thisSearch!==searchToken||$('#placeInput').value.trim()!==q)return;
+    updateSelected({label:name,short:toTitle(name),en:'THE LOCATION',lat,lon});
+    setStatus('地点を選択しました。地図と設定を確認してください。');
+   });
+   panel.appendChild(b);
+  });
+  setStatus(`${panel.childElementCount}件の候補が見つかりました。候補を選択してください。`);
+ }catch(e){
+  if(thisSearch===searchToken&&!controller.signal.aborted)setStatus('検索サービスに接続できません。地名サンプル、または地図から選択できます。');
+ }finally{
+  clearTimeout(timeout);
+  if(thisSearch===searchToken){$('#searchBtn').disabled=false;searchController=null;}
+ }
+}
 const poiConfig=[['leisure','park','緑地・公園','green'],['amenity','library','図書館','knowledge'],['amenity','university','大学','knowledge'],['amenity','school','学校','knowledge'],['historic',null,'史跡・歴史','history'],['tourism','museum','博物館','culture'],['tourism','gallery','文化施設','culture'],['railway','station','鉄道駅','transport'],['natural','water','水辺','water'],['waterway','river','水辺','water']];
 function tagPOI(tags){for(const [key,value,label,theme] of poiConfig){if(tags[key]&&(value===null||tags[key]===value))return {category:label,theme}}return null}
 function distanceMeters(lat1,lon1,lat2,lon2){
@@ -216,42 +279,42 @@ if(verified&&pois.length){
 async function generate(regen=false){
  if(apiBusy)return;
  if($('#placeInput').value.trim()!==selected.label){
-   setStatus('入力した地名を先に検索し、候補を選択してください。');
-   document.querySelector('#discover').scrollIntoView({behavior:'smooth',block:'start'});
-   return;
+  setStatus('入力した地名を先に検索し、候補を選択してください。');
+  document.querySelector('#discover').scrollIntoView({behavior:'smooth',block:'start'});return;
  }
- apiBusy=true;$('#generateBtn').disabled=true;
- $('#generateText').textContent='土地の気配を読み解いています…';
+ const version=++generationVersion;
+ const place={...selected};
+ const selectionAtStart=selectionVersion;
+ const currentKey=`${place.lat.toFixed(5)},${place.lon.toFixed(5)}`;
+ apiBusy=true;$('#generateBtn').disabled=true;$('#generateText').textContent='土地の気配を読み解いています…';
  $('#generatedStatus').textContent='周辺の公開データを確認中…';
  try{
-   let pois=[];
-   const origin={lat:selected.lat,lon:selected.lon};
-   const currentKey=`${origin.lat.toFixed(5)},${origin.lon.toFixed(5)}`;
-   if(regen&&lastKey===currentKey)pois=lastPOIs;
-   else{
-     pois=await fetchPOIs(origin);
-     lastPOIs=pois;
-     lastSource=[...new Set(pois.map(p=>p.source))].join('＋')||'地名のみ';
-     lastKey=currentKey;
-   }
-   if(`${selected.lat.toFixed(5)},${selected.lon.toFixed(5)}`!==currentKey){
-     setStatus('地点が変更されました。もう一度生成してください。');
-     return;
-   }
-   generation++;
-   poemWrite(pois,pois.length>0);
-   document.querySelector('#poem').scrollIntoView({behavior:'smooth',block:'start'});
+  let verified=false,pois=[];
+  if(regen&&lastKey===currentKey){
+   pois=lastPOIs;verified=pois.length>0;
+  }else{
+   try{
+    pois=await fetchPOIs();
+    verified=pois.length>0;
+   }catch(e){console.info('施設データを取得できませんでした。地名のみで生成します。',e);}
+  }
+  // 地名・文体が新しく選択された場合、古い取得結果を表示・キャッシュしない。
+  if(version!==generationVersion||selectionAtStart!==selectionVersion)return;
+  if(!(regen&&lastKey===currentKey)){lastPOIs=pois;lastSource=verified?'OpenPOI/OSM':'地名のみ';lastKey=currentKey;}
+  generation++;poemWrite(pois,verified);
+  document.querySelector('#poem').scrollIntoView({behavior:'smooth',block:'start'});
  }finally{
-   apiBusy=false;$('#generateBtn').disabled=false;
-   $('#generateText').textContent='この街を、詩にする';
+  if(version===generationVersion){
+   apiBusy=false;$('#generateBtn').disabled=false;$('#generateText').textContent='この街を、詩にする';
+  }
  }
 }
 function copy(){const txt=[`【${$('#poemProperty').textContent}】`,$('#poemHeadline').textContent,$('#poemBody').textContent,'※架空の物件を題材にした創作広告です。'].join('\n\n');const btn=$('#copyBtn');if(navigator.clipboard?.writeText){navigator.clipboard.writeText(txt).then(()=>{btn.textContent='COPIED ✓';setTimeout(()=>btn.textContent='COPY THE POEM ↗',2000)}).catch(()=>fallbackCopy(txt))}else fallbackCopy(txt)}
 function fallbackCopy(txt){const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();$('#copyBtn').textContent=ok?'COPIED ✓':'COPY FAILED';setTimeout(()=>$('#copyBtn').textContent='COPY THE POEM ↗',2000)}
 $$('[data-preset]').forEach(b=>b.addEventListener('click',()=>{updateSelected(presets[b.dataset.preset]);$('#searchResults').innerHTML='';setStatus('サンプル地点を選択しました。周辺施設は生成ボタンで取得します。')}));
-$$('[data-style]').forEach(b=>b.addEventListener('click',()=>{$$('[data-style]').forEach(c=>c.classList.toggle('active',c===b));style=b.dataset.style}));
-$('#density').addEventListener('input',e=>{intensity=+e.target.value;$('#densityValue').textContent=intensity});
-$('#searchBtn').addEventListener('click',search);$('#placeInput').addEventListener('keydown',e=>{if(e.key==='Enter')search()});
+$('[data-style]').forEach(b=>b.addEventListener('click',()=>{cancelPendingGeneration();$('[data-style]').forEach(c=>c.classList.toggle('active',c===b));style=b.dataset.style}));
+$('#density').addEventListener('input',e=>{cancelPendingGeneration();intensity=+e.target.value;$('#densityValue').textContent=intensity});
+$('#searchBtn').addEventListener('click',search);$('#placeInput').addEventListener('input',()=>{cancelPendingSearch();setStatus('新しい地名を検索して候補を選択してください。')});$('#placeInput').addEventListener('keydown',e=>{if(e.key==='Enter')search()});
 $('#generateBtn').addEventListener('click',()=>generate(false));$('#regenerateBtn').addEventListener('click',()=>generate(true));$('#copyBtn').addEventListener('click',copy);$('#printBtn').addEventListener('click',()=>window.print());
 window.addEventListener('load',initMap);
 })();
