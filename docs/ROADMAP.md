@@ -14,6 +14,7 @@
 - [地理・施設データ](DATA_SOURCES.md)：API仕様、帰属、距離、取得元。
 - [初期構想](CONCEPT.md)：コンセプトと発展案。
 - [広告研究計画](ADVERTISEMENT_RESEARCH_PLAN.md)：30物件・約90ページ、予備閲覧8物件、先行生成サービス比較。
+- [Pilot 8物件の比較報告](PILOT_8_AD_ANALYSIS.md)：24公式ページのテキスト比較、暫定採点・8類型。
 - [住環境機能仕様](LIVING_ENVIRONMENT_SPEC.md)：THE DREAM / THE REALITY、買い物・駅などの施設アクセス。
 
 ## リリース状態
@@ -32,7 +33,9 @@
 ## 追加された研究・仕様（2026-10-17）
 
 - [x] RES-00：広告分析の調査計画と予備候補8物件の一次閲覧・分析を記録（**30物件の正式分析は未実施**）。
-- [ ] RES-01：Pilotの実物件8件×3ページを精読し、表現・UI・生活情報の分類ルールを確定する。
+- [x] RES-01一次：実在広告8物件×3ページ＝24ページの文面・施設表示を確認し、4軸のうち3軸を暫定採点。[比較報告](PILOT_8_AD_ANALYSIS.md)・[8物件のCSV](../research/ad_corpus_pilot.csv)・[24ページURL台帳](../research/pilot_page_inventory.csv)に保存。
+- [x] RES-01画像確認の一部：Opera Browser Connectorで心斎橋タワー／BLUE FORESTのPCファーストビューを確認。光が丘は完売案内へ切替のためBLUE FORESTと入替。
+- [ ] RES-01残：残り6物件の画像・モーション・モバイル確認と、2物件の再採点による分類ルール確定。**Pilot全体は完了扱いにしない。**
 - [ ] RES-02：30物件×3ページ（合計約90ページ）まで層化調査し、表現の再現可能なパターンを抽出する。
 - [ ] RES-04：先行 [Play Toolsマンションポエム ジェネレーター](https://play-tools.com/mansion-poem) の3種の生成結果を比較する。
 - [ ] LIFE-00：OpenPOIとOSMの施設分類を踏まえ、食料品・コンビニ・駅・公園・文化施設の生活情報取得条件を確定する。
