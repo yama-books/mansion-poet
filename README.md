@@ -54,13 +54,14 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [docs/GENERATION_ENGINE.md](docs/GENERATION_ENGINE.md) | 土地特徴からのポエム生成、文体・濃度、禁則・品質評価 |
 | [docs/QUALITY_TEST_PLAN.md](docs/QUALITY_TEST_PLAN.md) | 地域別テスト、API異常・競合・スマホ・文章品質の受入条件 |
 | [docs/ADVERTISEMENT_RESEARCH_PLAN.md](docs/ADVERTISEMENT_RESEARCH_PLAN.md) | **実在マンション広告30物件・約90ページの分析計画**と先行ジェネレーター比較 |
+| [docs/PILOT_8_AD_ANALYSIS.md](docs/PILOT_8_AD_ANALYSIS.md) | **Pilot調査の一次成果**：実際の広告8物件・24ページの比較、8つの広告構文の仮説 |
 | [docs/LIVING_ENVIRONMENT_SPEC.md](docs/LIVING_ENVIRONMENT_SPEC.md) | **THE DREAM / THE REALITY**。近隣施設・交通・買い物の生活アクセス仕様 |
 
 ## v0.1.2 安定化の進捗（2026-10-17）
 
 - [PR #1](https://github.com/yama-books/mansion-poet/pull/1)：地名検索・地図逆引き・施設取得中の地点変更で古い結果が割り込まないようにしました。
 - [PR #2](https://github.com/yama-books/mansion-poet/pull/2)：施設取得へ正しい地点情報を渡す不具合を修正し、文体別キャッシュ・再生成時の施設選択を改善しました。
-- GitHub Actionsで **外部APIを呼ばない回帰テスト5件**を実行。テスト失敗時にGitHub Pagesへ配信しないチェックを追加しました。
+- GitHub Actionsで **外部APIを呼ばない回帰テスト9件**を実行。テスト失敗時にGitHub Pagesへ配信しないチェックを追加しました。
 - **v0.1.2は進行中**。API要求自体の中断、施設分類の信頼度・データソース統一、iPhone等の実機試験は今後のタスクです。[ROADMAP.md](docs/ROADMAP.md)を参照。
 
 ## 次の開発計画
@@ -69,7 +70,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 
 ## 新しい研究・将来機能の設計（未実装）
 
-2026-10-17に、実在のマンション広告30物件・約90ページを調べる計画と、詩（THE DREAM）から実際の施設・距離（THE REALITY）を見比べる構想を追加しました。[広告研究計画](docs/ADVERTISEMENT_RESEARCH_PLAN.md)／[生活アクセス仕様](docs/LIVING_ENVIRONMENT_SPEC.md)を参照してください。現在の公開版に生活アクセス画面はまだ実装されていません。
+2026-10-17に、実在のマンション広告30物件・約90ページを調べる計画と、詩（THE DREAM）から実際の施設・距離（THE REALITY）を見比べる構想を追加しました。 **予備調査として8物件×3ページの公式サイトを読み、広告表現と生活施設表示を比較した報告を保存しました。** 実際のビジュアルを画面で確認できたのは心斎橋とBLUE FORESTのトップ2件で、残る6物件の画像・モーションと再採点はこれからです。[広告研究計画](docs/ADVERTISEMENT_RESEARCH_PLAN.md)／[生活アクセス仕様](docs/LIVING_ENVIRONMENT_SPEC.md)を参照してください。現在の公開版に生活アクセス画面はまだ実装されていません。
 
 ### 関連する先行作品
 
