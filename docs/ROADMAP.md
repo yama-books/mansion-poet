@@ -3,11 +3,13 @@
 更新日：2026-10-17  
 対象：mansion-poet / POÈME / ESTATE
 
-> **正本は [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md)**。このファイルは実装済みと未実装を区別し、次に着手する順番を簡潔に表示します。LIFE-01は公開済みですが追加検索と実機受入は未完了です。
+> **現行機能の全体設計は [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md)、2026-10-17以降の次期実装順序は [NEXT_PHASE_MASTERPLAN_20261017.md](NEXT_PHASE_MASTERPLAN_20261017.md) を参照。** 以下は旧来のマイルストーンを含む履歴的ロードマップでもあり、部分的に当時の未実装記述が残る場合があります。最新の実装・公開状況は [LOCATION-01記録](LOCATION01_AD_HIGHLIGHTS.md) と [HANDOFF_READY](handoff/APP003_NEXT_SESSION_HANDOFF_20261017.md) を優先してください。
 
 ## 仕様・計画文書
 
 - [開発全体計画](DEVELOPMENT_PLAN.md)：目標、問題、段階、ゲート、直近10PR。
+- [次期開発計画 v1.0](NEXT_PHASE_MASTERPLAN_20261017.md)：施設の安全・分類→暗渠等の地理検索→主役の連携→住所・徒歩経路→文章品質→実機受入の12段階バックログ。
+- [次セッション HANDOFF_READY](handoff/APP003_NEXT_SESSION_HANDOFF_20261017.md)：APP-ID、基点main、PR・CI根拠、競合領域、未完了、次の1操作。
 - [UIデザインシステム](DESIGN_SYSTEM.md)：余白、配色、タイポグラフィ、モーション、モバイル。
 - [文章生成エンジン](GENERATION_ENGINE.md)：分類の信頼度、主題選択、辞書、禁則、文体・濃度。
 - [POEM-SUBJECT-01採用ポリシー](POEM_SUBJECT_POLICY.md)：自然景観・学校・一般行政窓口・郵便ポスト・宗教建築を積極的に扱い、福祉・医療・保護施設などの配慮対象を創作の主題から外す判定仕様（未実装）。
