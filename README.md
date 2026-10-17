@@ -64,6 +64,8 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [docs/MAIN_WAVE5_AD_ANALYSIS.md](docs/MAIN_WAVE5_AD_ANALYSIS.md) | **広告本調査 第5弾**：川口・北長野・熊本3物件・9ページ、ページごとの文体比較 |
 | [docs/MAIN_WAVE6_AD_ANALYSIS.md](docs/MAIN_WAVE6_AD_ANALYSIS.md) | **広告本調査 第6弾**：弘前・徳島・新潟・多摩・宇部5物件・15ページ |
 | [docs/CORPUS_30_SYNTHESIS.md](docs/CORPUS_30_SYNTHESIS.md) | **30物件・90ページの一次総括**：広告構文とDREAM／REALITYへの引継ぎ |
+| [docs/STB04_HANDOFF_20261017.md](docs/STB04_HANDOFF_20261017.md) | **STB-04検証・再開記録**：POI共通形式、CI・公開反映の証拠 |
+| [docs/STB05_HANDOFF_20261017.md](docs/STB05_HANDOFF_20261017.md) | **STB-05検証・再開記録**：近接重複、住所確認フラグ、残件 |
 | [research/wave5_page_role_scores.csv](research/wave5_page_role_scores.csv) | TOP・CONCEPT/DESIGN・LOCATIONのページ別ポエム度（暫定） |
 | [research/ad_corpus_main_wave1.csv](research/ad_corpus_main_wave1.csv) | 本調査の追加5物件の評価・出典データ |
 | [docs/LIVING_ENVIRONMENT_SPEC.md](docs/LIVING_ENVIRONMENT_SPEC.md) | **THE DREAM / THE REALITY**。近隣施設・交通・買い物の生活アクセス仕様 |
@@ -72,8 +74,9 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 
 - [PR #1](https://github.com/yama-books/mansion-poet/pull/1)：地名検索・地図逆引き・施設取得中の地点変更で古い結果が割り込まないようにしました。
 - [PR #2](https://github.com/yama-books/mansion-poet/pull/2)：施設取得へ正しい地点情報を渡す不具合を修正し、文体別キャッシュ・再生成時の施設選択を改善しました。
-- GitHub Actionsで **外部APIを呼ばない回帰テスト9件**を実行。テスト失敗時にGitHub Pagesへ配信しないチェックを追加しました。
-- **v0.1.2は進行中**。API要求自体の中断、施設分類の信頼度・データソース統一、iPhone等の実機試験は今後のタスクです。[ROADMAP.md](docs/ROADMAP.md)を参照。
+- GitHub Actionsで **外部APIを呼ばない回帰テスト16件**を実行（既存9件と追加のPOI正規化・重複・住所検証7件）。[PR #5のCIで16件成功](https://github.com/yama-books/mansion-poet/actions/runs/38988821248)を確認。
+- [PR #4](https://github.com/yama-books/mansion-poet/pull/4)でOpenPOI/OSMデータの共通形式・距離検査、[PR #5](https://github.com/yama-books/mansion-poet/pull/5)で近接重複と自治体住所の確認フラグをmainへ反映。**[GitHub Pages公開成功](https://github.com/yama-books/mansion-poet/actions/runs/38988895125)**、公開HTMLの新処理とHTTP 200を確認済み。
+- **v0.1.2は進行中**。STB-06の分類信頼度（実データに存在するバー名「お酒の美術館」の業態矛盾）、STB-07の通信失敗時フォールバック、実ブラウザでの地点選択→生成・iPhone等の実機試験は未完了。[ROADMAP.md](docs/ROADMAP.md)を参照。
 
 ## 次の開発計画
 
