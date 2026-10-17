@@ -36,6 +36,7 @@ class Element {
 }
 function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false,withPolicy=false}={}){
   const items=new Map();
+  const copied=[];
   const el=(key)=>{
     if(!items.has(key))items.set(key,new Element());
     return items.get(key);
@@ -71,7 +72,7 @@ function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false,wi
   el('#placeInput').value='東京都千代田区神保町';
   const sandbox={
     document,window,fetch:fetcher,AbortController,AbortSignal,
-    navigator:{clipboard:{writeText:async()=>{}}},URL,
+    navigator:{clipboard:{writeText:async(text)=>{copied.push(text)}}},URL,
     console:{info(){}},setTimeout,clearTimeout,L:leaflet
   };
   // The production functions live inside an IIFE; expose them only in the VM test copy.
@@ -80,7 +81,7 @@ function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false,wi
   assert.notEqual(instrumented,script,'Expected the application IIFE footer');
   runInNewContext(instrumented,sandbox,{timeout:2000});
   if(withMap)window.listeners.load();
-  return {el,presets,modes,mapHandlers,normalizers:sandbox.__poiTest};
+  return {el,presets,modes,mapHandlers,normalizers:sandbox.__poiTest,copied};
 }
 function geo(name,lat=35.69,lon=139.75) {
   return response([{geometry:{coordinates:[lon,lat]},properties:{title:name}}]);
@@ -1146,4 +1147,47 @@ test('ADDRESS-01 location UI exposes area-only provenance without claiming a ful
  const location=cards[0].children[2].children[0].textContent;
  assert.match(location,/^所在地（地域情報のみ）：東京都 中野区$/);
  assert.ok(!location.includes('番地'));
+});
+
+
+test('UI-01 poem-only copy remains distinct from the complete ad copy',async()=>{
+ const ui=makeUI(url=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   {id:'a1',name:'架空図書館',category:'library',lat:35.7074,lng:139.6659,address:'東京都中野区中央4丁目'},
+   {id:'a2',name:'架空公園',category:'park',lat:35.70745,lng:139.6659}
+  ]}));
+  return Promise.resolve(response({elements:[]}));
+ },{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.equal(ui.el('#copyBundleBtn').disabled,false);
+ await ui.el('#copyBtn').fire();
+ await ui.el('#copyBundleBtn').fire();
+ assert.equal(ui.copied.length,2);
+ const [poem,bundle]=ui.copied;
+ assert.ok(poem.includes('架空図書館'));
+ assert.ok(!poem.includes('【LOCATION 01'));
+ assert.ok(bundle.includes('【LOCATION 01'));
+ assert.ok(bundle.includes('所在地（公開データ）：東京都中野区中央4丁目'));
+ assert.ok(bundle.includes('所在地詳細：公開データ未収録'));
+ assert.ok(bundle.includes('直線 約'));
+ assert.ok(bundle.includes('※施設情報・直線距離は公開データをもとにした参考値です。'));
+ assert.ok(bundle.includes('\n'),'clipboard text should include actual line breaks');
+ assert.ok(!bundle.includes('\\n'),'clipboard should not contain visible escape sequences');
+});
+
+test('UI-01 changing locality clears the ad bundle and prevents stale facility copying',async()=>{
+ const ui=makeUI(url=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   {id:'x1',name:'架空図書館',category:'library',lat:35.7074,lng:139.6659}
+  ]}));
+  return Promise.resolve(response({elements:[]}));
+ },{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.equal(ui.el('#copyBundleBtn').disabled,false);
+ await ui.presets[2].fire();
+ assert.equal(ui.el('#copyBundleBtn').disabled,true);
+ await ui.el('#copyBundleBtn').fire();
+ assert.equal(ui.copied.length,0,'old LOCATION advertisement cannot be copied after location changes');
 });
