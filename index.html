@@ -66,6 +66,7 @@
 </details></section>
 </main><footer class="footer"><div><div class="footer-brand">POÈME / ESTATE</div><div class="fine" style="color:#8f988e">Making absolutely everything sound prestigious.</div></div><div class="footer-note">これはマンション広告を模した創作アプリです。実在の物件・取引を案内しません。<br>地図：<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">国土地理院</a> ／ 施設：<a href="https://openpoiapi.com/attribution.html" target="_blank" rel="noopener">OpenPOI API</a>・<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>（取得時）</div></footer>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="./src/poem-catalog.js"></script>
 <script>
 (()=>{'use strict';
 const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
@@ -201,7 +202,9 @@ const poiTypeRules=[
  {codes:['temple','shrine','historic','heritage','castle'],category:'史跡・歴史',theme:'history'},
  {codes:['railway_station','train_station','transit_station','station'],category:'鉄道・交通',theme:'transport'},
  {codes:['harbor','harbour','marina','river','waterfront'],category:'水辺・港',theme:'water'},
- {codes:['shopping_mall','department_store','supermarket','market','shopping_center','grocery','convenience_store','pharmacy','drugstore'],category:'商業・街並み',theme:'commerce'}
+ {codes:['shopping_mall','department_store','supermarket','market','shopping_center','grocery','convenience_store','pharmacy','drugstore'],category:'商業・街並み',theme:'commerce'},
+ {codes:['public_bath','sento','amusement_arcade','game_arcade','arcade'],category:'生活・余暇',theme:'daily'},
+ {codes:['post_box','post_office','townhall','government_office','vending_machine','parcel_locker','manhole','traffic_mirror','street_cabinet','ditch','drain','culvert'],category:'都市設備',theme:'urban_detail'}
 ];
 function namePOICategory(name){
  const rules=[
@@ -326,6 +329,7 @@ function normalizePOIs(rows,origin,source){
   return {name,...kind,source,sourceId,lat,lon,
    providerCategory:isOSM?null:String(item.category||''),
    providerBusinessType:isOSM?null:String(item.business_type||''),
+   providerBrand:isOSM?String(tags.brand||''):String(item.brand||''),
    distance:distanceMeters,distanceMeters,tags:{...tags},retrievedAt,
    licenses:isOSM?['ODbL-1.0']:(Array.isArray(item.licenses)?item.licenses:[]),
    attributions:isOSM?['© OpenStreetMap contributors']:
@@ -415,12 +419,13 @@ async function fetchOpenPOI(origin,signal){
  return {pois:normalizeOpenPOI(passed.flatMap(x=>x.value),origin),issues};
 }
 function choosePOIs(items){
- const unique=deduplicatePOIs(items).filter(p=>p.classificationConfidence!=='low');
+ const unique=deduplicatePOIs(items).filter(p=>p.classificationConfidence!=='low'&&
+  !(window.PoemCatalog?.suppressed(p)));
  const priorities=style==='nature'?
-   ['green','water','history','culture','knowledge','transport','commerce','dining']:
+   ['green','water','history','culture','knowledge','daily','urban_detail','transport','commerce','dining']:
    style==='urban'?
-   ['transport','culture','commerce','knowledge','dining','history','green','water']:
-   ['history','knowledge','culture','green','transport','water','commerce','dining'];
+   ['transport','urban_detail','daily','culture','commerce','knowledge','dining','history','green','water']:
+   ['history','knowledge','culture','green','urban_detail','daily','transport','water','commerce','dining'];
  const groups=new Map(priorities.map(key=>[key,[]]));
  for(const poi of unique){
    if(groups.has(poi.theme))groups.get(poi.theme).push(poi);
@@ -574,7 +579,7 @@ function renderReality(pois,health,place){
  }
 }
 
-const motifs={commerce:{label:'都市の豊穣',short:'都市',phrase:'街の営みが重なり合う、都市の豊穣'},dining:{label:'日常の饗宴',short:'賑わい',phrase:'食の風景が息づく、暮らしの交差点'},green:{label:'緑の余白',short:'緑',phrase:'都市のただ中に息づく、緑の余白'},knowledge:{label:'知の集積',short:'知',phrase:'学びと知性の気配を宿す街'},history:{label:'時の重層',short:'時',phrase:'歳月が描いてきた街の輪郭'},culture:{label:'文化の深奥',short:'文化',phrase:'暮らしの奥に息づく文化の気配'},transport:{label:'都市の結節点',short:'都市',phrase:'人々の営みが交差する都市の座標'},water:{label:'水の風景',short:'水辺',phrase:'水の気配が織りなす景観'}};
+const motifs={urban_detail:{label:'都市装置',short:'装置',phrase:'小さな設備にこそ都市の仕組みが宿る'},daily:{label:'街の日常',short:'日常',phrase:'日々の時間を支える身近な営み'},commerce:{label:'都市の豊穣',short:'都市',phrase:'街の営みが重なり合う、都市の豊穣'},dining:{label:'日常の饗宴',short:'賑わい',phrase:'食の風景が息づく、暮らしの交差点'},green:{label:'緑の余白',short:'緑',phrase:'都市のただ中に息づく、緑の余白'},knowledge:{label:'知の集積',short:'知',phrase:'学びと知性の気配を宿す街'},history:{label:'時の重層',short:'時',phrase:'歳月が描いてきた街の輪郭'},culture:{label:'文化の深奥',short:'文化',phrase:'暮らしの奥に息づく文化の気配'},transport:{label:'都市の結節点',short:'都市',phrase:'人々の営みが交差する都市の座標'},water:{label:'水の風景',short:'水辺',phrase:'水の気配が織りなす景観'}};
 const head={heritage:['この地に、\n邸宅の答えを。','その名は、\n時代を超える。','地の記憶を、\n邸の誇りへ。'],urban:['都市は、\nここから変わる。','その座標が、\n未来を指す。','この街を、\n超えてゆく。'],nature:['静けさこそ、\n至高の贅。','余白を、\n住まう。','風景と、\nひとつになる。']};
 const extraHead={green:['緑陰の先に、\n邸の哲学を。','緑の余白に、\n永遠を住まう。'],knowledge:['知の深奥に、\n邸の答えを。','叡智という、\n新しい住所。'],history:['時の深層に、\n邸宅を刻む。','百年の先へ、\n名を継ぐ。'],culture:['文化を纏い、\n都市を住まう。'],water:['水脈の記憶を、\n暮らしの誇りへ。'],transport:['都市の結節に、\n未来の邸を。'],commerce:['街の豊穣を、\n私邸の思想へ。'],dining:['日常の賑わいに、\n新しい格を。']};
 function shortName(){return selected.short||toTitle(selected.label)||'この地'}
@@ -590,6 +595,11 @@ if(low){text=`${site}を、新しい暮らしの舞台に。\n${verified&&chief?
 else if(style==='heritage'){text=`${detail}\n${motif?motif.phrase+'。':'その名が重ねてきた、かけがえのない時間。'}\n${veryHigh?'悠久の記憶を継承する、邸宅の最終到達点。':'街の輪郭を、住まいの美学へ。'}\n選ばれた座標に、人生の新たな頁がひらかれる。`}
 else if(style==='urban'){text=`${short}。都市は、この名を覚えている。\n${motif?motif.phrase+'。':'日常の交差点から、次の物語が始まる。'}\n${veryHigh?'進化の最前線に、未来の定義を書き換える。':'この街から、これからの暮らしを。'}\nここに生まれる、存在しないランドマーク。`}
 else{text=`${short}の空気に、暮らしの輪郭を重ねる。\n${motif?motif.phrase+'。':'何気ない風景のなかに、余白を見出す。'}\n${veryHigh?'沈黙さえも意匠となる、静謐の最深域。':'心に残る、ひとつの場所。'}\n大切な時間のための、架空の私邸。`}
+// POEM-01: detailed genre library overrides a generic thematic phrase only when
+// the normalized evidence matches an explicitly supported category/brand.
+const authored=verified&&chief&&window.PoemCatalog?.compose(chief,
+ {style,intensity,serial:generation,location:site});
+if(authored){title=authored.headline;text=authored.body;}
 const prop=selected.en&&selected.en!=='THE LOCATION'?`THE ${selected.en} RESIDENCE`:`THE RESIDENCE · ${short.toUpperCase()}`;
 $('#poemHeadline').textContent=title;$('#poemBody').textContent=text;$('#poemProperty').textContent=prop;$('#generatedStatus').textContent=verified?`周辺施設 ${pois.length}件を参照して生成`:'地名のみで生成（周辺施設は未取得）';
 const tagArea=$('#evidenceTags');tagArea.innerHTML='';const addTag=t=>{const el=document.createElement('span');el.className='evidence-tag';el.textContent=t;tagArea.appendChild(el)};
