@@ -68,7 +68,7 @@ function makeUI(fetcher,{withMap=false}={}){
   };
   // The production functions live inside an IIFE; expose them only in the VM test copy.
   const instrumented=script.replace(/\}\)\(\);\s*$/,
-    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI,deduplicatePOIs,choosePOIs,classifyOpenPOI};\n})();');
+    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI,deduplicatePOIs,choosePOIs,classifyOpenPOI,fetchWithCancellation,poiErrorCode};\n})();');
   assert.notEqual(instrumented,script,'Expected the application IIFE footer');
   runInNewContext(instrumented,sandbox,{timeout:2000});
   if(withMap)window.listeners.load();
@@ -545,4 +545,89 @@ test('STB-06 contradictory explicit business_type and category are not promoted 
  assert.equal(records[1].classificationConfidence,'high');
  assert.equal(normalizers.choosePOIs(records).length,1);
  assert.equal(normalizers.choosePOIs(records)[0].theme,'culture');
+});
+
+test('STB-07 HTTP 429 from both providers degrades to place-only and can retry',async()=>{
+ let requests=0;
+ const ui=makeUI(url=>{
+  requests++;
+  const code=String(url).includes('openpoiapi.com')?429:503;
+  return Promise.resolve({ok:false,status:code,json:async()=>({})});
+ });
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.match(ui.el('#generatedStatus').textContent,/アクセス制限中/);
+ assert.match(ui.el('#generatedStatus').textContent,/地名のみで創作/);
+ assert.match(ui.el('#evidenceText').textContent,/周辺施設データが得られなかった/);
+ const before=requests;
+ await ui.el('#regenerateBtn').fire();
+ assert.ok(requests>before,'Transient failed POI lookup must be retried, not reused as an empty cache');
+ assert.equal(ui.el('#generateBtn').disabled,false);
+});
+
+test('STB-07 partial OpenPOI success keeps validated POIs and reveals missing sources',async()=>{
+ const ui=makeUI(url=>{
+  const u=String(url);
+  if(u.includes('openpoiapi.com')){
+   const q=new URL(u).searchParams.get('q');
+   return Promise.resolve(q?{ok:false,status:429,json:async()=>({})}:
+    response({results:[{name:'近隣の図書館',category:'library',lat:35.7074,lng:139.6659}]}));
+  }
+  if(u.includes('overpass'))return Promise.resolve(response({elements:[]}));
+  throw Error('unexpected URL');
+ });
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.match(ui.el('#generatedStatus').textContent,/一部の施設情報はアクセス制限中/);
+ assert.match(ui.el('#poemBody').textContent,/近隣の図書館/);
+});
+
+test('STB-07 OpenPOI failure and successful OSM fallback does not claim full coverage',async()=>{
+ const ui=makeUI(url=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.reject(new TypeError('Failed to fetch'));
+  return Promise.resolve(response({elements:[{type:'node',id:300,lat:35.7074,lon:139.6659,
+    tags:{name:'補完の公園',leisure:'park'}}]}));
+ });
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.match(ui.el('#poemBody').textContent,/補完の公園/);
+ assert.match(ui.el('#generatedStatus').textContent,/一部の施設情報を取得できませんでした/);
+});
+
+test('STB-07 successful empty responses are not described as API failures',async()=>{
+ let queries=0;
+ const ui=makeUI(url=>{
+  queries++;
+  return Promise.resolve(String(url).includes('openpoiapi.com')?
+   response({results:[]}):response({elements:[]}));
+ });
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.match(ui.el('#generatedStatus').textContent,/利用できる周辺施設データが見つかりませんでした/);
+ assert.doesNotMatch(ui.el('#generatedStatus').textContent,/アクセス制限中|取得できませんでした/);
+ const first=queries;
+ await ui.el('#regenerateBtn').fire();
+ assert.equal(queries,first,'Successful empty data can be reused during same-style regeneration');
+});
+
+test('STB-07 malformed response plus unavailable fallback produces recoverable local poem',async()=>{
+ const ui=makeUI(url=>Promise.resolve(String(url).includes('openpoiapi.com')?
+  response({results:'not-an-array'}):{ok:false,status:500,json:async()=>({})}));
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.match(ui.el('#generatedStatus').textContent,/取得できませんでした/);
+ assert.equal(ui.el('#poemProperty').textContent,'THE NAKANO RESIDENCE');
+ assert.equal(ui.el('#generateBtn').disabled,false);
+});
+
+test('STB-07 fetch timeout differs from user cancellation',async()=>{
+ const ui=makeUI((url,{signal}={})=>new Promise((resolve,reject)=>{
+  signal?.addEventListener('abort',()=>reject(Object.assign(new Error('aborted'),{name:'AbortError'})),{once:true});
+ }));
+ const operation=ui.normalizers.fetchWithCancellation('https://example.invalid',{},new AbortController().signal,5);
+ await assert.rejects(operation,error=>error.code==='timeout');
+ const cancelled=new AbortController();
+ cancelled.abort();
+ await assert.rejects(ui.normalizers.fetchWithCancellation('https://example.invalid',{},cancelled.signal,100),
+  error=>ui.normalizers.poiErrorCode(error)==='aborted');
 });
