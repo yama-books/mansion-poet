@@ -111,3 +111,24 @@ test('LOCATION-01 partial/unavailable results produce no invented ad facilities'
  assert.deepEqual(create([poi({waterway:'ditch'})],{catalog:null}),[]);
  assert.deepEqual(create([poi({waterway:'ditch'},{distanceMeters:900})],{catalog}),[]);
 });
+
+test('LOCATION-01 does not advertise loosely typed grocery confectioner as supermarket',()=>{
+ const confectioner=poi({}, {name:'架空の洋菓子店',source:'OpenPOI',sourceId:'shop/1',theme:'commerce',
+   providerCategory:'grocery',providerBusinessType:'retail_other'});
+ const r=create([confectioner],{catalog});
+ assert.equal(r.length,1);
+ assert.equal(r[0].genreId,'commerce');
+ assert.doesNotMatch(r[0].headline+' '+r[0].body,/スーパーマーケット|食料品|スーパー/);
+ const explicit=poi({}, {name:'架空のスーパー',source:'OpenPOI',sourceId:'shop/2',
+   theme:'commerce',providerCategory:'supermarket'});
+ assert.equal(create([explicit],{catalog})[0].genreId,'supermarket');
+});
+
+test('LOCATION-01 PR texts avoid behind-the-scenes self-referential narration',()=>{
+ for(const [id,variants] of Object.entries(copy))for(const [headline,body] of variants){
+  assert.doesNotMatch(headline+' '+body,/ご紹介|紹介|広告|ポエム|着想源|捉え直す/,id);
+ }
+ for(const variants of Object.values(themes))for(const [headline,body] of variants){
+  assert.doesNotMatch(headline+' '+body,/ご紹介|紹介|広告|ポエム|着想源|捉え直す/);
+ }
+});
