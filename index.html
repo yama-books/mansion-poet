@@ -255,7 +255,11 @@ function deduplicatePOIs(items){
    poi.source==='OpenPOI'?poi:
    (previous.distanceMeters<=poi.distanceMeters?previous:poi);
   const validationFlags=[...new Set([...(previous.validationFlags||[]),...(poi.validationFlags||[])])];
-  unique[matchIndex]={...primary,evidenceSources,validationFlags};
+  const themeConflict=previous.theme!==poi.theme;
+  const classificationFlags=[...new Set([...(previous.classificationFlags||[]),...(poi.classificationFlags||[]),
+   ...(themeConflict?['source_theme_conflict']:[])])];
+  unique[matchIndex]={...primary,evidenceSources,validationFlags,classificationFlags,
+   classificationConfidence:themeConflict?'low':primary.classificationConfidence};
  }
  return unique;
 }
@@ -271,7 +275,8 @@ function normalizePOIs(rows,origin,source){
     {category:item.category??null,business_type:item.business_type??null});
   if(!tags||typeof tags!=='object'||Array.isArray(tags))return null;
   const name=String((isOSM?(tags['name:ja']||tags.name):item.name)||'').trim();
-  const kind=isOSM?{...tagPOI(tags),classificationConfidence:'high',classificationEvidence:'osm_tags',classificationFlags:[]}:classifyOpenPOI(item);
+  const osmKind=isOSM?tagPOI(tags):null;
+  const kind=isOSM?(osmKind?{...osmKind,classificationConfidence:'high',classificationEvidence:'osm_tags',classificationFlags:[]}:null):classifyOpenPOI(item);
   const rawLat=isOSM?(item.lat??item.center?.lat):item.lat;
   const rawLon=isOSM?(item.lon??item.center?.lon):item.lng;
   const lat=Number(rawLat),lon=Number(rawLon);
