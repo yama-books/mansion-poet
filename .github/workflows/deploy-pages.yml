@@ -6,6 +6,7 @@ on:
     paths:
       - index.html
       - tests/**
+      - src/**
       - .github/workflows/deploy-pages.yml
   workflow_dispatch:
 
@@ -41,6 +42,9 @@ jobs:
         run: |
           mkdir -p public
           cp index.html public/index.html
+          mkdir -p public/src
+          cp src/poem-catalog.js public/src/poem-catalog.js
+          test -s public/src/poem-catalog.js
           touch public/.nojekyll
           test -s public/index.html
 

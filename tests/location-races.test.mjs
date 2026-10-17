@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url);
+const authoredCatalog=require('../src/poem-catalog.js');
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
@@ -29,7 +32,7 @@ class Element {
   get childElementCount(){return this.children.length;}
   scrollIntoView(){}
 }
-function makeUI(fetcher,{withMap=false}={}){
+function makeUI(fetcher,{withMap=false,withCatalog=false}={}){
   const items=new Map();
   const el=(key)=>{
     if(!items.has(key))items.set(key,new Element());
@@ -59,7 +62,8 @@ function makeUI(fetcher,{withMap=false}={}){
     createElement(){return new Element();},
     body:{appendChild(){}}
   };
-  const window={listeners:{},addEventListener(type,fn){this.listeners[type]=fn;}};
+  const window={listeners:{},PoemCatalog:withCatalog?authoredCatalog:undefined,
+    addEventListener(type,fn){this.listeners[type]=fn;}};
   el('#placeInput').value='東京都千代田区神保町';
   const sandbox={
     document,window,fetch:fetcher,AbortController,AbortSignal,
@@ -747,4 +751,49 @@ test('LIFE-01 Reality view remains independent of poem style and limits each cat
  assert.equal(items.length,3);
  assert.equal(items[0].name,'独立スーパー0');
  assert.equal(items[2].name,'独立スーパー2');
+});
+
+test('POEM-01 actual generation uses the registered library and changes lines on regenerate',async()=>{
+ const ui=makeUI(url=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   {id:'s',name:'架空図書館',category:'library',lat:35.7074,lng:139.6659}
+  ]}));
+  return Promise.resolve(response({elements:[]}));
+ },{withCatalog:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.match(ui.el('#poemHeadline').textContent,/幾千の頁に未来を読む/);
+ assert.match(ui.el('#poemBody').textContent,/架空図書館/);
+ const first=ui.el('#poemHeadline').textContent;
+ await ui.el('#regenerateBtn').fire();
+ assert.notEqual(ui.el('#poemHeadline').textContent,first);
+ assert.match(ui.el('#poemHeadline').textContent,/本棚の奥に広がる世界/);
+});
+
+test('POEM-01 actual generator distinguishes verified pizza from arbitrary restaurant names',async()=>{
+ const ui=makeUI(url=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   {id:'p',name:'テストピザ工房',business_type:'pizza',category:'restaurant',lat:35.7074,lng:139.6659}
+  ]}));
+  return Promise.resolve(response({elements:[]}));
+ },{withCatalog:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.match(ui.el('#poemHeadline').textContent,/円環に託された都市の完成形/);
+ assert.match(ui.el('#poemBody').textContent,/テストピザ工房/);
+});
+
+test('POEM-01 protected education entry is not used in poem or evidence',async()=>{
+ const ui=makeUI(url=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   {id:'a',name:'架空の特別支援学校',category:'school',lat:35.7074,lng:139.6659},
+   {id:'b',name:'架空図書館',category:'library',lat:35.7075,lng:139.6659}
+  ]}));
+  return Promise.resolve(response({elements:[]}));
+ },{withCatalog:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.doesNotMatch(ui.el('#poemBody').textContent,/特別支援学校/);
+ assert.match(ui.el('#poemBody').textContent,/架空図書館/);
+ assert.ok(ui.el('#evidenceTags').children.every(x=>!x.textContent.includes('特別支援学校')));
 });
