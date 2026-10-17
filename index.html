@@ -93,6 +93,7 @@
 </details></section>
 </main><footer class="footer"><div><div class="footer-brand">POÈME / ESTATE</div><div class="fine" style="color:#8f988e">Making absolutely everything sound prestigious.</div></div><div class="footer-note">これはマンション広告を模した創作アプリです。実在の物件・取引を案内しません。<br>地図：<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">国土地理院</a> ／ 施設：<a href="https://openpoiapi.com/attribution.html" target="_blank" rel="noopener">OpenPOI API</a>・<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>（取得時）</div></footer>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="./src/subject-policy.js"></script>
 <script src="./src/poem-catalog.js"></script>
 <script src="./src/location-highlights.js"></script>
 <script>
@@ -449,7 +450,8 @@ async function fetchOpenPOI(origin,signal){
 }
 function choosePOIs(items){
  const unique=deduplicatePOIs(items).filter(p=>p.classificationConfidence!=='low'&&
-  !(window.PoemCatalog?.suppressed(p)));
+  (window.SubjectPolicy?window.SubjectPolicy.decideSubject(p).eligibility==='allow':
+   !(window.PoemCatalog?.suppressed(p))));
  const priorities=style==='nature'?
    ['green','water','history','culture','knowledge','daily','urban_detail','transport','commerce','dining']:
    style==='urban'?
@@ -570,7 +572,7 @@ function resetLocationHighlights(){
 }
 function renderLocationHighlights(pois,place){
  const container=$('#locationCards');container.innerHTML='';
- const items=window.LocationHighlights?.create(pois,{catalog:window.PoemCatalog,serial:generation})||[];
+ const items=window.LocationHighlights?.create(pois,{catalog:window.PoemCatalog,subjectPolicy:window.SubjectPolicy,serial:generation})||[];
  if(!items.length){
   $('#locationStatus').textContent='紹介できる施設情報は取得できませんでした。公開データの未登録や取得失敗の可能性があります。';
   return;
