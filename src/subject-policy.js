@@ -104,14 +104,14 @@ function decideSubject(p){
   return pick('landscape.garden','greenery','landscape');
  if(tourism==='viewpoint')
   return pick('landscape.viewpoint','viewpoint','landscape');
- if(norm(t.waterway)==='ditch'||type==='ditch'||category==='ditch')
-  return pick('infrastructure.ditch','drainage','water');
- if(norm(t.waterway)==='drain'||type==='drain'||category==='drain')
-  return pick('infrastructure.drain','drainage','water');
  if(norm(t.tunnel)==='culvert'&&['ditch','drain','river','stream','canal'].includes(norm(t.waterway)))
   return pick('infrastructure.culvert','concealed_waterway','water');
  if(norm(t.tunnel)==='culvert'&&!t.waterway)
   return result(p,'needs_review',null,[],['culvert_without_waterway']);
+ if(norm(t.waterway)==='ditch'||type==='ditch'||category==='ditch')
+  return pick('infrastructure.ditch','drainage','water');
+ if(norm(t.waterway)==='drain'||type==='drain'||category==='drain')
+  return pick('infrastructure.drain','drainage','water');
  if(['river','stream','waterfall'].includes(norm(t.waterway)))
   return pick('landscape.watercourse','water_landscape','landscape');
  if(norm(t.natural)==='peak'||norm(t.natural)==='wood'||norm(t.natural)==='tree'||
