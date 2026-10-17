@@ -622,7 +622,9 @@ test('STB-07 malformed response plus unavailable fallback produces recoverable l
 
 test('STB-07 fetch timeout differs from user cancellation',async()=>{
  const ui=makeUI((url,{signal}={})=>new Promise((resolve,reject)=>{
-  signal?.addEventListener('abort',()=>reject(Object.assign(new Error('aborted'),{name:'AbortError'})),{once:true});
+  const abort=()=>reject(Object.assign(new Error('aborted'),{name:'AbortError'}));
+  if(signal?.aborted)abort();
+  else signal?.addEventListener('abort',abort,{once:true});
  }));
  const operation=ui.normalizers.fetchWithCancellation('https://example.invalid',{},new AbortController().signal,5);
  await assert.rejects(operation,error=>error.code==='timeout');
