@@ -676,12 +676,14 @@ function buildThemePlan(ranked){
  const cards=window.LocationHighlights?.create(ranked,{
   catalog:window.PoemCatalog,subjectPolicy:window.SubjectPolicy,serial:generation})||[];
  const matching=cards.map(card=>ranked.find(p=>p.source===card.source&&(
-   p.sourceId&&card.sourceId?p.sourceId===card.sourceId:p.name===card.name))).filter(Boolean);
+   p.sourceId&&card.sourceId?p.sourceId===card.sourceId:
+   p.name===card.name&&Math.round(p.distanceMeters)===card.distanceMeters))).filter(Boolean);
  const chief=matching[0]||ranked[0]||null;
  const secondaries=matching.length?matching.slice(1,3):ranked.slice(1,3);
  const poemPOIs=cards.length?(chief?[chief,...secondaries]:[]):ranked;
- return {mainEvidenceId:chief?.sourceId||null,
-  secondaryEvidenceIds:secondaries.map(p=>p.sourceId||null),
+ const key=p=>p?.sourceId||(`${p?.source||'unknown'}:${p?.name||''}@${p?.lat},${p?.lon}`);
+ return {mainEvidenceId:chief?key(chief):null,
+  secondaryEvidenceIds:secondaries.map(key),
   locationCardIds:cards.map(card=>card.sourceId||null),
   genreId:chief?window.PoemCatalog?.resolve(chief)?.id||null:null,
   poemPOIs,locationCards:cards};
