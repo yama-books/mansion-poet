@@ -87,10 +87,10 @@ THE DREAM（架空広告）とTHE REALITY（地点近傍の生活施設）は**�
     }
   ],
   "omitted": {
-    "lowConfidence": 0,
-    "locationConflict": 0,
-    "unsupportedCategory": 0,
-    "outOfRadius": 0
+    "lowConfidence": null,
+    "locationConflict": null,
+    "unsupportedCategory": null,
+    "outOfRadius": null
   }
 }
 ~~~
@@ -112,7 +112,7 @@ THE DREAM（架空広告）とTHE REALITY（地点近傍の生活施設）は**�
 | facilityStatus | unknownを既定。planned/announcedを通常の生活施設一覧へ混ぜない。existingは十分な別証拠がある場合だけ |
 | projectStatus | 施設本体と改修・計画事業の状態を混同しないための将来用、初版null |
 | sources | deduplicatePOIsのevidenceSourcesを保持。licenses/attributionsを消さない |
-| omitted | 除外理由の**表示可能な診断件数**。元データの実店舗件数ではない |
+| omitted | 除外理由の**表示可能な診断件数**。元データの実店舗件数ではない。**既存関数で除外済みの候補は遡って数えられないため初版ではnull（未計測）を許容し、0件と混同しない** |
 
 選択座標と半径をキーとする。文体・濃度はREALITYの取得結果のキーに含めない。ただし既存DREAMのfetchPOIsは文体でOSM補完範囲が変わるため、LIFE-01で共有する際は「どのソースを実際に試したか」と検索条件を明示し、完全に同じ取得集合だと誤認しない。
 
