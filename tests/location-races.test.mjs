@@ -528,3 +528,21 @@ test('STB-06 unknown typed brands do not become facts from attractive naming',()
  assert.equal(records[2].theme,'dining');
  assert.equal(records[2].classificationEvidence,'category');
 });
+
+test('STB-06 contradictory explicit business_type and category are not promoted to city facts',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const records=normalizers.normalizeOpenPOI([
+  {name:'交差した業態',business_type:'bar_izakaya',category:'museum',
+   lat:35.7074,lng:139.6659},
+  {name:'信頼できる実博物館',business_type:'museum',category:'museum',
+   lat:35.7075,lng:139.6659}
+ ],origin);
+ assert.equal(records.length,2);
+ assert.equal(records[0].classificationEvidence,'business_type');
+ assert.equal(records[0].classificationConfidence,'low');
+ assert.ok(records[0].classificationFlags.includes('provider_type_conflict'));
+ assert.equal(records[1].classificationConfidence,'high');
+ assert.equal(normalizers.choosePOIs(records).length,1);
+ assert.equal(normalizers.choosePOIs(records)[0].theme,'culture');
+});
