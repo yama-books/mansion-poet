@@ -874,3 +874,95 @@ test('SAFE-01 medium-confidence name-only facility is withheld while explicit pa
  assert.ok(ui.el('#evidenceTags').children.every(x=>!x.textContent.includes('市立美術館')));
  assert.equal(ui.el('#locationCards').childElementCount,1);
 });
+
+
+test('GEO-01 unnamed public post boxes use a generic label and distinct OSM identity',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const got=normalizers.normalizeOSMPOI([
+  {type:'node',id:2001,lat:35.7074,lon:139.6659,tags:{amenity:'post_box'}},
+  {type:'node',id:2002,lat:35.70744,lon:139.6659,tags:{amenity:'post_box'}}
+ ],origin);
+ assert.equal(got.length,2);
+ assert.deepEqual(got.map(p=>p.sourceId),['node/2001','node/2002']);
+ assert.ok(got.every(p=>p.name==='郵便ポスト（名称未登録）'&&p.nameIsFallback));
+ assert.equal(normalizers.deduplicatePOIs(got).length,2,'two nearby boxes cannot merge by generic label');
+ assert.equal(subjectPolicy.decideSubject(got[0]).subjectId,'postal.post_box');
+});
+
+test('GEO-01 no invented identity for unnamed parks, private letter boxes or missing OSM IDs',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const got=normalizers.normalizeOSMPOI([
+  {type:'node',id:301,lat:35.7074,lon:139.6659,tags:{leisure:'park'}},
+  {type:'node',id:302,lat:35.7074,lon:139.6659,tags:{amenity:'letter_box'}},
+  {type:'node',lat:35.7074,lon:139.6659,tags:{amenity:'post_box'}},
+  {type:'node',id:303,lat:35.7074,lon:139.6659,tags:{amenity:'post_box'}}
+ ],origin);
+ assert.equal(got.length,1);
+ assert.equal(got[0].sourceId,'node/303');
+});
+
+test('GEO-01 nearest segment outranks an inaccurate line centre',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const way=normalizers.normalizeOSMPOI([{
+  type:'way',id:401,center:{lat:35.72,lon:139.68},
+  geometry:[{lat:35.706,lon:139.6659},{lat:35.708,lon:139.6659}],
+  tags:{waterway:'ditch'}
+ }],origin);
+ assert.equal(way.length,1);
+ assert.equal(way[0].sourceId,'way/401');
+ assert.equal(way[0].name,'側溝（名称未登録）');
+ assert.equal(way[0].distanceMethod,'nearest_line_segment');
+ assert.ok(way[0].distanceMeters<1,'selected origin lies on line segment');
+ assert.equal(subjectPolicy.decideSubject(way[0]).subjectId,'infrastructure.ditch');
+});
+
+test('GEO-01 waterway+culvert chooses the specific underground-waterway subject',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const got=normalizers.normalizeOSMPOI([{type:'way',id:501,
+  geometry:[{lat:35.7073,lon:139.6659},{lat:35.7076,lon:139.6659}],
+  tags:{waterway:'drain',tunnel:'culvert'}
+ }],origin)[0];
+ assert.ok(got);
+ assert.equal(got.name,'暗渠（名称未登録）');
+ assert.equal(subjectPolicy.decideSubject(got).subjectId,'infrastructure.culvert');
+ assert.equal(authoredCatalog.resolve(got)?.id,'culvert');
+});
+
+test('GEO-01 incomplete or malformed geometry is withheld rather than inventing line distances',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const got=normalizers.normalizeOSMPOI([
+  {type:'way',id:601,center:origin,tags:{waterway:'drain'}},
+  {type:'way',id:602,geometry:[{lat:35.7074,lon:139.6659}],tags:{waterway:'ditch'}},
+  {type:'way',id:603,geometry:[{lat:35.7074,lon:139.6659},{lat:NaN,lon:139.6659}],tags:{waterway:'ditch'}},
+  {type:'way',id:604,center:origin,tags:{name:'既存の公園',leisure:'park'}}
+ ],origin);
+ assert.deepEqual(got.map(p=>p.sourceId),['way/604']);
+ assert.equal(got[0].distanceMethod,'representative_center');
+});
+
+test('GEO-01 mocked OSM evidence yields real-ID LOCATION cards without invented addresses or walking',async()=>{
+ const ui=makeUI(url=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[]}));
+  return Promise.resolve(response({elements:[
+   {type:'node',id:701,lat:35.7074,lon:139.6659,tags:{amenity:'post_box'}},
+   {type:'way',id:702,center:{lat:35.72,lon:139.68},
+    geometry:[{lat:35.7072,lon:139.666},{lat:35.7077,lon:139.666}],
+    tags:{waterway:'stream',tunnel:'culvert'}}
+  ]}));
+ },{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ const cards=ui.el('#locationCards').children;
+ assert.equal(cards.length,2);
+ const names=cards.map(c=>c.children[1].textContent);
+ assert.ok(names.includes('郵便ポスト（名称未登録）'));
+ assert.ok(names.includes('暗渠（名称未登録）'));
+ assert.ok(cards.every(c=>c.children[2].children[0].textContent.includes('公開データ未収録')));
+ assert.ok(cards.every(c=>!c.children[2].textContent.includes('徒歩')));
+ assert.ok(ui.el('#evidenceTags').children.some(c=>c.textContent.includes('郵便ポスト')));
+});
