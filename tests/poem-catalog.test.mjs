@@ -30,6 +30,7 @@ test('POEM-01 structure-specific tags take priority over broad poetic theme',()=
  assert.equal(lib.resolve(ditch)?.id,'ditch');
  assert.equal(lib.resolve(drain)?.id,'drain');
  assert.equal(lib.resolve(culvert)?.id,'culvert');
+ assert.equal(lib.resolve(poi({tags:{tunnel:'culvert',waterway:'drain'}}))?.id,'culvert');
  assert.notEqual(lib.resolve(poi({tags:{tunnel:'culvert'},theme:'unknown'}))?.id,'culvert',
   'culvert must be a waterway, not a generic tunnel');
  assert.notEqual(lib.compose(ditch,{serial:1}).headline,lib.compose(drain,{serial:1}).headline);
