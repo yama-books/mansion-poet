@@ -1058,7 +1058,7 @@ test('SELECT-01 main and secondary evidence IDs come from the same LOCATION plan
  assert.equal(plan.locationCards.length,3);
  assert.equal(plan.mainEvidenceId,plan.locationCardIds[0]);
  assert.equal(plan.poemPOIs[0].sourceId,plan.mainEvidenceId);
- assert.deepEqual(plan.secondaryEvidenceIds,plan.poemPOIs.slice(1).map(p=>p.sourceId));
+ assert.equal(plan.secondaryEvidenceIds.join('|'),plan.poemPOIs.slice(1).map(p=>p.sourceId).join('|'));
  assert.equal(plan.genreId,authoredCatalog.resolve(plan.poemPOIs[0])?.id);
 });
 
