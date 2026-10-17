@@ -68,7 +68,7 @@ function makeUI(fetcher,{withMap=false}={}){
   };
   // The production functions live inside an IIFE; expose them only in the VM test copy.
   const instrumented=script.replace(/\}\)\(\);\s*$/,
-    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI};\n})();');
+    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI,deduplicatePOIs,choosePOIs};\n})();');
   assert.notEqual(instrumented,script,'Expected the application IIFE footer');
   runInNewContext(instrumented,sandbox,{timeout:2000});
   if(withMap)window.listeners.load();
@@ -356,4 +356,67 @@ test('STB-04 OpenPOI preserves source data while enforcing location and type val
  assert.equal(records[0].theme,'dining');
  assert.equal(records[0].name,'お酒の美術館');
  assert.equal(records[0].source,'OpenPOI');
+});
+
+test('STB-05 deduplicates matching names within 40m and keeps both source attributions',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={label:'東京都中野区中野',lat:35.7074,lon:139.6659};
+ const osm=normalizers.normalizeOSMPOI([
+   {type:'node',id:12,lat:35.70740,lon:139.66590,tags:{name:'地域図書館',amenity:'library'}}
+ ],origin)[0];
+ const open=normalizers.normalizeOpenPOI([
+   {id:'a1',name:'地域図書館',category:'library',lat:35.70743,lng:139.66592,
+    prefecture:'東京都',city:'中野区',licenses:['CC-BY-4.0'],attributions:['provider-example']}
+ ],origin)[0];
+ const list=normalizers.deduplicatePOIs([osm,open]);
+ assert.equal(list.length,1);
+ assert.equal(list[0].source,'OpenPOI');
+ assert.equal(list[0].evidenceSources.length,2);
+ assert.ok(list[0].evidenceSources.some(e=>e.source==='OSM'&&e.sourceId==='node/12'));
+ assert.ok(list[0].evidenceSources.some(e=>e.source==='OpenPOI'&&e.licenses.includes('CC-BY-4.0')));
+ assert.equal(list[0].validationFlags.length,0);
+});
+
+test('STB-05 preserves same-named locations hundreds of metres apart',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={label:'東京都中野区中野',lat:35.7074,lon:139.6659};
+ const a=normalizers.normalizeOpenPOI([
+  {name:'中央公園',category:'park',lat:35.7074,lng:139.6659},
+  {name:'中央公園',category:'park',lat:35.7102,lng:139.6659},
+  {name:'別名公園',category:'park',lat:35.7074,lng:139.66595}
+ ],origin);
+ assert.equal(a.length,3);
+ assert.equal(normalizers.deduplicatePOIs(a).length,3);
+ assert.equal(normalizers.choosePOIs(a).filter(p=>p.name==='中央公園').length,2);
+});
+
+test('STB-05 municipality and prefecture discrepancies are review flags not deletions',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={label:'東京都中野区中野',lat:35.7074,lon:139.6659};
+ const a=normalizers.normalizeOpenPOI([
+   {name:'近所図書館',category:'library',lat:35.7074,lng:139.6659,
+    prefecture:'東京都',city:'中野区'},
+   {name:'県の違う図書館',category:'library',lat:35.70745,lng:139.6659,
+    prefecture:'神奈川県',city:'中野区'},
+   {name:'別自治体図書館',category:'library',lat:35.70748,lng:139.6659,
+    prefecture:'東京都',city:'杉並区'}
+ ],origin);
+ assert.equal(a.length,3);
+ assert.equal(a[0].validationFlags.length,0);
+ assert.equal(a[1].validationFlags.includes('prefecture_mismatch'),true);
+ assert.equal(a[2].validationFlags.includes('municipality_mismatch'),true);
+ assert.equal(a[2].recordCity,'杉並区');
+ assert.equal(a[2].address,null);
+});
+
+test('STB-05 ambiguous location labels do not imply municipality mismatch',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={label:'中野付近（地図指定）',lat:35.7074,lon:139.6659};
+ const a=normalizers.normalizeOpenPOI([
+  {name:'公園',category:'park',lat:35.7074,lng:139.6659,
+    city:'渋谷区',prefecture:'東京都'}
+ ],origin);
+ assert.equal(a.length,1);
+ assert.equal(a[0].validationFlags.length,0);
+ assert.equal(normalizers.deduplicatePOIs([]).length,0);
 });
