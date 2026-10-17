@@ -130,6 +130,7 @@ function updateSelected(v,center=true){
  cancelPendingGeneration();
  selectionVersion++;
  selected={...v};
+ $('#smallPoiStatus').textContent='この地点では微細設備をまだ検索していません。';
  resetReality();
  resetLocationHighlights();
  $('#placeInput').value=v.label;$('#selectedPlace').textContent=v.label;
@@ -599,6 +600,7 @@ async function fetchPOIs(origin,signal,includeSmall=false){
   }
  }
  signal?.throwIfAborted();
+ const baseRetryable=issues.length>0||(!openOK&&!osmOK);
  let small=[];
  if(includeSmall){
   const found=await fetchSmallPOIs(origin,signal);
@@ -609,8 +611,10 @@ async function fetchPOIs(origin,signal,includeSmall=false){
  signal?.throwIfAborted();
  // Do not trim before deduplication or subject ranking.
  const pois=deduplicatePOIs([...eligibleOpen,...osm,...small]);
- const retryable=issues.length>0||(!openOK&&!osmOK);
- const kind=retryable?(pois.length?'partial':'unavailable'):(pois.length?'complete':'empty');
+ // Optional API failures are reported but do not force repeated base-provider requests.
+ const retryable=baseRetryable;
+ const incomplete=issues.length>0||(!openOK&&!osmOK);
+ const kind=incomplete?(pois.length?'partial':'unavailable'):(pois.length?'complete':'empty');
  return {pois,health:{kind,retryable,issues:[...new Set(issues)],openOK,osmOK,osmAttempted,smallHealth}};
 }
 
@@ -788,6 +792,7 @@ async function generate(regen=false){
  const currentKey=`${place.lat.toFixed(5)},${place.lon.toFixed(5)},850,${style},small:${includeSmall}`; // 自然モードではOSM補完を増やすため、文体もキャッシュ条件に含める。
  apiBusy=true;$('#generateBtn').disabled=true;$('#generateText').textContent='土地の気配を読み解いています…';
  $('#generatedStatus').textContent='周辺の公開データを確認中…';
+ $('#smallPoiStatus').textContent=includeSmall?'小さな設備も追加で照会中…':'追加の微細設備検索は未実施';
  try{
   let verified=false,pois=[],health={kind:'unknown',retryable:true,issues:[]};
   const canReuse=regen&&lastKey===currentKey&&!lastHealth.retryable;
