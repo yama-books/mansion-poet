@@ -67,6 +67,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [docs/STB04_HANDOFF_20261017.md](docs/STB04_HANDOFF_20261017.md) | **STB-04検証・再開記録**：POI共通形式、CI・公開反映の証拠 |
 | [docs/STB05_HANDOFF_20261017.md](docs/STB05_HANDOFF_20261017.md) | **STB-05検証・再開記録**：近接重複、住所確認フラグ、残件 |
 | [docs/STB06_HANDOFF_20261017.md](docs/STB06_HANDOFF_20261017.md) | **STB-06検証・再開記録**：業態優先、信頼度、出典の矛盾、残件 |
+| [docs/STB07_HANDOFF_20261017.md](docs/STB07_HANDOFF_20261017.md) | **STB-07検証・再開記録**：API部分失敗、429、タイムアウト、再試行、受入残件 |
 | [research/wave5_page_role_scores.csv](research/wave5_page_role_scores.csv) | TOP・CONCEPT/DESIGN・LOCATIONのページ別ポエム度（暫定） |
 | [research/ad_corpus_main_wave1.csv](research/ad_corpus_main_wave1.csv) | 本調査の追加5物件の評価・出典データ |
 | [docs/LIVING_ENVIRONMENT_SPEC.md](docs/LIVING_ENVIRONMENT_SPEC.md) | **THE DREAM / THE REALITY**。近隣施設・交通・買い物の生活アクセス仕様 |
@@ -75,10 +76,11 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 
 - [PR #1](https://github.com/yama-books/mansion-poet/pull/1)：地名検索・地図逆引き・施設取得中の地点変更で古い結果が割り込まないようにしました。
 - [PR #2](https://github.com/yama-books/mansion-poet/pull/2)：施設取得へ正しい地点情報を渡す不具合を修正し、文体別キャッシュ・再生成時の施設選択を改善しました。
-- GitHub Actionsで **外部APIを呼ばない回帰テスト23件**を実行（元の9件とPOI共通化・重複排除・分類信頼度の追加14件）。[PR #6のCIで23件成功](https://github.com/yama-books/mansion-poet/actions/runs/38990538973)を確認。
+- GitHub Actionsで **外部APIを呼ばない回帰テスト29件**を実行（元の9件とPOI共通化・重複排除・分類信頼度・通信障害対策の追加20件）。[PR #7のCIで29件成功](https://github.com/yama-books/mansion-poet/actions/runs/38991873254)を確認。
 - [PR #4](https://github.com/yama-books/mansion-poet/pull/4)でOpenPOI/OSMデータの共通形式・距離検査、[PR #5](https://github.com/yama-books/mansion-poet/pull/5)で近接重複と自治体住所の確認フラグをmainへ反映。**[GitHub Pages公開成功](https://github.com/yama-books/mansion-poet/actions/runs/38988895125)**、公開HTMLの新処理とHTTP 200を確認済み。
 - [PR #6](https://github.com/yama-books/mansion-poet/pull/6)で施設分類信頼度を追加し、明示業態（例：`bar_izakaya`）を名前より優先。相互に矛盾する分類の自動採用を保留。[Pages配信成功](https://github.com/yama-books/mansion-poet/actions/runs/38990694991)、公開HTMLの反映・HTTP 200を確認済み。
-- **v0.1.2は進行中**。STB-07の通信失敗時フォールバック、実ブラウザでの地点選択→生成・iPhone等の実機試験は未完了。[ROADMAP.md](docs/ROADMAP.md)を参照。
+- [PR #7](https://github.com/yama-books/mansion-poet/pull/7)で429・タイムアウト・部分取得・全失敗を区別。利用できる施設データだけで創作を続け、アクセス制限時は案内文を表示。一時的な失敗は再生成で再取得する。[GitHub Pages配信成功](https://github.com/yama-books/mansion-poet/actions/runs/38991967295)、公開HTML HTTP 200・反映を確認。
+- **v0.1.2のSTB-01〜07はコード・CI・Pages反映済み**ですが、バージョンの受入完了は未確定です。実ブラウザでの地点選択→生成・iPhone等の実機確認が未完了。[ROADMAP.md](docs/ROADMAP.md)を参照。
 
 ## 次の開発計画
 
