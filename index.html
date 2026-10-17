@@ -702,7 +702,12 @@ function renderLocationHighlights(items,place){
   article.appendChild(over);
   const heading=document.createElement('h3');heading.className='location-card-name';heading.textContent=item.name;article.appendChild(heading);
   const meta=document.createElement('div');meta.className='location-card-meta';
-  const addr=document.createElement('span');addr.textContent=item.address||'所在地詳細：公開データ未収録';meta.appendChild(addr);
+  const addr=document.createElement('span');
+  addr.textContent=!item.address?'所在地詳細：公開データ未収録':
+   item.addressPrecision==='area'?'所在地（地域情報のみ）：'+item.address:
+   item.addressPrecision==='street'?'所在地（公開データの街路情報）：'+item.address:
+   '所在地（公開データ）：'+item.address;
+  meta.appendChild(addr);
   const distance=document.createElement('strong');distance.textContent='直線 約'+item.distanceMeters+'m';meta.appendChild(distance);
   if(item.walkMinutes!==null){
    const walk=document.createElement('span');walk.textContent='徒歩約'+item.walkMinutes+'分（経路確認済み）';meta.appendChild(walk);
