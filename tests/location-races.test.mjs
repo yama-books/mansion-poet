@@ -384,12 +384,15 @@ test('STB-05 preserves same-named locations hundreds of metres apart',()=>{
  const origin={label:'東京都中野区中野',lat:35.7074,lon:139.6659};
  const a=normalizers.normalizeOpenPOI([
   {name:'中央公園',category:'park',lat:35.7074,lng:139.6659},
-  {name:'中央公園',category:'park',lat:35.7102,lng:139.6659},
+  {name:'中央公園',category:'park',lat:35.7102,lng:139.6659}
+ ],origin);
+ assert.equal(a.length,2);
+ assert.equal(normalizers.deduplicatePOIs(a).length,2);
+ assert.equal(normalizers.choosePOIs(a).filter(p=>p.name==='中央公園').length,2);
+ const other=normalizers.normalizeOpenPOI([
   {name:'別名公園',category:'park',lat:35.7074,lng:139.66595}
  ],origin);
- assert.equal(a.length,3);
- assert.equal(normalizers.deduplicatePOIs(a).length,3);
- assert.equal(normalizers.choosePOIs(a).filter(p=>p.name==='中央公園').length,2);
+ assert.equal(normalizers.deduplicatePOIs([a[0],...other]).length,2);
 });
 
 test('STB-05 municipality and prefecture discrepancies are review flags not deletions',()=>{
