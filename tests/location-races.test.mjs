@@ -5,6 +5,7 @@ import {runInNewContext} from 'node:vm';
 import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url);
 const authoredCatalog=require('../src/poem-catalog.js');
+const adHighlights=require('../src/location-highlights.js');
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
@@ -32,7 +33,7 @@ class Element {
   get childElementCount(){return this.children.length;}
   scrollIntoView(){}
 }
-function makeUI(fetcher,{withMap=false,withCatalog=false}={}){
+function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false}={}){
   const items=new Map();
   const el=(key)=>{
     if(!items.has(key))items.set(key,new Element());
@@ -63,6 +64,7 @@ function makeUI(fetcher,{withMap=false,withCatalog=false}={}){
     body:{appendChild(){}}
   };
   const window={listeners:{},PoemCatalog:withCatalog?authoredCatalog:undefined,
+    LocationHighlights:withHighlights?adHighlights:undefined,
     addEventListener(type,fn){this.listeners[type]=fn;}};
   el('#placeInput').value='東京都千代田区神保町';
   const sandbox={
@@ -796,4 +798,43 @@ test('POEM-01 protected education entry is not used in poem or evidence',async()
  assert.doesNotMatch(ui.el('#poemBody').textContent,/特別支援学校/);
  assert.match(ui.el('#poemBody').textContent,/架空図書館/);
  assert.ok(ui.el('#evidenceTags').children.every(x=>!x.textContent.includes('特別支援学校')));
+});
+
+test('LOCATION-01 renders an ad card with factual location fields and independent PR prose',async()=>{
+ const ui=makeUI(url=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   {id:'p1',name:'架空の中央公園',category:'park',address:'東京都中野区中央',lat:35.7074,lng:139.6659}
+  ]}));
+  return Promise.resolve(response({elements:[]}));
+ },{withCatalog:true,withHighlights:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ const cards=ui.el('#locationCards').children;
+ assert.equal(cards.length,1);
+ assert.match(cards[0].children[1].textContent,/架空の中央公園/);
+ assert.match(cards[0].children[2].children[0].textContent,/東京都中野区中央/);
+ assert.match(cards[0].children[2].children[1].textContent,/直線 約0m/);
+ assert.match(cards[0].children[3].textContent,/緑の余白/);
+ assert.doesNotMatch(cards[0].children[2].textContent,/徒歩約/);
+ assert.match(ui.el('#locationStatus').textContent,/1件/);
+});
+
+test('LOCATION-01 clears stale promotional cards on selection changes',async()=>{
+ const ui=makeUI(url=>String(url).includes('openpoiapi.com')?
+  Promise.resolve(response({results:[{id:'p2',name:'架空の公園',category:'park',lat:35.7074,lng:139.6659}]})):
+  Promise.resolve(response({elements:[]})),{withCatalog:true,withHighlights:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.equal(ui.el('#locationCards').childElementCount,1);
+ await ui.presets[2].fire();
+ assert.equal(ui.el('#locationCards').childElementCount,0);
+ assert.match(ui.el('#locationStatus').textContent,/地点を選んで/);
+});
+
+test('LOCATION-01 unavailable facility data creates no invented ad cards',async()=>{
+ const ui=makeUI(()=>Promise.reject(new Error('offline')),{withCatalog:true,withHighlights:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.equal(ui.el('#locationCards').childElementCount,0);
+ assert.match(ui.el('#locationStatus').textContent,/取得できませんでした/);
 });
