@@ -25,13 +25,14 @@
 - [Main調査 Wave 6](MAIN_WAVE6_AD_ANALYSIS.md)：弘前・徳島・新潟・多摩・宇部の5物件・15ページ。出典の矛盾と最新性に注意。
 - [広告研究30件の総括](CORPUS_30_SYNTHESIS.md)：暫定採点の分布、表現の型、DREAM／REALITYへの引継ぎ。
 - [住環境機能仕様](LIVING_ENVIRONMENT_SPEC.md)：THE DREAM / THE REALITY、買い物・駅などの施設アクセス。
+- [STB-06実装・引継ぎ](STB06_HANDOFF_20261017.md)：POI業態優先、分類信頼度、PR/CI/Pages反映。
 
 ## リリース状態
 
 | バージョン | 重点 | 状態 |
 | --- | --- | --- |
 | v0.1.1 | GitHub Pages公開・GSI地名検索・OpenPOI施設取得・テンプレート生成 | **公開・基本動作検証済**（実機テストは残） |
-| v0.1.2 | 地点の競合防止・キャッシュ・POI信頼度・軽量テスト | **進行中**（PR #1・#2・#3マージ済み） |
+| v0.1.2 | 地点の競合防止・キャッシュ・POI信頼度・軽量テスト | **進行中**（STB-04〜06＝PR #4・#5・#6までマージ・配信。STB-07と実機検証は未完了） |
 | v0.2 | 最初のUI磨き込み・スマホ体験・文章の初歩的改善 | **未着手** |
 | v0.3 | 複数の土地特徴から主題を選ぶ | **未着手** |
 | v0.4 | 本格ポエム生成・架空物件名の拡充 | **未着手** |
@@ -72,7 +73,7 @@
 - [x] POI地点引数を修正し、正常取得でないのに地名だけに降格する問題を修復（PR #2）。
 - [x] STB-04：OpenPOI・OSM共通の名称／座標／直線距離／タグ／出典／ライセンス／取得時刻の正規化を[PR #4](https://github.com/yama-books/mansion-poet/pull/4)でmainにマージ。[Nodeテスト12件成功](https://github.com/yama-books/mansion-poet/actions/runs/38986973279)、[Pages配信SUCCESS](https://github.com/yama-books/mansion-poet/actions/runs/38988445031)、公開HTML HTTP 200・新関数配信を確認。**実ブラウザ操作とスマホ実機は未確認**。[引継ぎ](STB04_HANDOFF_20261017.md)。
 - [x] STB-05：名称＋40mの近接条件で重複POIを統合し、別地点の同名施設は保存。OpenPOI/OSMの両出典を保持し、行政住所の不整合は確認フラグへ。[PR #5](https://github.com/yama-books/mansion-poet/pull/5)をmainへマージ、[Node16件合格](https://github.com/yama-books/mansion-poet/actions/runs/38988821248)、[Pages公開SUCCESS](https://github.com/yama-books/mansion-poet/actions/runs/38988895125)、公開HTMLに新処理反映を確認。**実ブラウザ操作未検証**。[引継ぎ](STB05_HANDOFF_20261017.md)。
-- [ ] STB-06：OpenPOI実データの「お酒の美術館中野店」が `bar_izakaya` 業態であるケースに対し、名前の「美術館」だけで文化・芸術と誤判定しない。カテゴリ信頼度と業態矛盾ルールを追加する（未実装）。
+- [x] STB-06：`bar_izakaya` 等の明示業態を施設名より優先し、分類信頼度・根拠・矛盾フラグを保存。低信頼データはポエム主題から除外。[PR #6](https://github.com/yama-books/mansion-poet/pull/6)をmainへマージ、[Node23件成功](https://github.com/yama-books/mansion-poet/actions/runs/38990538973)、[Pages配信SUCCESS](https://github.com/yama-books/mansion-poet/actions/runs/38990694991)、公開HTMLの実装反映とHTTP 200を確認。**地点選択・生成の実ブラウザ操作とスマホ実機は未確認**。[引継ぎ](STB06_HANDOFF_20261017.md)。
 - [ ] STB-07：429/CORS風障害、空結果、接続不可時の段階的フォールバックと表示（未実装）。
 - [x] QA-01前半：Node組込テスト9件（検索競合・地図逆引き・生成競合・文体キャッシュ・API中断・JSON読み取り中断・OSM代替）をPRとPages配信前に自動実行。
 - [ ] QA-01後半：POI正規化の純粋関数分離と、分類・住所・通信失敗の詳細テストを追加。
