@@ -176,6 +176,59 @@ function classifyOpenPOI(record){
  if(match(/cafe|coffee_shop|restaurant|bakery|food_court/,/喫茶|カフェ|ベーカリー|珈琲/)) return {category:'食と街の営み',theme:'dining'};
  return null;
 }
+// STB-05: uncertain administrative labels should flag, never silently reject a nearby POI.
+function addressValidationFlags(record,origin){
+ const label=typeof origin?.label==='string'?origin.label.trim():'';
+ const prefecture=String(record?.prefecture||'').trim();
+ const city=String(record?.city||'').trim();
+ const flags=[];
+ const prefMatch=label.match(/^(北海道|東京都|京都府|大阪府|.{2,4}県)/);
+ if(prefMatch&&prefecture&&prefecture!==prefMatch[1])flags.push('prefecture_mismatch');
+ // A free-text map label or neighbourhood does not establish a municipality.
+ if(prefMatch&&city){
+  const administrativePart=label.slice(prefMatch[1].length);
+  if(/[市区町村]/.test(administrativePart)&&!administrativePart.includes(city)){
+   flags.push('municipality_mismatch');
+  }
+ }
+ return flags;
+}
+function normalizedPOIName(name){
+ return String(name||'').normalize('NFKC').toLowerCase().replace(/[\s\u3000]+/g,'');
+}
+function poiEvidence(p){
+ return {source:p.source,sourceId:p.sourceId??null,
+  licenses:Array.isArray(p.licenses)?p.licenses:[],
+  attributions:Array.isArray(p.attributions)?p.attributions:[]};
+}
+function deduplicatePOIs(items){
+ const unique=[];
+ for(const poi of items||[]){
+  if(!poi||!normalizedPOIName(poi.name)||!Number.isFinite(poi.lat)||!Number.isFinite(poi.lon))continue;
+  const currentEvidence=Array.isArray(poi.evidenceSources)&&poi.evidenceSources.length?
+   poi.evidenceSources:[poiEvidence(poi)];
+  const matchIndex=unique.findIndex(other=>
+   normalizedPOIName(other.name)===normalizedPOIName(poi.name)&&
+   distanceMetersBetween(other.lat,other.lon,poi.lat,poi.lon)<=40);
+  if(matchIndex<0){
+   unique.push({...poi,evidenceSources:[...currentEvidence]});
+   continue;
+  }
+  const previous=unique[matchIndex];
+  const evidenceSources=[...previous.evidenceSources];
+  const key=e=>e.source+'|'+(e.sourceId??'')+'|'+JSON.stringify(e.attributions);
+  for(const ev of currentEvidence){
+   if(!evidenceSources.some(e=>key(e)===key(ev)))evidenceSources.push(ev);
+  }
+  // Preserve secondary attribution and prefer a structured OpenPOI record as primary.
+  const primary=previous.source==='OpenPOI'?previous:
+   poi.source==='OpenPOI'?poi:
+   (previous.distanceMeters<=poi.distanceMeters?previous:poi);
+  const validationFlags=[...new Set([...(previous.validationFlags||[]),...(poi.validationFlags||[])])];
+  unique[matchIndex]={...primary,evidenceSources,validationFlags};
+ }
+ return unique;
+}
 // STB-04: one POI schema for OpenPOI and OSM. Distance is always straight-line metres.
 function normalizePOIs(rows,origin,source){
  if(!Array.isArray(rows)||!Number.isFinite(origin?.lat)||!Number.isFinite(origin?.lon))return [];
@@ -204,7 +257,10 @@ function normalizePOIs(rows,origin,source){
    licenses:isOSM?['ODbL-1.0']:(Array.isArray(item.licenses)?item.licenses:[]),
    attributions:isOSM?['© OpenStreetMap contributors']:
     (Array.isArray(item.attributions)?item.attributions:[]),
-   address:!isOSM&&typeof item.address==='string'?item.address:null};
+   address:!isOSM&&typeof item.address==='string'?item.address:null,
+   recordPrefecture:!isOSM?(item.prefecture||null):null,
+   recordCity:!isOSM?(item.city||null):null,
+   validationFlags:isOSM?[]:addressValidationFlags(item,origin)};
  }).filter(Boolean);
 }
 function normalizeOpenPOI(rows,origin){return normalizePOIs(rows,origin,'OpenPOI')}
@@ -247,18 +303,14 @@ async function fetchOpenPOI(origin,signal){
  return normalizeOpenPOI(passed.flatMap(x=>x.value),origin);
 }
 function choosePOIs(items){
- const unique=new Map();
- for(const poi of items){
-   const key=poi.name.normalize('NFKC').toLowerCase().replace(/\s+/g,'');
-   if(key&&!unique.has(key))unique.set(key,poi);
- }
+ const unique=deduplicatePOIs(items);
  const priorities=style==='nature'?
    ['green','water','history','culture','knowledge','transport','commerce','dining']:
    style==='urban'?
    ['transport','culture','commerce','knowledge','dining','history','green','water']:
    ['history','knowledge','culture','green','transport','water','commerce','dining'];
  const groups=new Map(priorities.map(key=>[key,[]]));
- for(const poi of unique.values()){
+ for(const poi of unique){
    if(groups.has(poi.theme))groups.get(poi.theme).push(poi);
  }
  for(const group of groups.values())group.sort((a,b)=>(a.distance??9999)-(b.distance??9999));
@@ -300,7 +352,7 @@ async function fetchPOIs(origin,signal){
   }
  }
  signal?.throwIfAborted();
- return [...open,...osm]; // 施設の正規化済み生データをキャッシュし、作品ごとに順位を選び直す。
+ return deduplicatePOIs([...open,...osm]); // Keep source evidence with style-independent cache.
 }
 const motifs={commerce:{label:'都市の豊穣',short:'都市',phrase:'街の営みが重なり合う、都市の豊穣'},dining:{label:'日常の饗宴',short:'賑わい',phrase:'食の風景が息づく、暮らしの交差点'},green:{label:'緑の余白',short:'緑',phrase:'都市のただ中に息づく、緑の余白'},knowledge:{label:'知の集積',short:'知',phrase:'学びと知性の気配を宿す街'},history:{label:'時の重層',short:'時',phrase:'歳月が描いてきた街の輪郭'},culture:{label:'文化の深奥',short:'文化',phrase:'暮らしの奥に息づく文化の気配'},transport:{label:'都市の結節点',short:'都市',phrase:'人々の営みが交差する都市の座標'},water:{label:'水の風景',short:'水辺',phrase:'水の気配が織りなす景観'}};
 const head={heritage:['この地に、\n邸宅の答えを。','その名は、\n時代を超える。','地の記憶を、\n邸の誇りへ。'],urban:['都市は、\nここから変わる。','その座標が、\n未来を指す。','この街を、\n超えてゆく。'],nature:['静けさこそ、\n至高の贅。','余白を、\n住まう。','風景と、\nひとつになる。']};
