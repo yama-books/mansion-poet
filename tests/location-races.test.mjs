@@ -1083,3 +1083,67 @@ test('SELECT-01 rendered poem and evidence follow the first actual LOCATION card
  await ui.el('#regenerateBtn').fire();
  assert.ok(ui.el('#poemBody').textContent.includes(ui.el('#locationCards').children[0].children[1].textContent));
 });
+
+test('ADDRESS-01 distinguishes POI-specific reported addresses and partial OSM street records',()=>{
+ const reported=adHighlights.addressEvidenceFor({source:'OpenPOI',address:'東京都中野区中央4丁目',recordCity:'別の地域'});
+ assert.equal(reported.precision,'reported');
+ assert.equal(reported.text,'東京都中野区中央4丁目');
+ assert.equal(reported.source,'OpenPOI');
+ const osmFull=adHighlights.addressEvidenceFor({source:'OSM',tags:{'addr:full':'東京都中野区中央5-2-1'}});
+ assert.equal(osmFull.precision,'reported');
+ assert.equal(osmFull.text,'東京都中野区中央5-2-1');
+ const street=adHighlights.addressEvidenceFor({source:'OSM',tags:{
+  'addr:prefecture':'東京都','addr:city':'中野区','addr:street':'中央通り','addr:housenumber':'12'}});
+ assert.equal(street.precision,'street');
+ assert.equal(street.text,'東京都 中野区 中央通り 12');
+ assert.equal(street.source,'OSM');
+});
+
+test('ADDRESS-01 incomplete area and missing source stay visibly distinct from a complete address',()=>{
+ const admin=adHighlights.addressEvidenceFor({source:'OpenPOI',recordPrefecture:'東京都',recordCity:'中野区'});
+ assert.equal(admin.precision,'area');
+ assert.equal(admin.text,'東京都 中野区');
+ const partial=adHighlights.addressEvidenceFor({source:'OSM',tags:{'addr:city':'中野区','addr:suburb':'中央'}});
+ assert.equal(partial.precision,'area');
+ assert.equal(partial.text,'中野区 中央');
+ const absent=adHighlights.addressEvidenceFor({source:'OSM',tags:{name:'無名の設備'}});
+ assert.equal(absent.precision,'unknown');
+ assert.equal(absent.text,null);
+ assert.equal(adHighlights.addressFor({source:'OSM',tags:{name:'無名'}}),null);
+});
+
+test('ADDRESS-01 selected place is not silently inserted into any unrelated POI address',async()=>{
+ const ui=makeUI((url)=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   {id:'a1',name:'架空図書館',category:'library',lat:35.7074,lng:139.6659},
+   {id:'a2',name:'架空公園',category:'park',lat:35.70741,lng:139.6659}
+  ]}));
+  return Promise.resolve(response({elements:[]}));
+ },{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ const cards=ui.el('#locationCards').children;
+ assert.equal(cards.length,2);
+ for(const card of cards){
+  const label=card.children[2].children[0].textContent;
+  assert.equal(label,'所在地詳細：公開データ未収録');
+  assert.ok(!label.includes('東京都中野区中野'));
+ }
+});
+
+test('ADDRESS-01 location UI exposes area-only provenance without claiming a full street address',async()=>{
+ const ui=makeUI((url)=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   {id:'a3',name:'架空図書館',category:'library',lat:35.7074,lng:139.6659,
+    prefecture:'東京都',city:'中野区'}
+  ]}));
+  return Promise.resolve(response({elements:[]}));
+ },{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ const cards=ui.el('#locationCards').children;
+ assert.equal(cards.length,1);
+ const location=cards[0].children[2].children[0].textContent;
+ assert.match(location,/^所在地（地域情報のみ）：東京都 中野区$/);
+ assert.ok(!location.includes('番地'));
+});
