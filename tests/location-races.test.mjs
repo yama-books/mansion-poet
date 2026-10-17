@@ -966,3 +966,81 @@ test('GEO-01 mocked OSM evidence yields real-ID LOCATION cards without invented 
  assert.ok(cards.every(c=>!c.children[2].textContent.includes('徒歩')));
  assert.ok(ui.el('#evidenceTags').children.some(c=>c.textContent.includes('郵便ポスト')));
 });
+
+
+test('GEO-02 default generation never issues an extra micro-POI query',async()=>{
+ let microCalls=0,otherOverpass=0;
+ const ui=makeUI((url,options={})=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   ...Array.from({length:4},(_,i)=>({id:'park'+i,name:'公園'+i,category:'park',
+    lat:35.7074+i*0.0001,lng:139.6659}))]}));
+  if(String(url).includes('overpass')){
+   if(String(options.body).includes('post_box'))microCalls++;else otherOverpass++;
+   return Promise.resolve(response({elements:[]}));
+  }
+  throw Error('unexpected request '+url);
+ },{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.equal(microCalls,0);
+ assert.equal(otherOverpass,0,'sufficient standard provider results need no OSM fallback');
+ assert.match(ui.el('#smallPoiStatus').textContent,/未実施/);
+});
+
+test('GEO-02 opt-in queries bounded features once and reuses cached evidence on regenerate',async()=>{
+ let microCalls=0;
+ const ui=makeUI((url,options={})=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   ...Array.from({length:4},(_,i)=>({id:'park'+i,name:'公園'+i,category:'park',
+    lat:35.7074+i*0.0001,lng:139.6659}))]}));
+  if(String(url).includes('overpass')){
+   const q=decodeURIComponent(String(options.body||''));
+   if(q.includes('post_box')){
+    microCalls++;
+    assert.match(q,/around:450/);
+    assert.match(q,/out geom/);
+    assert.match(q,/\[maxsize:16777216\]/);
+    return Promise.resolve(response({elements:[{type:'node',id:9001,
+     lat:35.70741,lon:139.6659,tags:{amenity:'post_box'}}]}));
+   }
+   return Promise.resolve(response({elements:[]}));
+  }
+  throw Error('unexpected request '+url);
+ },{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();
+ ui.el('#smallPoiOptIn').checked=true;
+ await ui.el('#smallPoiOptIn').fire('change');
+ await ui.el('#generateBtn').fire();
+ assert.equal(microCalls,1);
+ assert.ok(ui.el('#evidenceTags').children.some(x=>x.textContent.includes('郵便ポスト')));
+ assert.ok(ui.el('#locationCards').children.some(c=>c.children[1].textContent.includes('郵便ポスト')));
+ assert.match(ui.el('#smallPoiStatus').textContent,/候補を取得/);
+ await ui.el('#regenerateBtn').fire();
+ assert.equal(microCalls,1,'same location and style should reuse evidence');
+ await ui.modes[2].fire();
+ await ui.el('#regenerateBtn').fire();
+ assert.equal(microCalls,1,'changing poetry style must not duplicate geo micro query within cooldown');
+});
+
+test('GEO-02 micro-provider failure preserves normal ads and cools down instead of retry storm',async()=>{
+ let microCalls=0;
+ const ui=makeUI((url,options={})=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   ...Array.from({length:4},(_,i)=>({id:'park'+i,name:'公園'+i,category:'park',
+    lat:35.7074+i*0.0001,lng:139.6659}))]}));
+  if(String(url).includes('overpass')){
+   if(String(options.body).includes('post_box')){microCalls++;return Promise.reject(Error('overloaded'));}
+   return Promise.resolve(response({elements:[]}));
+  }
+  throw Error('unexpected request '+url);
+ },{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();
+ ui.el('#smallPoiOptIn').checked=true;
+ await ui.el('#generateBtn').fire();
+ assert.equal(microCalls,1);
+ assert.match(ui.el('#smallPoiStatus').textContent,/取得できませんでした/);
+ assert.match(ui.el('#poemBody').textContent,/公園/);
+ assert.ok(ui.el('#locationCards').childElementCount>0);
+ await ui.el('#generateBtn').fire();
+ assert.equal(microCalls,1,'failed optional query should not hammer public Overpass on repeated clicks');
+});
