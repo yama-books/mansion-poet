@@ -43,6 +43,8 @@ jobs:
           mkdir -p public
           cp index.html public/index.html
           mkdir -p public/src
+          cp src/subject-policy.js public/src/subject-policy.js
+          test -s public/src/subject-policy.js
           cp src/poem-catalog.js public/src/poem-catalog.js
           cp src/location-highlights.js public/src/location-highlights.js
           test -s public/src/poem-catalog.js

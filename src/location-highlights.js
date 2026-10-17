@@ -23,19 +23,20 @@ function walking(p){
   !Number.isFinite(p?.walkingRouteMeters)||p.walkingRouteMeters<0)return null;
  return Math.max(1,Math.ceil(p.walkingRouteMeters/80));
 }
-function validPoi(p,catalog){
+function validPoi(p,catalog,subjectPolicy){
  return Boolean(p&&catalog&&typeof catalog.resolve==='function'&&
  p.classificationConfidence==='high'&&!(p.validationFlags||[]).length&&
  !(p.classificationFlags||[]).some(f=>f==='provider_type_conflict'||f==='source_theme_conflict')&&
- !catalog.suppressed(p)&&typeof p.name==='string'&&p.name.trim().length>0&&
+ !catalog.suppressed(p)&&(!subjectPolicy||subjectPolicy.decideSubject(p).eligibility==='allow')&&
+ typeof p.name==='string'&&p.name.trim().length>0&&
  Number.isFinite(p.distanceMeters)&&p.distanceMeters>=0&&p.distanceMeters<=850&&
  (p.source==='OSM'||p.source==='OpenPOI'));
 }
-function create(items,{catalog,serial=1,maxItems=3}={}){
+function create(items,{catalog,subjectPolicy,serial=1,maxItems=3}={}){
  if(!catalog)return [];
  const result=[];const seen=new Set();const themesUsed=new Set();
  for(const p of items||[]){
-  if(!validPoi(p,catalog))continue;
+  if(!validPoi(p,catalog,subjectPolicy))continue;
   const unique=(p.source||'')+':'+(p.sourceId||p.name+'@'+p.lat+','+p.lon);
   if(seen.has(unique))continue;
   const detected=catalog.resolve(p);
