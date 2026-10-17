@@ -33,3 +33,18 @@
 5. iPhone Safari／Android Chromeでの実機操作確認。
 
 関連： [LIFE-01実装記録](LIFE01_IMPLEMENTATION_20261017.md)
+
+## 2026-10-17 公開ゲート記録
+
+- [x] [PR #11](https://github.com/yama-books/mansion-poet/pull/11) をmainにマージ：[`472a9db`](https://github.com/yama-books/mansion-poet/commit/472a9db86dec0a3da65200d6780182fb06a4a75f)。
+- [x] [PR CI #39009003709](https://github.com/yama-books/mansion-poet/actions/runs/39009003709)：51件成功、失敗0。
+- [x] [Pages #39009079478](https://github.com/yama-books/mansion-poet/actions/runs/39009079478) SUCCESS。公開HTMLと `src/poem-catalog.js` それぞれHTTP 200で配信・実装コード反映を確認。
+- [x] 公開ブラウザ（中野）でジャンル専用の見出し「学びが街に刻む明日の線。」、根拠施設「アイデスク中野自習室」を使った本文を確認。REGENERATEで「教室という未来の入口。」に変化。取得元は一部失敗したが、得られた施設情報を利用した生成が継続した。
+- [x] 上記ブラウザ確認で、広義の `education` が「学校」として細分類されるケースを発見。続く[PR #12](https://github.com/yama-books/mansion-poet/pull/12) で学校・池・カレーの細分類誤昇格を修正し、[`da22323`](https://github.com/yama-books/mansion-poet/commit/da2232307ef035f643a1dbf7935a2c55f15cbe80) をmainへマージ。
+- [x] [PR #12 CI #39009236878](https://github.com/yama-books/mansion-poet/actions/runs/39009236878)：53件成功、失敗0。
+- [ ] PR #12のPages最終成功は別途追記・確認。
+- [ ] PR #12修正版の生成を公開ブラウザで再確認。
+- [ ] 63ジャンルすべての自然な日本語・内容表現を人手で複数回レビュー。
+- [ ] iPhone Safari、Android Chromeの実機受入。
+
+**配信後の動作検証は実際に取得できた施設種のみ**。630文章フックの個別の公開ブラウザ表示を全て確認したわけではない。
