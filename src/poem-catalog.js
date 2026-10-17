@@ -32,6 +32,7 @@
     if(p.source!=='OSM')return false;
     const i=expression.indexOf('=');if(i<0)return false;
     const key=expression.slice(0,i),val=expression.slice(i+1);
+    if(key==='tunnel'&&val==='culvert'&&!normalize(t.waterway))return false;
     return normalize(t[key])===normalize(val);
    }
    return false;
