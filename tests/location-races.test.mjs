@@ -375,6 +375,8 @@ test('STB-05 deduplicates matching names within 40m and keeps both source attrib
  assert.ok(list[0].evidenceSources.some(e=>e.source==='OSM'&&e.sourceId==='node/12'));
  assert.ok(list[0].evidenceSources.some(e=>e.source==='OpenPOI'&&e.licenses.includes('CC-BY-4.0')));
  assert.equal(list[0].validationFlags.length,0);
+ assert.equal(normalizers.choosePOIs(list)[0].evidenceSources.length,2,
+   'POI re-ranking should not discard secondary-source attribution');
 });
 
 test('STB-05 preserves same-named locations hundreds of metres apart',()=>{
