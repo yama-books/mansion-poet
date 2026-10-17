@@ -71,6 +71,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [research/wave5_page_role_scores.csv](research/wave5_page_role_scores.csv) | TOP・CONCEPT/DESIGN・LOCATIONのページ別ポエム度（暫定） |
 | [research/ad_corpus_main_wave1.csv](research/ad_corpus_main_wave1.csv) | 本調査の追加5物件の評価・出典データ |
 | [docs/LIVING_ENVIRONMENT_SPEC.md](docs/LIVING_ENVIRONMENT_SPEC.md) | **THE DREAM / THE REALITY**。近隣施設・交通・買い物の生活アクセス仕様 |
+| [docs/LIFE00_DATA_CONTRACT.md](docs/LIFE00_DATA_CONTRACT.md) | **LIFE-00仕様レビュー案**：生活5カテゴリの最小データ契約・通信状態・受入テスト（**未実装**） |
 
 ## v0.1.2 安定化の進捗（2026-10-17）
 
