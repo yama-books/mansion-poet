@@ -205,18 +205,21 @@ function deduplicatePOIs(items){
  const unique=[];
  for(const poi of items||[]){
   if(!poi||!normalizedPOIName(poi.name)||!Number.isFinite(poi.lat)||!Number.isFinite(poi.lon))continue;
-  const evidence=poiEvidence(poi);
+  const currentEvidence=Array.isArray(poi.evidenceSources)&&poi.evidenceSources.length?
+   poi.evidenceSources:[poiEvidence(poi)];
   const matchIndex=unique.findIndex(other=>
    normalizedPOIName(other.name)===normalizedPOIName(poi.name)&&
    distanceMetersBetween(other.lat,other.lon,poi.lat,poi.lon)<=40);
   if(matchIndex<0){
-   unique.push({...poi,evidenceSources:[evidence]});
+   unique.push({...poi,evidenceSources:[...currentEvidence]});
    continue;
   }
   const previous=unique[matchIndex];
   const evidenceSources=[...previous.evidenceSources];
   const key=e=>e.source+'|'+(e.sourceId??'')+'|'+JSON.stringify(e.attributions);
-  if(!evidenceSources.some(e=>key(e)===key(evidence)))evidenceSources.push(evidence);
+  for(const ev of currentEvidence){
+   if(!evidenceSources.some(e=>key(e)===key(ev)))evidenceSources.push(ev);
+  }
   // Preserve secondary attribution and prefer a structured OpenPOI record as primary.
   const primary=previous.source==='OpenPOI'?previous:
    poi.source==='OpenPOI'?poi:
