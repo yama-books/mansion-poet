@@ -13,7 +13,7 @@
 
 GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開ける静的Webアプリです。
 
-- 配信方式：GitHub Actionsで `main/index.html` と `src/poem-catalog.js` をGitHub Pagesに公開
+- 配信方式：GitHub Actionsで `main/index.html` と `src/poem-catalog.js`、`src/location-highlights.js` をGitHub Pagesに公開
 - 自動公開：`index.html`、`src/**`、`tests/**`、または `.github/workflows/deploy-pages.yml` を変更したとき
 - 公開用ワークフロー：[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)
 
@@ -24,6 +24,10 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 [630種類の文章フック・63ジャンル](src/poem-catalog.js)を実装。側溝・暗渠・カーブミラー・郵便ポスト・学校・神社寺院などの建築・自然景観・飲食店・確認済みチェーン名を細分類し、各10案を再生成に使用します。[実装と制限の記録](docs/POEM01_GENRE_LIBRARY.md)。
 
 **辞書に登録されていることと、現在の施設APIから取得できることは別**です。ソースの種類や店舗ブランドが明示的に確認できたときだけ専用文章を使用し、未確認なら従来の文章に戻ります。文章の人手校閲と、細かい施設の取得拡充は後続作業です。宗教的な建築は文化・景観の文脈で扱い、医療・支援等の保護対象は広告パロディの主題から除外します。
+
+## LOCATION HIGHLIGHTS：広告型の周辺施設紹介
+
+ポエムの下に、取得した施設をそのまま高級マンション広告の周辺環境紹介として掲載。**施設名／所在地（提供元に登録されているときのみ）／直線距離／施設専用PR文**を最大3件表示します。29ジャンル87組の広告文を収録し、出典や生活情報は下のTHE EVIDENCE／THE REALITYへ分離しました。現在は**歩行経路が未取得**なので徒歩○分は記載しません。明示的な施設情報が取得できなければ仮想の施設紹介は出しません。詳細は[LOCATION-01仕様](docs/LOCATION01_AD_HIGHLIGHTS.md)。
 
 ## 使い方
 
@@ -119,6 +123,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 mansion-poet/
 ├── index.html              # UI、CSS、生成エンジンを含む静的Webアプリ
 ├── src/poem-catalog.js    # 63ジャンル×10変奏の文章辞書
+├── src/location-highlights.js # 29ジャンル×3案の施設PR文章
 ├── tests/                 # 生成・分類・状態管理の回帰テスト
 ├── README.md               # このファイル
 └── docs/
