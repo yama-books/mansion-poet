@@ -5,6 +5,7 @@ import {runInNewContext} from 'node:vm';
 import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url);
 const authoredCatalog=require('../src/poem-catalog.js');
+const subjectPolicy=require('../src/subject-policy.js');
 const adHighlights=require('../src/location-highlights.js');
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
@@ -33,7 +34,7 @@ class Element {
   get childElementCount(){return this.children.length;}
   scrollIntoView(){}
 }
-function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false}={}){
+function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false,withPolicy=false}={}){
   const items=new Map();
   const el=(key)=>{
     if(!items.has(key))items.set(key,new Element());
@@ -63,7 +64,8 @@ function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false}={
     createElement(){return new Element();},
     body:{appendChild(){}}
   };
-  const window={listeners:{},PoemCatalog:withCatalog?authoredCatalog:undefined,
+  const window={listeners:{},SubjectPolicy:withPolicy?subjectPolicy:undefined,
+    PoemCatalog:withCatalog?authoredCatalog:undefined,
     LocationHighlights:withHighlights?adHighlights:undefined,
     addEventListener(type,fn){this.listeners[type]=fn;}};
   el('#placeInput').value='東京都千代田区神保町';
@@ -837,4 +839,38 @@ test('LOCATION-01 unavailable facility data creates no invented ad cards',async(
  await ui.el('#generateBtn').fire();
  assert.equal(ui.el('#locationCards').childElementCount,0);
  assert.match(ui.el('#locationStatus').textContent,/取得できませんでした/);
+});
+
+
+test('SAFE-01 protected tagged school cannot leak into POEM, LOCATION or THE EVIDENCE',async()=>{
+ const ui=makeUI(url=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   {id:'protected',name:'架空のひかり学園',category:'school',
+    tags:{amenity:'school','social_facility:for':'disabled'},lat:35.7074,lng:139.6659},
+   {id:'public',name:'架空の中央公園',category:'park',lat:35.7075,lng:139.6659}
+  ]}));
+  return Promise.resolve(response({elements:[]}));
+ },{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.doesNotMatch(ui.el('#poemBody').textContent,/ひかり学園/);
+ assert.ok(ui.el('#evidenceTags').children.every(x=>!x.textContent.includes('ひかり学園')));
+ assert.ok(ui.el('#locationCards').children.every(x=>!JSON.stringify(x).includes('ひかり学園')));
+ assert.match(ui.el('#poemBody').textContent,/中央公園/);
+ assert.equal(ui.el('#locationCards').childElementCount,1);
+});
+
+test('SAFE-01 medium-confidence name-only facility is withheld while explicit park remains',async()=>{
+ const ui=makeUI(url=>{
+  if(String(url).includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   {id:'guess',name:'架空の市立美術館',lat:35.7074,lng:139.6659},
+   {id:'park',name:'架空の緑地公園',category:'park',lat:35.7075,lng:139.6659}
+  ]}));
+  return Promise.resolve(response({elements:[]}));
+ },{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.doesNotMatch(ui.el('#poemBody').textContent,/市立美術館/);
+ assert.ok(ui.el('#evidenceTags').children.every(x=>!x.textContent.includes('市立美術館')));
+ assert.equal(ui.el('#locationCards').childElementCount,1);
 });
