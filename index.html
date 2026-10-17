@@ -406,7 +406,7 @@ function normalizePOIs(rows,origin,source){
   const distanceMeters=closest?.distanceMeters??distanceMetersBetween(origin.lat,origin.lon,lat,lon);
   // The provider's radius must not override our own geometry check.
   if(!Number.isFinite(distanceMeters)||distanceMeters>850)return null;
-  return {name,nameIsFallback,geometryKind:closest?'line':null,
+  return {name,sourceName:rawName||null,nameIsFallback,geometryKind:closest?'line':null,
    distanceMethod:closest?'nearest_line_segment':(isOSM&&item.center?'representative_center':'point'),
    ...kind,source,sourceId,lat,lon,
    providerCategory:isOSM?null:String(item.category||''),
