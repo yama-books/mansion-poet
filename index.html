@@ -153,7 +153,7 @@ async function search(){
 }
 const poiConfig=[['leisure','park','緑地・公園','green'],['amenity','library','図書館','knowledge'],['amenity','university','大学','knowledge'],['amenity','school','学校','knowledge'],['historic',null,'史跡・歴史','history'],['tourism','museum','博物館','culture'],['tourism','gallery','文化施設','culture'],['railway','station','鉄道駅','transport'],['natural','water','水辺','water'],['waterway','river','水辺','water']];
 function tagPOI(tags){for(const [key,value,label,theme] of poiConfig){if(tags[key]&&(value===null||tags[key]===value))return {category:label,theme}}return null}
-function distanceMeters(lat1,lon1,lat2,lon2){
+function distanceMetersBetween(lat1,lon1,lat2,lon2){
  const radians=n=>n*Math.PI/180;
  const dlat=radians(lat2-lat1),dlon=radians(lon2-lon1);
  const a=Math.sin(dlat/2)**2+Math.cos(radians(lat1))*Math.cos(radians(lat2))*Math.sin(dlon/2)**2;
@@ -176,19 +176,39 @@ function classifyOpenPOI(record){
  if(match(/cafe|coffee_shop|restaurant|bakery|food_court/,/喫茶|カフェ|ベーカリー|珈琲/)) return {category:'食と街の営み',theme:'dining'};
  return null;
 }
-function normalizeOpenPOI(rows,origin){
- if(!Array.isArray(rows)) return [];
+// STB-04: one POI schema for OpenPOI and OSM. Distance is always straight-line metres.
+function normalizePOIs(rows,origin,source){
+ if(!Array.isArray(rows)||!Number.isFinite(origin?.lat)||!Number.isFinite(origin?.lon))return [];
+ if(source!=='OpenPOI'&&source!=='OSM')return [];
+ const retrievedAt=new Date().toISOString();
  return rows.map(item=>{
-   const lat=Number(item.lat),lon=Number(item.lng),kind=classifyOpenPOI(item);
-   if(!kind||!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return null;
-   const distance=distanceMeters(origin.lat,origin.lon,lat,lon);
-   // 公開データには別の街に紐づいた誤座標もあるため、必ず中心点との距離を再検査する。
-   if(distance>850)return null;
-   return {name:String(item.name).trim(),...kind,source:'OpenPOI',distance,
-     licenses:Array.isArray(item.licenses)?item.licenses:[],
-     attributions:Array.isArray(item.attributions)?item.attributions:[]};
+  if(!item||typeof item!=='object')return null;
+  const isOSM=source==='OSM';
+  const tags=isOSM?item.tags:(item.tags&&typeof item.tags==='object'?item.tags:
+    {category:item.category??null,business_type:item.business_type??null});
+  if(!tags||typeof tags!=='object'||Array.isArray(tags))return null;
+  const name=String((isOSM?(tags['name:ja']||tags.name):item.name)||'').trim();
+  const kind=isOSM?tagPOI(tags):classifyOpenPOI(item);
+  const rawLat=isOSM?(item.lat??item.center?.lat):item.lat;
+  const rawLon=isOSM?(item.lon??item.center?.lon):item.lng;
+  const lat=Number(rawLat),lon=Number(rawLon);
+  if(!name||name.length>80||!kind||rawLat==null||rawLon==null||
+     !Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return null;
+  const distanceMeters=distanceMetersBetween(origin.lat,origin.lon,lat,lon);
+  // Overpass area centres can be outside radius. Never trust a provider's distance filter.
+  if(!Number.isFinite(distanceMeters)||distanceMeters>850)return null;
+  const sourceId=isOSM?(item.type!=null&&item.id!=null?`${item.type}/${item.id}`:null):
+    (item.id==null?null:String(item.id));
+  return {name,...kind,source,sourceId,lat,lon,
+   distance:distanceMeters,distanceMeters,tags:{...tags},retrievedAt,
+   licenses:isOSM?['ODbL-1.0']:(Array.isArray(item.licenses)?item.licenses:[]),
+   attributions:isOSM?['© OpenStreetMap contributors']:
+    (Array.isArray(item.attributions)?item.attributions:[]),
+   address:!isOSM&&typeof item.address==='string'?item.address:null};
  }).filter(Boolean);
 }
+function normalizeOpenPOI(rows,origin){return normalizePOIs(rows,origin,'OpenPOI')}
+function normalizeOSMPOI(rows,origin){return normalizePOIs(rows,origin,'OSM')}
 // A request ends on timeout or when its generation is superseded.
 async function fetchWithCancellation(url,options,parentSignal,milliseconds){
  const requestController=new AbortController();
@@ -253,8 +273,14 @@ function choosePOIs(items){
  }
  return result;
 }
-async function fetchOSMPOIs(origin,signal){const {lat,lon}=origin;const query=`[out:json][timeout:14];(nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["leisure"="park"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["amenity"~"^(library|university|school)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["historic"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["tourism"~"^(museum|gallery)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["railway"="station"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["natural"="water"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["waterway"="river"];);out center 35;`;
-const json=await fetchWithCancellation('https://overpass.kumi.systems/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(query)},signal,7500);return (json.elements||[]).filter(v=>v.tags&&v.tags.name&&tagPOI(v.tags)).map(v=>({name:v.tags['name:ja']||v.tags.name,...tagPOI(v.tags),source:"OSM"})).filter((v,i,arr)=>arr.findIndex(y=>y.name===v.name)===i).slice(0,12)}
+async function fetchOSMPOIs(origin,signal){
+ const {lat,lon}=origin;
+ const query=`[out:json][timeout:14];(nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["leisure"="park"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["amenity"~"^(library|university|school)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["historic"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["tourism"~"^(museum|gallery)$"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["railway"="station"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["natural"="water"];nwr(around:850,${lat.toFixed(5)},${lon.toFixed(5)})["waterway"="river"];);out center 35;`;
+ const json=await fetchWithCancellation('https://overpass.kumi.systems/api/interpreter',
+  {method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+   body:'data='+encodeURIComponent(query)},signal,7500);
+ return normalizeOSMPOI(json.elements,origin).slice(0,12);
+}
 
 async function fetchPOIs(origin,signal){
  let open=[],osm=[];

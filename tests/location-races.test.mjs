@@ -61,13 +61,18 @@ function makeUI(fetcher,{withMap=false}={}){
   };
   const window={listeners:{},addEventListener(type,fn){this.listeners[type]=fn;}};
   el('#placeInput').value='東京都千代田区神保町';
-  runInNewContext(script,{
+  const sandbox={
     document,window,fetch:fetcher,AbortController,AbortSignal,
     navigator:{clipboard:{writeText:async()=>{}}},URL,
     console:{info(){}},setTimeout,clearTimeout,L:leaflet
-  },{timeout:2000});
+  };
+  // The production functions live inside an IIFE; expose them only in the VM test copy.
+  const instrumented=script.replace(/\}\)\(\);\s*$/,
+    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI};\n})();');
+  assert.notEqual(instrumented,script,'Expected the application IIFE footer');
+  runInNewContext(instrumented,sandbox,{timeout:2000});
   if(withMap)window.listeners.load();
-  return {el,presets,modes,mapHandlers};
+  return {el,presets,modes,mapHandlers,normalizers:sandbox.__poiTest};
 }
 function geo(name,lat=35.69,lon=139.75) {
   return response([{geometry:{coordinates:[lon,lat]},properties:{title:name}}]);
@@ -246,7 +251,7 @@ test('ordinary OpenPOI failure still falls back to OSM and yields a poem',async(
   const value=String(url);
   if(value.includes('openpoiapi.com'))return Promise.reject(new Error('OpenPOI unavailable'));
   if(value.includes('overpass')){
-   return Promise.resolve(response({elements:[{tags:{name:'テスト公園',leisure:'park'}}]}));
+   return Promise.resolve(response({elements:[{type:'node',id:1,lat:35.7074,lon:139.6659,tags:{name:'テスト公園',leisure:'park'}}]}));
   }
   throw Error('Unexpected URL: '+value);
  });
@@ -283,4 +288,72 @@ test('location changes can abort OpenPOI response bodies after HTTP headers arri
  await oldGeneration;
  assert.equal(ui.el('#selectedPlace').textContent,'京都府京都市中京区');
  assert.equal(ui.el('#generateBtn').disabled,false);
+});
+
+test('STB-04 OpenPOI and OSM share a coordinate- and provenance-aware POI schema',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const open=normalizers.normalizeOpenPOI([{id:'abc',name:'架空図書館',category:'library',
+   lat:'35.7076',lng:'139.6659',licenses:[{id:'sample-license'}],
+   attributions:['example attribution'],address:'東京都中野区'}],origin)[0];
+ const osm=normalizers.normalizeOSMPOI([{type:'way',id:12,center:{lat:35.7075,lon:139.6659},
+   tags:{name:'Example Park', 'name:ja':'架空公園',leisure:'park'}}],origin)[0];
+ assert.equal(open.name,'架空図書館');
+ assert.equal(open.source,'OpenPOI');
+ assert.equal(open.sourceId,'abc');
+ assert.equal(open.category,'文教・書物');
+ assert.equal(open.lat,35.7076);
+ assert.equal(open.lon,139.6659);
+ assert.equal(open.distance,open.distanceMeters);
+ assert.ok(open.distanceMeters>0&&open.distanceMeters<850);
+ assert.equal(open.licenses[0].id,'sample-license');
+ assert.equal(open.attributions[0],'example attribution');
+ assert.equal(open.address,'東京都中野区');
+ assert.ok(!Number.isNaN(Date.parse(open.retrievedAt)));
+ assert.equal(osm.name,'架空公園');
+ assert.equal(osm.source,'OSM');
+ assert.equal(osm.sourceId,'way/12');
+ assert.equal(osm.lat,35.7075);
+ assert.equal(osm.lon,139.6659);
+ assert.equal(osm.tags.leisure,'park');
+ assert.equal(osm.category,'緑地・公園');
+ assert.equal(osm.distance,osm.distanceMeters);
+ assert.ok(osm.distanceMeters>0&&osm.distanceMeters<850);
+ assert.ok(osm.attributions.some(x=>x.includes('OpenStreetMap')));
+ assert.ok(osm.licenses.length>0);
+ assert.ok(!Number.isNaN(Date.parse(osm.retrievedAt)));
+});
+
+test('STB-04 OSM drops unnamed, unlocated, invalid and out-of-range features',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const valid={type:'node',id:7,lat:35.7074,lon:139.6659,
+   tags:{name:'近くの公園',leisure:'park'}};
+ const results=normalizers.normalizeOSMPOI([
+   valid,
+   {type:'way',id:8,center:{lat:35.8,lon:139.8},tags:{name:'遠方公園',leisure:'park'}},
+   {type:'way',id:9,tags:{name:'座標なし公園',leisure:'park'}},
+   {type:'node',id:10,lat:95,lon:139.6659,tags:{name:'異常公園',leisure:'park'}},
+   {type:'node',id:11,lat:35.7074,lon:139.6659,tags:{leisure:'park'}},
+   {type:'node',id:12,lat:35.7074,lon:139.6659,tags:{name:'未対象施設',shop:'furniture'}}
+ ],origin);
+ assert.equal(results.length,1);
+ assert.equal(results[0].sourceId,'node/7');
+ assert.equal(results[0].distanceMeters,0);
+});
+
+test('STB-04 OpenPOI preserves source data while enforcing location and type validation',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const records=normalizers.normalizeOpenPOI([
+   {name:'お酒の美術館',category:'restaurant',lat:35.7074,lng:139.6659},
+   {name:'遠方の公園',category:'park',lat:35.8,lng:139.8},
+   {name:'不正な座標',category:'park',lat:'invalid',lng:139.6659},
+   {name:'座標なし',category:'park',lat:null,lng:null},
+   {name:'未知の一般店',category:'retail_other',lat:35.7074,lng:139.6659}
+ ],origin);
+ assert.equal(records.length,1);
+ assert.equal(records[0].theme,'dining');
+ assert.equal(records[0].name,'お酒の美術館');
+ assert.equal(records[0].source,'OpenPOI');
 });

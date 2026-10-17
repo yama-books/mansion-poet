@@ -70,7 +70,8 @@
 - [x] STB-02後半：地点・文体変更時、OpenPOIおよびOverpassへの進行中の通信とJSON読み取りをAbortControllerで中断（PR #3）。
 - [x] STB-03：文体別にキャッシュを識別し、未ソート施設データから文体ごとに施設を選び直す（PR #2）。
 - [x] POI地点引数を修正し、正常取得でないのに地名だけに降格する問題を修復（PR #2）。
-- [ ] STB-04/05：POIデータを統一し、距離・重複・住所の不整合を検査。
+- [ ] STB-04：OpenPOI・OSM共通の名称／座標／直線距離／タグ／出典／ライセンス／取得時刻の正規化を[Draft PR #4](https://github.com/yama-books/mansion-poet/pull/4)に実装。既存9件＋追加3件の[GitHub Actions 12件成功](https://github.com/yama-books/mansion-poet/actions/runs/38986973279)を確認済み。実ブラウザ動作・mainマージ・Pages反映は未実施。[再開記録](STB04_HANDOFF_20261017.md)。
+- [ ] STB-05：距離近傍でのPOI重複排除、住所の市区町村不一致の要確認検出（**未着手**）。
 - [ ] STB-06/07：施設名による分類の誤りを抑制し、通信失敗時も生成を継続。
 - [x] QA-01前半：Node組込テスト9件（検索競合・地図逆引き・生成競合・文体キャッシュ・API中断・JSON読み取り中断・OSM代替）をPRとPages配信前に自動実行。
 - [ ] QA-01後半：POI正規化の純粋関数分離と、分類・住所・通信失敗の詳細テストを追加。
