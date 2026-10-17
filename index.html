@@ -863,7 +863,7 @@ async function generate(regen=false){
 }
 function poemCopyText(){
  return [`【${$('#poemProperty').textContent}】`,$('#poemHeadline').textContent,
-  $('#poemBody').textContent,'※架空の物件を題材にした創作広告です。'].join('\\n\\n');
+  $('#poemBody').textContent,'※架空の物件を題材にした創作広告です。'].join('\n\n');
 }
 function copyToClipboard(txt,selector,original){
  const btn=$(selector);
@@ -887,10 +887,10 @@ function copyBundle(){
   item.name,formatLocationAddress(item),`直線 約${item.distanceMeters}m`,
   item.headline,item.body,
   `掲載情報：${item.source==='OSM'?'OpenStreetMap':'OpenPOI'}`
- ].join('\\n')).join('\\n\\n');
+ ].join('\n')).join('\n\n');
  const txt=[poemCopyText(),ad,
   '※施設情報・直線距離は公開データをもとにした参考値です。徒歩時間・施設への立入・営業状況を保証しません。']
-  .join('\\n\\n');
+  .join('\n\n');
  copyToClipboard(txt,'#copyBundleBtn','COPY POEM + LOCATION ↗');
 }
 $$('[data-preset]').forEach(b=>b.addEventListener('click',()=>{updateSelected(presets[b.dataset.preset]);$('#searchResults').innerHTML='';setStatus('サンプル地点を選択しました。周辺施設は生成ボタンで取得します。')}));
