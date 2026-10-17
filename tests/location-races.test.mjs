@@ -257,8 +257,9 @@ test('ordinary OpenPOI failure still falls back to OSM and yields a poem',async(
  });
  await ui.presets[1].fire();
  await ui.el('#generateBtn').fire();
- assert.match(ui.el('#generatedStatus').textContent,/周辺施設\s+1件を参照/);
- assert.ok(ui.el('#poemBody').textContent);
+ assert.match(ui.el('#generatedStatus').textContent,/一部の施設情報を取得できませんでした/);
+ assert.match(ui.el('#poemBody').textContent,/テスト公園/,
+  'OSM fallback must be part of the actual poem');
 });
 
 
