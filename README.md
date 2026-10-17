@@ -27,7 +27,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 
 ## LOCATION HIGHLIGHTS：広告型の周辺施設紹介
 
-ポエムの下に、取得した施設をそのまま高級マンション広告の周辺環境紹介として掲載。**施設名／所在地（提供元に登録されているときのみ）／直線距離／施設専用PR文**を最大3件表示します。29ジャンル87組の広告文を収録し、出典や生活情報は下のTHE EVIDENCE／THE REALITYへ分離しました。現在は**歩行経路が未取得**なので徒歩○分は記載しません。明示的な施設情報が取得できなければ仮想の施設紹介は出しません。詳細は[LOCATION-01仕様](docs/LOCATION01_AD_HIGHLIGHTS.md)。
+ポエムの下に、取得した施設をそのまま高級マンション広告の周辺環境紹介として掲載。**施設名／所在地（提供元に登録されているときのみ）／直線距離／施設専用PR文**を最大3件表示します。29ジャンル87組＋一般テーマ30組、計117組の広告文を収録し、出典や生活情報は下のTHE EVIDENCE／THE REALITYへ分離しました。現在は**歩行経路が未取得**なので徒歩○分は記載しません。明示的な施設情報が取得できなければ仮想の施設紹介は出しません。詳細は[LOCATION-01仕様](docs/LOCATION01_AD_HIGHLIGHTS.md)。
 
 ## 使い方
 
@@ -123,7 +123,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 mansion-poet/
 ├── index.html              # UI、CSS、生成エンジンを含む静的Webアプリ
 ├── src/poem-catalog.js    # 63ジャンル×10変奏の文章辞書
-├── src/location-highlights.js # 29ジャンル×3案の施設PR文章
+├── src/location-highlights.js # 29細分類×3案＋一般10テーマ×3案の施設PR文章
 ├── tests/                 # 生成・分類・状態管理の回帰テスト
 ├── README.md               # このファイル
 └── docs/
