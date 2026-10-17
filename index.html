@@ -671,9 +671,25 @@ function resetLocationHighlights(){
  $('#locationCards').innerHTML='';
  $('#locationStatus').textContent='地点を選んでポエムを生成すると、周辺の魅力をご紹介します。';
 }
-function renderLocationHighlights(pois,place){
+// SELECT-01: a single evidence-led selection for the poem and LOCATION.
+function buildThemePlan(ranked){
+ const cards=window.LocationHighlights?.create(ranked,{
+  catalog:window.PoemCatalog,subjectPolicy:window.SubjectPolicy,serial:generation})||[];
+ const matching=cards.map(card=>ranked.find(p=>p.source===card.source&&(
+   p.sourceId&&card.sourceId?p.sourceId===card.sourceId:
+   p.name===card.name&&Math.round(p.distanceMeters)===card.distanceMeters))).filter(Boolean);
+ const chief=matching[0]||ranked[0]||null;
+ const secondaries=matching.length?matching.slice(1,3):ranked.slice(1,3);
+ const poemPOIs=cards.length?(chief?[chief,...secondaries]:[]):ranked;
+ const key=p=>p?.sourceId||(`${p?.source||'unknown'}:${p?.name||''}@${p?.lat},${p?.lon}`);
+ return {mainEvidenceId:chief?key(chief):null,
+  secondaryEvidenceIds:secondaries.map(key),
+  locationCardIds:cards.map(card=>card.sourceId||null),
+  genreId:chief?window.PoemCatalog?.resolve(chief)?.id||null:null,
+  poemPOIs,locationCards:cards};
+}
+function renderLocationHighlights(items,place){
  const container=$('#locationCards');container.innerHTML='';
- const items=window.LocationHighlights?.create(pois,{catalog:window.PoemCatalog,subjectPolicy:window.SubjectPolicy,serial:generation})||[];
  if(!items.length){
   $('#locationStatus').textContent='紹介できる施設情報は取得できませんでした。公開データの未登録や取得失敗の可能性があります。';
   return;
@@ -812,17 +828,19 @@ async function generate(regen=false){
   if(version!==generationVersion||selectionAtStart!==selectionVersion||controller.signal.aborted)return;
   if(!canReuse){lastPOIs=pois;lastHealth=health;lastSource=verified?'OpenPOI/OSM':'地名のみ';lastKey=currentKey;}
   const rankedPOIs=choosePOIs(pois); // styleごとに評価し直す。
-  generation++;poemWrite(rankedPOIs,rankedPOIs.length>0);
-  renderLocationHighlights(rankedPOIs,place);
+  generation++;
+  const plan=buildThemePlan(rankedPOIs);
+  poemWrite(plan.poemPOIs,plan.poemPOIs.length>0);
+  renderLocationHighlights(plan.locationCards,place);
   renderReality(pois,health,place);
   const micro=health.smallHealth;
   $('#smallPoiStatus').textContent=!includeSmall?'追加の微細設備検索は未実施':
    micro?.status==='success'?'街の小さな設備：公開データから候補を取得':
    micro?.status==='empty'?'街の小さな設備：今回の検索で該当データなし（未登録・検索漏れの可能性あり）':
    '街の小さな設備：取得できませんでした。通常の広告生成は継続します。';
-  const warning=outageMessage(health,rankedPOIs.length>0);
+  const warning=outageMessage(health,plan.poemPOIs.length>0);
   if(warning)$('#generatedStatus').textContent=warning;
-  else if(health.kind==='empty'||!rankedPOIs.length)
+  else if(health.kind==='empty'||!plan.poemPOIs.length)
    $('#generatedStatus').textContent='利用できる周辺施設データが見つかりませんでした。地名のみで創作しました。';
   document.querySelector('#poem').scrollIntoView({behavior:'smooth',block:'start'});
  }finally{
