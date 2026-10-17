@@ -26,6 +26,7 @@
 - [広告研究30件の総括](CORPUS_30_SYNTHESIS.md)：暫定採点の分布、表現の型、DREAM／REALITYへの引継ぎ。
 - [住環境機能仕様](LIVING_ENVIRONMENT_SPEC.md)：THE DREAM / THE REALITY、買い物・駅などの施設アクセス。
 - [LIFE-00最小データ契約](LIFE00_DATA_CONTRACT.md)：生活5分類、既存STB-04〜07との接続、未取得表示、14件の未実施回帰試験を定義（仕様レビュー用・UI未実装）。
+- [LIFE-01実装記録](LIFE01_IMPLEMENTATION_20261017.md)：5カテゴリの折りたたみ生活情報画面、既存施設データ再利用・Node36テスト成功。main・Pages配信とiPhone実機は独立して確認する。
 - [STB-06実装・引継ぎ](STB06_HANDOFF_20261017.md)：POI業態優先、分類信頼度、PR/CI/Pages反映。
 - [STB-07実装・引継ぎ](STB07_HANDOFF_20261017.md)：API障害の区別、部分成功と再試行、PR/CI/Pages反映。
 

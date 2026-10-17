@@ -68,7 +68,7 @@ function makeUI(fetcher,{withMap=false}={}){
   };
   // The production functions live inside an IIFE; expose them only in the VM test copy.
   const instrumented=script.replace(/\}\)\(\);\s*$/,
-    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI,deduplicatePOIs,choosePOIs,classifyOpenPOI,fetchWithCancellation,poiErrorCode};\n})();');
+    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI,deduplicatePOIs,choosePOIs,classifyOpenPOI,fetchWithCancellation,poiErrorCode,lifeCategoryFor,buildLifeViewModel};\n})();');
   assert.notEqual(instrumented,script,'Expected the application IIFE footer');
   runInNewContext(instrumented,sandbox,{timeout:2000});
   if(withMap)window.listeners.load();
@@ -633,4 +633,118 @@ test('STB-07 fetch timeout differs from user cancellation',async()=>{
  cancelled.abort();
  await assert.rejects(ui.normalizers.fetchWithCancellation('https://example.invalid',{},cancelled.signal,100),
   error=>ui.normalizers.poiErrorCode(error)==='aborted');
+});
+
+test('LIFE-01 explicit grocery, convenience and station types are classified into distinct life groups',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659,label:'東京都中野区中野'};
+ const pois=normalizers.normalizeOpenPOI([
+  {id:'g',name:'テスト食料品店',category:'supermarket',lat:origin.lat,lng:origin.lon},
+  {id:'c',name:'テストコンビニ',business_type:'convenience_store',lat:origin.lat+0.001,lng:origin.lon},
+  {id:'s',name:'テスト駅',category:'station',lat:origin.lat+0.002,lng:origin.lon}
+ ],origin);
+ assert.equal(pois.length,3);
+ const view=normalizers.buildLifeViewModel(pois,{kind:'complete',osmAttempted:false});
+ assert.equal(view.groups.find(g=>g.id==='shopping').items.length,1);
+ assert.equal(view.groups.find(g=>g.id==='daily').items.length,1);
+ assert.equal(view.groups.find(g=>g.id==='transport').items.length,1);
+ assert.equal(view.found,3);
+});
+
+test('LIFE-01 attractive shop names never override conflicting explicit business type',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659,label:'東京都中野区中野'};
+ const pois=normalizers.normalizeOpenPOI([
+  {name:'お酒の美術館',category:'bar_izakaya',lat:origin.lat,lng:origin.lon},
+  {name:'店名にスーパーを含むバー',category:'bar_izakaya',lat:origin.lat+0.001,lng:origin.lon},
+  {name:'業態矛盾の売店',business_type:'supermarket',category:'station',lat:origin.lat+0.002,lng:origin.lon},
+  {name:'名前のみのスーパー',lat:origin.lat+0.003,lng:origin.lon}
+ ],origin);
+ assert.equal(normalizers.buildLifeViewModel(pois,{kind:'complete'}).found,0);
+});
+
+test('LIFE-01 OSM parks, libraries and museums are recognized only from tags',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const pois=normalizers.normalizeOSMPOI([
+  {id:1,type:'node',lat:origin.lat,lon:origin.lon,tags:{name:'架空公園',leisure:'park'}},
+  {id:2,type:'node',lat:origin.lat+0.001,lon:origin.lon,tags:{name:'架空図書館',amenity:'library'}},
+  {id:3,type:'node',lat:origin.lat+0.002,lon:origin.lon,tags:{name:'架空美術館',tourism:'museum'}},
+  {id:4,type:'node',lat:origin.lat+0.003,lon:origin.lon,tags:{name:'博物館という名の家具店',shop:'furniture'}}
+ ],origin);
+ assert.equal(pois.length,3);
+ const view=normalizers.buildLifeViewModel(pois,{kind:'complete',osmAttempted:true});
+ assert.equal(view.groups.find(g=>g.id==='rest').items.length,1);
+ assert.equal(view.groups.find(g=>g.id==='culture').items.length,2);
+});
+
+test('LIFE-01 dedup retains source provenance and excludes address mismatch',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659,label:'東京都中野区中野'};
+ const a=normalizers.normalizeOpenPOI([
+  {name:'同じ図書館',category:'library',id:'d1',lat:origin.lat,lng:origin.lon},
+  {name:'住所が違うスーパー',category:'supermarket',id:'d2',lat:origin.lat+0.002,lng:origin.lon,prefecture:'大阪府'}
+ ],origin);
+ const b=normalizers.normalizeOSMPOI([
+  {type:'node',id:11,lat:origin.lat+0.00005,lon:origin.lon,tags:{name:'同じ図書館',amenity:'library'}}
+ ],origin);
+ const view=normalizers.buildLifeViewModel([...a,...b],{kind:'complete'});
+ const books=view.groups.find(g=>g.id==='culture').items;
+ assert.equal(books.length,1);
+ assert.equal(books[0].evidenceSources.length,2);
+ assert.equal(view.groups.find(g=>g.id==='shopping').items.length,0);
+});
+
+test('LIFE-01 public generation renders five categories and invalidates them on location change',async()=>{
+ const ui=makeUI(url=>{
+  const u=String(url);
+  if(u.includes('openpoiapi.com'))return Promise.resolve(response({results:[
+   {id:10,name:'架空スーパー',category:'supermarket',lat:35.7074,lng:139.6659}
+  ]}));
+  return Promise.resolve(response({elements:[]}));
+ });
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.equal(ui.el('#realityList').children.length,5);
+ assert.match(ui.el('#realityStatus').textContent,/東京都中野区中野/);
+ const shopping=ui.el('#realityList').children[0];
+ assert.match(shopping.children[1].children[0].textContent,/架空スーパー/);
+ assert.match(shopping.children[1].children[1].textContent,/直線距離 約0m/);
+ await ui.presets[2].fire();
+ assert.equal(ui.el('#realityList').children.length,0);
+ assert.match(ui.el('#realityStatus').textContent,/選択地点が変わりました/);
+});
+
+test('LIFE-01 partial data and outage keep honest coverage labels',async()=>{
+ const ui=makeUI(url=>{
+  const u=String(url);
+  if(u.includes('openpoiapi.com')){
+   return Promise.resolve(new URL(u).searchParams.has('q')?
+    {ok:false,status:429,json:async()=>({})}:
+    response({results:[{name:'スーパーサンプル',category:'supermarket',lat:35.7074,lng:139.6659}]}));
+  }
+  return Promise.resolve({ok:false,status:503,json:async()=>({})});
+ });
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.match(ui.el('#realityStatus').textContent,/一部の取得元が利用できません/);
+ assert.equal(ui.el('#realityList').children[0].children.length,2);
+ const down=makeUI(url=>Promise.resolve({ok:false,status:429,json:async()=>({})}));
+ await down.presets[1].fire();
+ await down.el('#generateBtn').fire();
+ assert.match(down.el('#realityStatus').textContent,/取得できませんでした/);
+ assert.equal(down.el('#realityList').children.length,0);
+});
+
+test('LIFE-01 Reality view remains independent of poem style and limits each category to three',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const pois=normalizers.normalizeOpenPOI(Array.from({length:7},(_,i)=>({
+  id:'shop-'+i,name:'独立スーパー'+i,category:'supermarket',lat:origin.lat+0.0006*i,lng:origin.lon
+ })),origin);
+ const view=normalizers.buildLifeViewModel(pois,{kind:'complete'});
+ const items=view.groups.find(g=>g.id==='shopping').items;
+ assert.equal(items.length,3);
+ assert.equal(items[0].name,'独立スーパー0');
+ assert.equal(items[2].name,'独立スーパー2');
 });
