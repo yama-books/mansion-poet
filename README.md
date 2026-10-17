@@ -13,15 +13,21 @@
 
 GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開ける静的Webアプリです。
 
-- 配信方式：GitHub Actionsで `main/index.html` をGitHub Pagesに公開
-- 自動公開：`index.html` または `.github/workflows/deploy-pages.yml` を変更したとき
+- 配信方式：GitHub Actionsで `main/index.html` と `src/poem-catalog.js` をGitHub Pagesに公開
+- 自動公開：`index.html`、`src/**`、`tests/**`、または `.github/workflows/deploy-pages.yml` を変更したとき
 - 公開用ワークフロー：[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)
 
 2026-10-17：初回Actionsデプロイが成功し、実際の公開URLからHTTP 200、画面テキスト・地図タイル・主要操作ボタンの表示を確認しました。さらに公開ブラウザ上で「中野」サンプル選択→生成（OpenPOIで施設8件）と、荻窪の地名検索→候補選択→生成（施設10件）を確認しました。iPhone/Androidなど個別端末の実機操作は引き続き検証対象です。
 
+## POEM-01 ジャンル別ポエム辞書（実装段階）
+
+[630種類の文章フック・63ジャンル](src/poem-catalog.js)を実装。側溝・暗渠・カーブミラー・郵便ポスト・学校・神社寺院などの建築・自然景観・飲食店・確認済みチェーン名を細分類し、各10案を再生成に使用します。[実装と制限の記録](docs/POEM01_GENRE_LIBRARY.md)。
+
+**辞書に登録されていることと、現在の施設APIから取得できることは別**です。ソースの種類や店舗ブランドが明示的に確認できたときだけ専用文章を使用し、未確認なら従来の文章に戻ります。文章の人手校閲と、細かい施設の取得拡充は後続作業です。宗教的な建築は文化・景観の文脈で扱い、医療・支援等の保護対象は広告パロディの主題から除外します。
+
 ## 使い方
 
-1. [`index.html`](index.html) をブラウザで開きます。Python、Node.js、ビルド操作、APIキーは不要です。
+1. [GitHub Pages](https://yama-books.github.io/mansion-poet/) から開きます。ビルド操作やAPIキーは不要です（ローカルでHTML単独表示する場合は隣の`src/poem-catalog.js`も必要です）。
 2. サンプル地名を選ぶか、地名を検索して候補を選択します。地図クリックで地点を指定することもできます。
 3. 「格式・邸宅」「都市・先進」「自然・静寂」から文体を選び、ポエム濃度を調節します。
 4. 「この街を、詩にする」を押します。
@@ -112,6 +118,8 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 ```text
 mansion-poet/
 ├── index.html              # UI、CSS、生成エンジンを含む静的Webアプリ
+├── src/poem-catalog.js    # 63ジャンル×10変奏の文章辞書
+├── tests/                 # 生成・分類・状態管理の回帰テスト
 ├── README.md               # このファイル
 └── docs/
     ├── CONCEPT.md          # 構想・仕様
