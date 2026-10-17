@@ -2,7 +2,7 @@
 
 APP-ID: APP-003 / POÈME / ESTATE  
 実装日：2026-10-17（JST）  
-状態：**最小版実装。公開・受入の確認結果はPR/CIに記録する。**  
+状態：**最小版実装・main公開・公開ブラウザ受入確認済み。実機タップ・細密設備検索は未完了。**  
 正本：[yama-books/mansion-poet](https://github.com/yama-books/mansion-poet)  
 関連：[POEM-01](POEM01_GENRE_LIBRARY.md) / [POEM_SUBJECT_POLICY](POEM_SUBJECT_POLICY.md) / [LIFE-01](LIFE01_IMPLEMENTATION_20261017.md)
 
@@ -52,7 +52,7 @@ APP-ID: APP-003 / POÈME / ESTATE
 
 ## 文章辞書
 
-`src/location-highlights.js` に**29ジャンル × 3広告見出し／PR本文 = 87組**の初稿を登録。暗渠・側溝・排水路・郵便ポスト・郵便局・学校・役所・神社・寺院・教会建築・公園・庭園・河川・樹木・図書館・スーパー・ピザ・ラーメン・ラーメン二郎・天下一品・銭湯・ゲームセンター・駅・マンホール・カーブミラー・自販機・ベンチ・宅配ロッカーなど。その他のPOEM-01ジャンルには10の一般テーマ別PR文を適用可能。
+`src/location-highlights.js` に**29ジャンル × 3広告見出し／PR本文 = 87組**の初稿を登録。暗渠・側溝・排水路・郵便ポスト・郵便局・学校・役所・神社・寺院・教会建築・公園・庭園・河川・樹木・図書館・スーパー・ピザ・ラーメン・ラーメン二郎・天下一品・銭湯・ゲームセンター・駅・マンホール・カーブミラー・自販機・ベンチ・宅配ロッカーなど。その他のPOEM-01ジャンルには10の一般テーマそれぞれ3案、計30組の専用PR文を適用。**合計117組**。
 
 POEM-01の既存630文言は**文言制作専用の別作業**へ移譲済みにつき触れない。PR用の新しい文章は別ファイルへ保存するため編集競合を防げる。
 
@@ -62,7 +62,7 @@ POEM-01の既存630文言は**文言制作専用の別作業**へ移譲済みに
 - 徒歩ルート、入口座標、経路の到達可能性、施設営業状況の取得
 - 住所の逆ジオコーディング（POIの座標と選択地点の混同を避ける）
 - 3カード以上の比較や画像生成
-- PR用87組の人手による複数回品質校閲
+- PR用117組の人手による複数回品質校閲
 - 他の施設種のブランド名を未検証で推定すること
 
 ## 段階的な次作業
@@ -74,7 +74,18 @@ POEM-01の既存630文言は**文言制作専用の別作業**へ移譲済みに
 
 ### 検証ゲート
 
-- Nodeユニットテスト：87広告案、住所・距離・徒歩分数の禁則、配慮施設の非選定、再生成変化。
+- Nodeユニットテスト：117広告案、住所・距離・徒歩分数の禁則、配慮施設の非選定、再生成変化。
 - モック画面テスト：PRカードのDOM、地点変更後の旧カード消去、取得不能時に架空カードを出さないこと。
 - PR CI成功 → mainマージ → Pages成功 → 公開ページで表示・再生成・モバイル表示の確認。
 - この文書の「実装」とユーザーの実機操作確認は別扱いとする。
+
+## 2026-10-17 実装・公開・受入CHECKPOINT
+
+- [x] [LOCATION-01 PR #13](https://github.com/yama-books/mansion-poet/pull/13) mainマージ：[`105ef6f`](https://github.com/yama-books/mansion-poet/commit/105ef6f28bc6ee0ce09eb89b7cb35614fa01fc13)。[PR CI 66件成功](https://github.com/yama-books/mansion-poet/actions/runs/39013478076)、[Pages SUCCESS](https://github.com/yama-books/mansion-poet/actions/runs/39013536945)、公開HTML/新JS HTTP 200を確認。
+- [x] 公開ブラウザで中野プリセット→実施設カード3枚表示、所在地・直線距離・広告見出し・PR本文、REGENERATE、京都プリセットへ地点変更した際の古いカード即時消去を確認。
+- [x] 実ブラウザで洋菓子店がスーパーと分類され、PRに編集者視点の「ご紹介します」が入る問題を検出。[分類・コピー修正PR #14](https://github.com/yama-books/mansion-poet/pull/14)をマージ（[`ea25c23`](https://github.com/yama-books/mansion-poet/commit/ea25c23d0ddce5b397ece4f7e8928451edc7cfea)）。[68テスト全成功](https://github.com/yama-books/mansion-poet/actions/runs/39013849570)、[Pages SUCCESS](https://github.com/yama-books/mansion-poet/actions/runs/39013894353)。公開ブラウザで銀座コージーコーナーが一般商業PRにフォールバックし、スーパー・食料品など誤断定しないことを確認。
+- [x] 一般テーマの広告が再生成でも変わらない問題を発見。[PR #15](https://github.com/yama-books/mansion-poet/pull/15)で全10テーマを3案ずつに拡大、合計117組へ（[`a879580`](https://github.com/yama-books/mansion-poet/commit/a879580b8d951a675c56930237dbf697b4753302)）。[PR CI 69件全合格](https://github.com/yama-books/mansion-poet/actions/runs/39014087499)、[最終Pages SUCCESS](https://github.com/yama-books/mansion-poet/actions/runs/39014131376)。公開ブラウザで中野の3カードが再生成で**すべて別見出しに変化**し、洋菓子店をスーパーと誤認しないこと、徒歩分数を捏造しないことを確認。
+- [ ] iPhone Safari / Android Chrome実機。320px/375pxでの実機タップ、長い施設名の文字切れ、印刷／コピーへの取り込み確認は未完了。
+- [ ] 暗渠・側溝・ポスト等の微細施設をライブAPIから実際に取得して広告カード化する試験。現行API条件では未検索・未登録の可能性が高い。
+
+**出典表示とPOIの網羅性は別課題。** 公開ブラウザで今回観測したのは中野の実取得施設に対する広告カードであり、117組すべてを実データで動作確認したわけではない。
