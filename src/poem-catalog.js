@@ -36,6 +36,8 @@
    }
    return false;
   };
+  // Tunnelled waterway (culvert) is more specific than a stream/river tag alone.
+  if(p.source==='OSM'&&normalize(t.tunnel)==='culvert'&&normalize(t.waterway))return index.get('culvert');
   // Exact brand > structure-specific tags > provider type > generic literary theme.
   for(const prefix of ['brand:','osm:','type:','theme:']){
    for(const g of genres){if(g.selectors.some(sel=>sel.startsWith(prefix)&&matches(sel)))return g;}
