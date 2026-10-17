@@ -66,8 +66,11 @@ function makeUI(fetcher,{withMap=false}={}){
     navigator:{clipboard:{writeText:async()=>{}}},URL,
     console:{info(){}},setTimeout,clearTimeout,L:leaflet
   };
-  runInNewContext(script+'\nglobalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI};',
-    sandbox,{timeout:2000});
+  // The production functions live inside an IIFE; expose them only in the VM test copy.
+  const instrumented=script.replace(/\}\)\(\);\s*$/,
+    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI};\n})();');
+  assert.notEqual(instrumented,script,'Expected the application IIFE footer');
+  runInNewContext(instrumented,sandbox,{timeout:2000});
   if(withMap)window.listeners.load();
   return {el,presets,modes,mapHandlers,normalizers:sandbox.__poiTest};
 }
