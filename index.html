@@ -216,7 +216,47 @@ async function search(){
  }
 }
 const poiConfig=[['leisure','park','緑地・公園','green'],['amenity','library','図書館','knowledge'],['amenity','university','大学','knowledge'],['amenity','school','学校','knowledge'],['historic',null,'史跡・歴史','history'],['tourism','museum','博物館','culture'],['tourism','gallery','文化施設','culture'],['railway','station','鉄道駅','transport'],['natural','water','水辺','water'],['waterway','river','水辺','water']];
-function tagPOI(tags){for(const [key,value,label,theme] of poiConfig){if(tags[key]&&(value===null||tags[key]===value))return {category:label,theme}}return null}
+// GEO-01: taxonomy only. GEO-02 will decide which low-volume queries to enable.
+const smallInfrastructure=[
+ ['amenity','post_box','郵便ポスト','post_box',false],
+ ['man_made','manhole','マンホール','manhole',false],
+ ['highway','traffic_mirror','カーブミラー','mirror',false],
+ ['waterway','ditch','側溝','ditch',true],
+ ['waterway','drain','排水路','drain',true]
+];
+function tagPOI(tags){
+ if(tags.tunnel==='culvert'&&['ditch','drain','stream','river','canal'].includes(tags.waterway))
+  return {category:'暗渠',theme:'urban_detail',facilityKind:'culvert',allowUnnamed:true,linear:true};
+ for(const [key,value,category,facilityKind,linear] of smallInfrastructure){
+  if(tags[key]===value)
+   return {category,theme:'urban_detail',facilityKind,allowUnnamed:true,linear};
+ }
+ for(const [key,value,label,theme] of poiConfig){
+  if(tags[key]&&(value===null||tags[key]===value))return {category:label,theme};
+ }
+ return null;
+}
+// Straight-line proximity to a *line segment*, not the geometric centre of a way.
+function nearestLinePoint(geometry,origin){
+ if(!Array.isArray(geometry)||geometry.length<2)return null;
+ const latScale=111195,lonScale=latScale*Math.cos(origin.lat*Math.PI/180);
+ if(Math.abs(lonScale)<1)return null;
+ const pts=geometry.map(p=>({lat:Number(p?.lat),lon:Number(p?.lon)}));
+ if(pts.some(p=>!Number.isFinite(p.lat)||!Number.isFinite(p.lon)||
+  Math.abs(p.lat)>90||Math.abs(p.lon)>180))return null;
+ let closest=null;
+ for(let i=1;i<pts.length;i++){
+  const a=pts[i-1],b=pts[i];
+  const ax=(a.lon-origin.lon)*lonScale,ay=(a.lat-origin.lat)*latScale;
+  const bx=(b.lon-origin.lon)*lonScale,by=(b.lat-origin.lat)*latScale;
+  const dx=bx-ax,dy=by-ay,denom=dx*dx+dy*dy;
+  const t=denom?Math.max(0,Math.min(1,-(ax*dx+ay*dy)/denom)):0;
+  const lat=a.lat+(b.lat-a.lat)*t,lon=a.lon+(b.lon-a.lon)*t;
+  const distanceMeters=distanceMetersBetween(origin.lat,origin.lon,lat,lon);
+  if(!closest||distanceMeters<closest.distanceMeters)closest={lat,lon,distanceMeters};
+ }
+ return closest;
+}
 function distanceMetersBetween(lat1,lon1,lat2,lon2){
  const radians=n=>n*Math.PI/180;
  const dlat=radians(lat2-lat1),dlon=radians(lon2-lon1);
@@ -306,9 +346,13 @@ function deduplicatePOIs(items){
   if(!poi||!normalizedPOIName(poi.name)||!Number.isFinite(poi.lat)||!Number.isFinite(poi.lon))continue;
   const currentEvidence=Array.isArray(poi.evidenceSources)&&poi.evidenceSources.length?
    poi.evidenceSources:[poiEvidence(poi)];
-  const matchIndex=unique.findIndex(other=>
-   normalizedPOIName(other.name)===normalizedPOIName(poi.name)&&
-   distanceMetersBetween(other.lat,other.lon,poi.lat,poi.lon)<=40);
+  const matchIndex=unique.findIndex(other=>{
+   // Same generic label does not mean the same post box or drain.
+   if(poi.nameIsFallback||other.nameIsFallback||poi.geometryKind==='line'||other.geometryKind==='line')
+    return Boolean(poi.sourceId&&other.sourceId&&poi.source===other.source&&poi.sourceId===other.sourceId);
+   return normalizedPOIName(other.name)===normalizedPOIName(poi.name)&&
+    distanceMetersBetween(other.lat,other.lon,poi.lat,poi.lon)<=40;
+  });
   if(matchIndex<0){
    unique.push({...poi,evidenceSources:[...currentEvidence]});
    continue;
@@ -343,20 +387,28 @@ function normalizePOIs(rows,origin,source){
   const tags=isOSM?item.tags:(item.tags&&typeof item.tags==='object'?item.tags:
     {category:item.category??null,business_type:item.business_type??null});
   if(!tags||typeof tags!=='object'||Array.isArray(tags))return null;
-  const name=String((isOSM?(tags['name:ja']||tags.name):item.name)||'').trim();
   const osmKind=isOSM?tagPOI(tags):null;
-  const kind=isOSM?(osmKind?{...osmKind,classificationConfidence:'high',classificationEvidence:'osm_tags',classificationFlags:[]}:null):classifyOpenPOI(item);
-  const rawLat=isOSM?(item.lat??item.center?.lat):item.lat;
-  const rawLon=isOSM?(item.lon??item.center?.lon):item.lng;
+  const rawName=String((isOSM?(tags['name:ja']||tags.name):item.name)||'').trim();
+  const sourceId=isOSM?(item.type!=null&&item.id!=null?`${item.type}/${item.id}`:null):
+    (item.id==null?null:String(item.id));
+  const nameIsFallback=Boolean(isOSM&&!rawName&&osmKind?.allowUnnamed&&sourceId);
+  const name=nameIsFallback?`${osmKind.category}（名称未登録）`:rawName;
+  const kind=isOSM?(osmKind?{category:osmKind.category,theme:osmKind.theme,
+   classificationConfidence:'high',classificationEvidence:'osm_tags',classificationFlags:[]}:null):classifyOpenPOI(item);
+  const closest=isOSM&&osmKind?.linear?nearestLinePoint(item.geometry,origin):null;
+  // A line's centre is not a defensible claim about how near that line passes.
+  if(isOSM&&osmKind?.linear&&!closest)return null;
+  const rawLat=closest?.lat??(isOSM?(item.lat??item.center?.lat):item.lat);
+  const rawLon=closest?.lon??(isOSM?(item.lon??item.center?.lon):item.lng);
   const lat=Number(rawLat),lon=Number(rawLon);
   if(!name||name.length>80||!kind||rawLat==null||rawLon==null||
      !Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return null;
-  const distanceMeters=distanceMetersBetween(origin.lat,origin.lon,lat,lon);
-  // Overpass area centres can be outside radius. Never trust a provider's distance filter.
+  const distanceMeters=closest?.distanceMeters??distanceMetersBetween(origin.lat,origin.lon,lat,lon);
+  // The provider's radius must not override our own geometry check.
   if(!Number.isFinite(distanceMeters)||distanceMeters>850)return null;
-  const sourceId=isOSM?(item.type!=null&&item.id!=null?`${item.type}/${item.id}`:null):
-    (item.id==null?null:String(item.id));
-  return {name,...kind,source,sourceId,lat,lon,
+  return {name,nameIsFallback,geometryKind:closest?'line':null,
+   distanceMethod:closest?'nearest_line_segment':(isOSM&&item.center?'representative_center':'point'),
+   ...kind,source,sourceId,lat,lon,
    providerCategory:isOSM?null:String(item.category||''),
    providerBusinessType:isOSM?null:String(item.business_type||''),
    providerBrand:isOSM?String(tags.brand||''):String(item.brand||''),
