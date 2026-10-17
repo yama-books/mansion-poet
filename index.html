@@ -190,13 +190,16 @@ function classifyOpenPOI(record){
  const fields=[['business_type',record.business_type],['category',record.category]]
   .map(([field,value])=>[field,String(value??'').toLowerCase().trim().replace(/[\s-]+/g,'_')])
   .filter(([,value])=>value);
- const known=fields.map(([field,type])=>({field,rule:poiTypeRules.find(r=>r.codes.includes(type))}))
-  .find(x=>x.rule);
+ const typed=fields.map(([field,type])=>({field,rule:poiTypeRules.find(r=>r.codes.includes(type))}))
+  .filter(x=>x.rule);
+ const known=typed[0];
  const named=namePOICategory(name);
  if(known){
+  const providerConflict=typed.some(x=>x.rule.theme!==known.rule.theme);
   return {category:known.rule.category,theme:known.rule.theme,
-   classificationConfidence:'high',classificationEvidence:known.field,
-   classificationFlags:named&&named.theme!==known.rule.theme?['name_type_conflict']:[]};
+   classificationConfidence:providerConflict?'low':'high',classificationEvidence:known.field,
+   classificationFlags:[...(named&&named.theme!==known.rule.theme?['name_type_conflict']:[]),
+    ...(providerConflict?['provider_type_conflict']:[])]};
  }
  if(!named)return null;
  // Generic provider categories or pure brand-name guesses are not sufficient for the poem.
