@@ -142,3 +142,16 @@ test('POEM-01 genre-specific variants avoid direct historical/religious guarante
   assert.doesNotMatch(g.variants.join('、'),blocked);
  }
 });
+
+test('POEM-01 precision: education is not always school, generic water not always pond',()=>{
+ const education=poi({source:'OpenPOI',providerBusinessType:'education',theme:'knowledge'});
+ assert.notEqual(lib.resolve(education)?.id,'school');
+ assert.equal(lib.resolve(poi({tags:{natural:'water'},theme:'water'}))?.id,'water');
+ assert.equal(lib.resolve(poi({tags:{water:'pond'},theme:'water'}))?.id,'pond');
+});
+
+test('POEM-01 precision: Indian cuisine alone does not prove a curry speciality',()=>{
+ const indian=poi({tags:{cuisine:'indian'},theme:'dining'});
+ assert.notEqual(lib.resolve(indian)?.id,'curry');
+ assert.equal(lib.resolve(poi({tags:{cuisine:'curry'},theme:'dining'}))?.id,'curry');
+});
