@@ -68,7 +68,7 @@ function makeUI(fetcher,{withMap=false}={}){
   };
   // The production functions live inside an IIFE; expose them only in the VM test copy.
   const instrumented=script.replace(/\}\)\(\);\s*$/,
-    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI,deduplicatePOIs,choosePOIs};\n})();');
+    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI,deduplicatePOIs,choosePOIs,classifyOpenPOI};\n})();');
   assert.notEqual(instrumented,script,'Expected the application IIFE footer');
   runInNewContext(instrumented,sandbox,{timeout:2000});
   if(withMap)window.listeners.load();
@@ -424,4 +424,125 @@ test('STB-05 ambiguous location labels do not imply municipality mismatch',()=>{
  assert.equal(a.length,1);
  assert.equal(a[0].validationFlags.length,0);
  assert.equal(normalizers.deduplicatePOIs([]).length,0);
+});
+
+test('STB-06 bar_izakaya beats the word 美術館 in the brand name',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const rows=normalizers.normalizeOpenPOI([
+  {id:'bar1',name:'お酒の美術館中野店',category:'bar_izakaya',
+   business_type:'bar_izakaya',lat:35.7074,lng:139.6659},
+  {id:'bar2',name:'バー美術館',category:'tourism',
+   business_type:'bar_izakaya',lat:35.7075,lng:139.6659},
+  {id:'bar3',name:'お酒の美術館',category:'restaurant',
+   business_type:'restaurant',lat:35.7076,lng:139.6659}
+ ],origin);
+ assert.equal(rows.length,3);
+ for(const row of rows){
+  assert.equal(row.theme,'dining');
+  assert.equal(row.category,'食と街の営み');
+  assert.equal(row.classificationConfidence,'high');
+  assert.equal(row.classificationEvidence,'business_type');
+  assert.equal(row.classificationFlags.includes('name_type_conflict'),true);
+ }
+});
+
+test('STB-06 explicit culture and bookstore types remain confidently classified',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const rows=normalizers.normalizeOpenPOI([
+  {name:'市立美術館',category:'museum',lat:35.7074,lng:139.6659},
+  {name:'神保町古書店',business_type:'bookstore',category:'retail_other',lat:35.70745,lng:139.6659},
+  {name:'公園前カフェ',business_type:'cafe',category:'restaurant',lat:35.7075,lng:139.6659}
+ ],origin);
+ assert.equal(rows.length,3);
+ assert.equal(rows[0].theme,'culture');
+ assert.equal(rows[0].classificationConfidence,'high');
+ assert.equal(rows[0].classificationEvidence,'category');
+ assert.equal(rows[1].theme,'knowledge');
+ assert.equal(rows[1].classificationEvidence,'business_type');
+ assert.equal(rows[2].theme,'dining');
+ assert.equal(rows[2].classificationFlags.includes('name_type_conflict'),true);
+});
+
+test('STB-06 unknown provider category plus a museum name stays low confidence',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const records=normalizers.normalizeOpenPOI([
+  {name:'お酒の美術館',lat:35.7074,lng:139.6659},
+  {name:'美術館商店',category:'retail_other',lat:35.70745,lng:139.6659},
+  {name:'市立美術館',lat:35.7075,lng:139.6659},
+  {name:'歴史博物館',category:'museum',lat:35.70755,lng:139.6659}
+ ],origin);
+ assert.equal(records.length,4);
+ assert.equal(records[0].classificationConfidence,'low');
+ assert.equal(records[1].classificationConfidence,'low');
+ assert.equal(records[2].classificationConfidence,'medium');
+ assert.equal(records[3].classificationConfidence,'high');
+ assert.equal(normalizers.choosePOIs(records).length,2);
+ assert.ok(normalizers.choosePOIs(records).every(x=>x.classificationConfidence!=='low'));
+});
+
+test('STB-06 OSM unknown tags are rejected instead of getting a theme from their names',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const out=normalizers.normalizeOSMPOI([
+  {type:'node',id:1,lat:35.7074,lon:139.6659,tags:{name:'駅前美術館商店',shop:'furniture'}},
+  {type:'node',id:2,lat:35.7074,lon:139.6659,tags:{name:'本物の図書館',amenity:'library'}}
+ ],origin);
+ assert.equal(out.length,1);
+ assert.equal(out[0].sourceId,'node/2');
+ assert.equal(out[0].classificationConfidence,'high');
+ assert.equal(out[0].classificationEvidence,'osm_tags');
+});
+
+test('STB-06 conflicting provider themes are quarantined but provenance is retained',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const a=normalizers.normalizeOpenPOI([
+  {id:'a',name:'同じ名称',category:'bar_izakaya',lat:35.7074,lng:139.6659}
+ ],origin)[0];
+ const b=normalizers.normalizeOSMPOI([
+  {type:'node',id:2,lat:35.70742,lon:139.6659,tags:{name:'同じ名称',tourism:'museum'}}
+ ],origin)[0];
+ const combined=normalizers.deduplicatePOIs([a,b]);
+ assert.equal(combined.length,1);
+ assert.equal(combined[0].classificationConfidence,'low');
+ assert.equal(combined[0].classificationFlags.includes('source_theme_conflict'),true);
+ assert.equal(combined[0].evidenceSources.length,2);
+ assert.equal(normalizers.choosePOIs(combined).length,0);
+});
+
+test('STB-06 unknown typed brands do not become facts from attractive naming',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const records=normalizers.normalizeOpenPOI([
+  {name:'建築美術館',category:'miscellaneous_business',lat:35.7074,lng:139.6659},
+  {name:'学校前のスーパーマーケット',category:'supermarket',lat:35.7075,lng:139.6659},
+  {name:'お酒の美術館',category:'bar_izakaya',lat:35.7076,lng:139.6659}
+ ],origin);
+ assert.equal(records.length,3);
+ assert.equal(records[0].classificationConfidence,'low');
+ assert.equal(records[1].theme,'commerce');
+ assert.equal(records[1].classificationConfidence,'high');
+ assert.equal(records[2].theme,'dining');
+ assert.equal(records[2].classificationEvidence,'category');
+});
+
+test('STB-06 contradictory explicit business_type and category are not promoted to city facts',()=>{
+ const {normalizers}=makeUI(()=>Promise.reject(Error('unused')));
+ const origin={lat:35.7074,lon:139.6659};
+ const records=normalizers.normalizeOpenPOI([
+  {name:'交差した業態',business_type:'bar_izakaya',category:'museum',
+   lat:35.7074,lng:139.6659},
+  {name:'信頼できる実博物館',business_type:'museum',category:'museum',
+   lat:35.7075,lng:139.6659}
+ ],origin);
+ assert.equal(records.length,2);
+ assert.equal(records[0].classificationEvidence,'business_type');
+ assert.equal(records[0].classificationConfidence,'low');
+ assert.ok(records[0].classificationFlags.includes('provider_type_conflict'));
+ assert.equal(records[1].classificationConfidence,'high');
+ assert.equal(normalizers.choosePOIs(records).length,1);
+ assert.equal(normalizers.choosePOIs(records)[0].theme,'culture');
 });

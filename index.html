@@ -159,22 +159,55 @@ function distanceMetersBetween(lat1,lon1,lat2,lon2){
  const a=Math.sin(dlat/2)**2+Math.cos(radians(lat1))*Math.cos(radians(lat2))*Math.sin(dlon/2)**2;
  return 6371000*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
+// STB-06: evidence from an explicit business type outranks a marketing/brand name.
+const poiTypeRules=[
+ {codes:['cafe','coffee_shop','coffeehouse','restaurant','bakery','food_court','fast_food','bar_izakaya','izakaya','bar','pub','drinking_establishment'],category:'食と街の営み',theme:'dining'},
+ {codes:['library','bookstore','book_shop','university','college','school','education'],category:'文教・書物',theme:'knowledge'},
+ {codes:['museum','gallery','theatre','theater','arts_center','art_center','cultural_center'],category:'文化・芸術',theme:'culture'},
+ {codes:['park','garden','botanical','botanical_garden','nature_reserve'],category:'緑地・公園',theme:'green'},
+ {codes:['temple','shrine','historic','heritage','castle'],category:'史跡・歴史',theme:'history'},
+ {codes:['railway_station','train_station','transit_station','station'],category:'鉄道・交通',theme:'transport'},
+ {codes:['harbor','harbour','marina','river','waterfront'],category:'水辺・港',theme:'water'},
+ {codes:['shopping_mall','department_store','supermarket','market','shopping_center','grocery'],category:'商業・街並み',theme:'commerce'}
+];
+function namePOICategory(name){
+ const rules=[
+  [/図書館|書店|書房|古書店|本屋|大学|高等学校|専門学校|学園|文庫$/, 'knowledge'],
+  [/美術館|博物館|資料館|記念館|劇場|文化会館|ギャラリー$/, 'culture'],
+  [/公園|庭園|植物園|自然公園$/, 'green'],
+  [/神社|神宮|寺院|寺|史跡|城跡|旧跡$/, 'history'],
+  [/駅|停留場$/, 'transport'],
+  [/港|海岸|運河|川|湾$/, 'water'],
+  [/商店街|百貨店|デパート|スーパー|市場$/, 'commerce'],
+  [/喫茶|カフェ|ベーカリー|珈琲$/, 'dining']
+ ];
+ const theme=rules.find(([pattern])=>pattern.test(name))?.[1];
+ return poiTypeRules.find(rule=>rule.theme===theme)||null;
+}
 function classifyOpenPOI(record){
- const name=String(record.name||'').trim();
- const type=[record.category,record.business_type].filter(Boolean).join(' ').toLowerCase();
- if(!name||name.length>80) return null;
- // カテゴリが明示された飲食店等を、施設名中の『神社』『美術館』などで誤分類しない。
- if(/cafe|coffee_shop|restaurant|bakery|food_court/.test(type))return {category:'食と街の営み',theme:'dining'};
- const match=(typePattern,namePattern)=>typePattern.test(type)||namePattern.test(name);
- if(match(/library|bookstore|book_shop|university|college|school|education/,/図書館|書店|書房|古書|本屋|大学|高等学校|専門学校|学園|文庫/)) return {category:'文教・書物',theme:'knowledge'};
- if(match(/museum|gallery|theatre|theater|arts?_center|cultural/,/美術館|博物館|資料館|記念館|劇場|文化会館|ギャラリー/)) return {category:'文化・芸術',theme:'culture'};
- if(match(/park|garden|botanical|nature_reserve/,/公園|庭園|植物園|自然公園/)) return {category:'緑地・公園',theme:'green'};
- if(match(/temple|shrine|historic|heritage|castle/,/神社|神宮|寺院|寺$|史跡|城跡|旧跡/)) return {category:'史跡・歴史',theme:'history'};
- if(match(/railway_station|train_station|transit_station|station/,/駅$|停留場$/)) return {category:'鉄道・交通',theme:'transport'};
- if(match(/harbor|harbour|marina|river|waterfront/,/港$|海岸|運河|川$|湾$/)) return {category:'水辺・港',theme:'water'};
- if(match(/shopping_mall|department_store|supermarket|market|shopping_center|grocery/,/商店街|百貨店|デパート|スーパー|市場$/)) return {category:'商業・街並み',theme:'commerce'};
- if(match(/cafe|coffee_shop|restaurant|bakery|food_court/,/喫茶|カフェ|ベーカリー|珈琲/)) return {category:'食と街の営み',theme:'dining'};
- return null;
+ const name=String(record?.name||'').trim();
+ if(!name||name.length>80)return null;
+ const fields=[['business_type',record.business_type],['category',record.category]]
+  .map(([field,value])=>[field,String(value??'').toLowerCase().trim().replace(/[\s-]+/g,'_')])
+  .filter(([,value])=>value);
+ const typed=fields.map(([field,type])=>({field,rule:poiTypeRules.find(r=>r.codes.includes(type))}))
+  .filter(x=>x.rule);
+ const known=typed[0];
+ const named=namePOICategory(name);
+ if(known){
+  const providerConflict=typed.some(x=>x.rule.theme!==known.rule.theme);
+  return {category:known.rule.category,theme:known.rule.theme,
+   classificationConfidence:providerConflict?'low':'high',classificationEvidence:known.field,
+   classificationFlags:[...(named&&named.theme!==known.rule.theme?['name_type_conflict']:[]),
+    ...(providerConflict?['provider_type_conflict']:[])]};
+ }
+ if(!named)return null;
+ // Generic provider categories or pure brand-name guesses are not sufficient for the poem.
+ const ambiguous=fields.length>0||/(お酒|居酒屋|バー|喫茶|カフェ|珈琲|レストラン).*?(美術館|博物館|記念館)$/.test(name);
+ return {category:named.category,theme:named.theme,
+  classificationConfidence:ambiguous?'low':'medium',
+  classificationEvidence:fields.length?'unverified_type_and_name':'name_only',
+  classificationFlags:ambiguous?['unverified_name_classification']:['name_only_classification']};
 }
 // STB-05: uncertain administrative labels should flag, never silently reject a nearby POI.
 function addressValidationFlags(record,origin){
@@ -225,7 +258,11 @@ function deduplicatePOIs(items){
    poi.source==='OpenPOI'?poi:
    (previous.distanceMeters<=poi.distanceMeters?previous:poi);
   const validationFlags=[...new Set([...(previous.validationFlags||[]),...(poi.validationFlags||[])])];
-  unique[matchIndex]={...primary,evidenceSources,validationFlags};
+  const themeConflict=previous.theme!==poi.theme;
+  const classificationFlags=[...new Set([...(previous.classificationFlags||[]),...(poi.classificationFlags||[]),
+   ...(themeConflict?['source_theme_conflict']:[])])];
+  unique[matchIndex]={...primary,evidenceSources,validationFlags,classificationFlags,
+   classificationConfidence:themeConflict?'low':primary.classificationConfidence};
  }
  return unique;
 }
@@ -241,7 +278,8 @@ function normalizePOIs(rows,origin,source){
     {category:item.category??null,business_type:item.business_type??null});
   if(!tags||typeof tags!=='object'||Array.isArray(tags))return null;
   const name=String((isOSM?(tags['name:ja']||tags.name):item.name)||'').trim();
-  const kind=isOSM?tagPOI(tags):classifyOpenPOI(item);
+  const osmKind=isOSM?tagPOI(tags):null;
+  const kind=isOSM?(osmKind?{...osmKind,classificationConfidence:'high',classificationEvidence:'osm_tags',classificationFlags:[]}:null):classifyOpenPOI(item);
   const rawLat=isOSM?(item.lat??item.center?.lat):item.lat;
   const rawLon=isOSM?(item.lon??item.center?.lon):item.lng;
   const lat=Number(rawLat),lon=Number(rawLon);
@@ -303,7 +341,7 @@ async function fetchOpenPOI(origin,signal){
  return normalizeOpenPOI(passed.flatMap(x=>x.value),origin);
 }
 function choosePOIs(items){
- const unique=deduplicatePOIs(items);
+ const unique=deduplicatePOIs(items).filter(p=>p.classificationConfidence!=='low');
  const priorities=style==='nature'?
    ['green','water','history','culture','knowledge','transport','commerce','dining']:
    style==='urban'?
@@ -342,9 +380,10 @@ async function fetchPOIs(origin,signal){
   console.info('OpenPOIから周辺施設を取得できませんでした',e);
  }
  signal?.throwIfAborted();
- const uniqueThemes=new Set(open.map(x=>x.theme));
+ const eligibleOpen=open.filter(x=>x.classificationConfidence!=='low');
+ const uniqueThemes=new Set(eligibleOpen.map(x=>x.theme));
  // OpenPOIが苦手な自然・史跡カテゴリはOverpassも参照する。
- if(!open.length||open.length<4||!uniqueThemes.has('green')||style==='nature'){
+ if(!eligibleOpen.length||eligibleOpen.length<4||!uniqueThemes.has('green')||style==='nature'){
   try{osm=await fetchOSMPOIs(origin,signal)}
   catch(e){
    signal?.throwIfAborted();
@@ -352,7 +391,7 @@ async function fetchPOIs(origin,signal){
   }
  }
  signal?.throwIfAborted();
- return deduplicatePOIs([...open,...osm]); // Keep source evidence with style-independent cache.
+ return deduplicatePOIs([...eligibleOpen,...osm]); // Never promote low-confidence naming guesses to factual motifs.
 }
 const motifs={commerce:{label:'都市の豊穣',short:'都市',phrase:'街の営みが重なり合う、都市の豊穣'},dining:{label:'日常の饗宴',short:'賑わい',phrase:'食の風景が息づく、暮らしの交差点'},green:{label:'緑の余白',short:'緑',phrase:'都市のただ中に息づく、緑の余白'},knowledge:{label:'知の集積',short:'知',phrase:'学びと知性の気配を宿す街'},history:{label:'時の重層',short:'時',phrase:'歳月が描いてきた街の輪郭'},culture:{label:'文化の深奥',short:'文化',phrase:'暮らしの奥に息づく文化の気配'},transport:{label:'都市の結節点',short:'都市',phrase:'人々の営みが交差する都市の座標'},water:{label:'水の風景',short:'水辺',phrase:'水の気配が織りなす景観'}};
 const head={heritage:['この地に、\n邸宅の答えを。','その名は、\n時代を超える。','地の記憶を、\n邸の誇りへ。'],urban:['都市は、\nここから変わる。','その座標が、\n未来を指す。','この街を、\n超えてゆく。'],nature:['静けさこそ、\n至高の贅。','余白を、\n住まう。','風景と、\nひとつになる。']};
