@@ -76,7 +76,7 @@ function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false,wi
   };
   // The production functions live inside an IIFE; expose them only in the VM test copy.
   const instrumented=script.replace(/\}\)\(\);\s*$/,
-    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI,deduplicatePOIs,choosePOIs,classifyOpenPOI,fetchWithCancellation,poiErrorCode,lifeCategoryFor,buildLifeViewModel};\n})();');
+    'globalThis.__poiTest={normalizeOpenPOI,normalizeOSMPOI,deduplicatePOIs,choosePOIs,classifyOpenPOI,fetchWithCancellation,poiErrorCode,lifeCategoryFor,buildLifeViewModel,buildThemePlan};\n})();');
   assert.notEqual(instrumented,script,'Expected the application IIFE footer');
   runInNewContext(instrumented,sandbox,{timeout:2000});
   if(withMap)window.listeners.load();
@@ -1043,4 +1043,43 @@ test('GEO-02 micro-provider failure preserves normal ads and cools down instead 
  assert.ok(ui.el('#locationCards').childElementCount>0);
  await ui.el('#generateBtn').fire();
  assert.equal(microCalls,1,'failed optional query should not hammer public Overpass on repeated clicks');
+});
+
+test('SELECT-01 main and secondary evidence IDs come from the same LOCATION plan',()=>{
+ const ui=makeUI(()=>Promise.reject(Error('unused')),{withCatalog:true,withHighlights:true,withPolicy:true});
+ const origin={lat:35.7074,lon:139.6659};
+ const normalized=ui.normalizers.normalizeOpenPOI([
+  {id:'p1',name:'試験公園',category:'park',lat:35.7074,lng:139.6659},
+  {id:'p2',name:'試験図書館',category:'library',lat:35.7075,lng:139.6659},
+  {id:'p3',name:'試験博物館',category:'museum',lat:35.7076,lng:139.6659}
+ ],origin);
+ const ranked=ui.normalizers.choosePOIs(normalized);
+ const plan=ui.normalizers.buildThemePlan(ranked);
+ assert.equal(plan.locationCards.length,3);
+ assert.equal(plan.mainEvidenceId,plan.locationCardIds[0]);
+ assert.equal(plan.poemPOIs[0].sourceId,plan.mainEvidenceId);
+ assert.deepEqual(plan.secondaryEvidenceIds,plan.poemPOIs.slice(1).map(p=>p.sourceId));
+ assert.equal(plan.genreId,authoredCatalog.resolve(plan.poemPOIs[0])?.id);
+});
+
+test('SELECT-01 rendered poem and evidence follow the first actual LOCATION card',async()=>{
+ const ui=makeUI((url)=>{
+  if(String(url).includes('openpoiapi.com'))
+   return Promise.resolve(response({results:[
+    {id:'p1',name:'試験図書館',category:'library',lat:35.7074,lng:139.6659},
+    {id:'p2',name:'試験公園',category:'park',lat:35.7075,lng:139.6659},
+    {id:'p3',name:'試験博物館',category:'museum',lat:35.7076,lng:139.6659},
+    {id:'p4',name:'試験駅',category:'station',lat:35.7077,lng:139.6659}
+   ]}));
+  return Promise.resolve(response({elements:[]}));
+ },{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ const cards=ui.el('#locationCards').children;
+ assert.equal(cards.length,3);
+ const chief=cards[0].children[1].textContent;
+ assert.ok(ui.el('#poemBody').textContent.includes(chief));
+ assert.ok(ui.el('#evidenceTags').children.some(x=>x.textContent.includes(chief)));
+ await ui.el('#regenerateBtn').fire();
+ assert.ok(ui.el('#poemBody').textContent.includes(ui.el('#locationCards').children[0].children[1].textContent));
 });
