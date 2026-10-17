@@ -42,8 +42,8 @@
 - [x] 公開ブラウザ（中野）でジャンル専用の見出し「学びが街に刻む明日の線。」、根拠施設「アイデスク中野自習室」を使った本文を確認。REGENERATEで「教室という未来の入口。」に変化。取得元は一部失敗したが、得られた施設情報を利用した生成が継続した。
 - [x] 上記ブラウザ確認で、広義の `education` が「学校」として細分類されるケースを発見。続く[PR #12](https://github.com/yama-books/mansion-poet/pull/12) で学校・池・カレーの細分類誤昇格を修正し、[`da22323`](https://github.com/yama-books/mansion-poet/commit/da2232307ef035f643a1dbf7935a2c55f15cbe80) をmainへマージ。
 - [x] [PR #12 CI #39009236878](https://github.com/yama-books/mansion-poet/actions/runs/39009236878)：53件成功、失敗0。
-- [ ] PR #12のPages最終成功は別途追記・確認。
-- [ ] PR #12修正版の生成を公開ブラウザで再確認。
+- [x] [PR #12最終Pages #39009274361](https://github.com/yama-books/mansion-poet/actions/runs/39009274361) SUCCESS（CI 53件全合格後）。
+- [x] 最終公開版のブラウザ再検証：中野プリセット→生成。「アイデスク中野自習室」は専用の学校ジャンルでなく一般文教へフォールバックし、見出し「知の営みが街を描く。」と施設名の出典表示を確認。通信一部失敗ステータスも正常。
 - [ ] 63ジャンルすべての自然な日本語・内容表現を人手で複数回レビュー。
 - [ ] iPhone Safari、Android Chromeの実機受入。
 
