@@ -132,3 +132,16 @@ test('LOCATION-01 PR texts avoid behind-the-scenes self-referential narration',(
   assert.doesNotMatch(headline+' '+body,/ご紹介|紹介|広告|ポエム|着想源|捉え直す/);
  }
 });
+
+test('LOCATION-01 every broad category has three unique PR headline and body variations',()=>{
+ assert.equal(Object.keys(themes).length,10);
+ for(const [theme,variants] of Object.entries(themes)){
+  assert.equal(variants.length,3,theme);
+  assert.equal(new Set(variants.map(x=>x[0])).size,3,theme);
+  assert.equal(new Set(variants.map(x=>x[1])).size,3,theme);
+ }
+ const generic=poi({}, {source:'OpenPOI',sourceId:'generic/1',name:'架空の自習室',
+   providerCategory:'education',theme:'knowledge'});
+ const copies=[1,2,3].map(serial=>create([generic],{catalog,serial})[0].headline);
+ assert.equal(new Set(copies).size,3);
+});
