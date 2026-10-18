@@ -37,6 +37,7 @@ class Element {
 function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false,withPolicy=false,reducedMotion=false}={}){
   const items=new Map();
   const copied=[];
+  const printed=[];
   const el=(key)=>{
     if(!items.has(key))items.set(key,new Element());
     return items.get(key);
@@ -63,12 +64,12 @@ function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false,wi
       return [];
     },
     createElement(){return new Element();},
-    body:{appendChild(){}}
+    body:{appendChild(){},dataset:{}}
   };
   const window={listeners:{},matchMedia:()=>({matches:reducedMotion}),SubjectPolicy:withPolicy?subjectPolicy:undefined,
     PoemCatalog:withCatalog?authoredCatalog:undefined,
     LocationHighlights:withHighlights?adHighlights:undefined,
-    addEventListener(type,fn){this.listeners[type]=fn;}};
+    addEventListener(type,fn){this.listeners[type]=fn;},print(){printed.push(document.body.dataset.printLayout)}};
   el('#placeInput').value='東京都千代田区神保町';
   const sandbox={
     document,window,fetch:fetcher,AbortController,AbortSignal,
@@ -81,7 +82,7 @@ function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false,wi
   assert.notEqual(instrumented,script,'Expected the application IIFE footer');
   runInNewContext(instrumented,sandbox,{timeout:2000});
   if(withMap)window.listeners.load();
-  return {el,presets,modes,mapHandlers,normalizers:sandbox.__poiTest,copied};
+  return {el,presets,modes,mapHandlers,normalizers:sandbox.__poiTest,copied,printed};
 }
 function geo(name,lat=35.69,lon=139.75) {
   return response([{geometry:{coordinates:[lon,lat]},properties:{title:name}}]);
@@ -1222,4 +1223,71 @@ test('UI-01 respects reduced-motion setting for generated-page scrolling',async(
  await normal.presets[1].fire();
  await normal.el('#generateBtn').fire();
  assert.equal(normal.el('#poem').scrollOptions?.behavior,'smooth');
+});
+
+test('PRINT-02 options are selectable and scoped to the following native print action',async()=>{
+ const ui=makeUI(url=>String(url).includes('openpoiapi.com')?
+  Promise.resolve(response({results:[{id:'p1',name:'架空公園',category:'park',lat:35.7074,lng:139.6659}]})):
+  Promise.resolve(response({elements:[]}))
+ ,{withCatalog:true,withHighlights:true,withPolicy:true});
+ assert.match(html,/id="printLayout"[^>]*><option value="compact">/);
+ assert.match(html,/<option value="onepage">/);
+ await ui.el('#printBtn').fire();
+ assert.equal(ui.printed.length,0,'cannot print ungenerated sample');
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ ui.el('#printLayout').value='compact';
+ await ui.el('#printBtn').fire();
+ ui.el('#printLayout').value='onepage';
+ await ui.el('#printBtn').fire();
+ assert.equal(ui.printed.join(','),'compact,onepage');
+});
+
+test('PRINT-02 print media provides separate compact and 1-sheet advertisement compositions',()=>{
+ assert.match(html,/body:not\(\[data-print-layout="onepage"\]\) \.location-card\{/);
+ assert.match(html,/body\[data-print-layout="onepage"\] \.location-cards\{display:grid!important;/);
+ assert.match(html,/body\[data-print-layout="onepage"\] \.location-card:first-child\{grid-row:span 2!important/);
+ assert.match(html,/body\[data-print-layout\] \.location-highlights\{[\s\S]*?break-before:auto!important/);
+});
+
+test('UI-01 fixed: changing from Nakano to Kyoto immediately locks both copies, print and old content',async()=>{
+ const ui=makeUI(url=>String(url).includes('openpoiapi.com')?
+  Promise.resolve(response({results:[{id:'p1',name:'架空図書館',category:'library',lat:35.7074,lng:139.6659}]})):
+  Promise.resolve(response({elements:[]}))
+ ,{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();await ui.el('#generateBtn').fire();
+ assert.equal(ui.el('#copyBtn').disabled,false);
+ assert.equal(ui.el('#copyBundleBtn').disabled,false);
+ assert.equal(ui.el('#printBtn').disabled,false);
+ await ui.presets[2].fire();
+ assert.equal(ui.el('#copyBtn').disabled,true);
+ assert.equal(ui.el('#copyBundleBtn').disabled,true);
+ assert.equal(ui.el('#printBtn').disabled,true);
+ assert.equal(ui.el('#regenerateBtn').disabled,true);
+ assert.match(ui.el('#poemProperty').textContent,/AWAITING/);
+ assert.equal(ui.el('#evidenceTags').childElementCount,0);
+ await ui.el('#copyBtn').fire();await ui.el('#copyBundleBtn').fire();await ui.el('#printBtn').fire();
+ assert.equal(ui.copied.length,0,'old locality data must never be copied');
+ assert.equal(ui.printed.length,0,'old locality data must never be printed');
+ await ui.el('#generateBtn').fire();
+ assert.equal(ui.el('#copyBtn').disabled,false);
+ await ui.el('#copyBtn').fire();
+ assert.equal(ui.copied.length,1);
+ assert.match(ui.copied[0],/KYOTO/);
+ assert.ok(!ui.copied[0].includes('NAKANO'));
+});
+
+test('UI-01 fixed: typing a new address also invalidates previously generated copy',async()=>{
+ const ui=makeUI(url=>String(url).includes('openpoiapi.com')?
+  Promise.resolve(response({results:[{id:'p1',name:'架空公園',category:'park',lat:35.7074,lng:139.6659}]})):
+  Promise.resolve(response({elements:[]}))
+ ,{withCatalog:true,withHighlights:true,withPolicy:true});
+ await ui.presets[1].fire();await ui.el('#generateBtn').fire();
+ ui.el('#placeInput').value='京都';
+ await ui.el('#placeInput').fire('input');
+ assert.equal(ui.el('#copyBtn').disabled,true);
+ assert.equal(ui.el('#printBtn').disabled,true);
+ await ui.el('#copyBtn').fire();await ui.el('#printBtn').fire();
+ assert.equal(ui.copied.length,0);
+ assert.equal(ui.printed.length,0);
 });

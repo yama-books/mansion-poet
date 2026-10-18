@@ -115,6 +115,87 @@
  .location-card-source{margin-top:2mm!important;padding:0!important}
  .location-footnote{margin-top:3mm!important;font-size:8pt!important;line-height:1.45!important}
 }
+
+/* PRINT-02: two user-selectable variants; controls keep all POI text intact. */
+.print-layout-label{display:inline-flex;align-items:center;gap:9px;min-height:44px;
+ padding:0 12px;border:1px solid #787c6e;color:#e4e4d9;font-size:10px;letter-spacing:.08em}
+.print-layout-label select{min-width:115px;max-width:170px;min-height:40px;border:0;
+ background:#1b211d;color:#e4e4d9;font-size:12px;letter-spacing:0;padding:4px}
+.line-button:disabled{opacity:.42;cursor:not-allowed}
+@media(max-width:600px){.print-layout-label{width:100%;justify-content:space-between}
+ .print-layout-label select{max-width:65%;flex:1}}
+@media print{
+ /* Common: no forced page break between poem and LOCATION. Avoid clipping text. */
+ body[data-print-layout] .location-highlights{
+  break-before:auto!important;page-break-before:auto!important;
+  break-inside:auto!important;page-break-inside:auto!important}
+ body[data-print-layout] .output-text{break-inside:avoid;page-break-inside:avoid}
+ body[data-print-layout] .location-cards{gap:0!important}
+ body[data-print-layout] .location-card-source{margin-top:2mm!important}
+ /* Variant 1: an understated compact version of the existing vertical layout. */
+ body:not([data-print-layout="onepage"]) .output-text{padding:3mm 2mm 4mm!important}
+ body:not([data-print-layout="onepage"]) .output-header{font-size:21pt!important;
+  margin:4mm 0 3mm!important;line-height:1.3!important}
+ body:not([data-print-layout="onepage"]) .output-body{font-size:9.3pt!important;line-height:1.55!important}
+ body:not([data-print-layout="onepage"]) .output-english{margin-top:5mm!important;padding-top:3mm!important}
+ body:not([data-print-layout="onepage"]) .location-highlights{padding:3mm 2mm!important;margin-top:3mm!important}
+ body:not([data-print-layout="onepage"]) .location-header{padding:0 0 2mm!important}
+ body:not([data-print-layout="onepage"]) .location-header h2{font-size:15pt!important}
+ body:not([data-print-layout="onepage"]) .location-header p{display:none!important}
+ body:not([data-print-layout="onepage"]) .location-status{margin:2mm 0!important;font-size:8pt!important}
+ body:not([data-print-layout="onepage"]) .location-card{padding:2mm 3mm!important;margin:0 0 2mm!important}
+ body:not([data-print-layout="onepage"]) .location-card-name{font-size:11.5pt!important;margin:1mm 0!important}
+ body:not([data-print-layout="onepage"]) .location-card-meta{padding:1mm 0!important}
+ body:not([data-print-layout="onepage"]) .location-card-tagline{font-size:10pt!important;margin:1.2mm 0 0!important}
+ body:not([data-print-layout="onepage"]) .location-card-copy{font-size:8.5pt!important;line-height:1.45!important}
+ body:not([data-print-layout="onepage"]) .location-footnote{font-size:7.4pt!important;line-height:1.3!important;margin-top:2mm!important}
+ /* Variant 2: the poem is a magazine masthead, the 3 POIs are a single ad composition. */
+ body[data-print-layout="onepage"] .output-text{padding:6mm 5mm 5mm!important;
+  border-left:2.5mm solid #7d6c50!important}
+ body[data-print-layout="onepage"] .output-number{font-size:17pt!important}
+ body[data-print-layout="onepage"] .output-header{font-size:24pt!important;line-height:1.32!important;
+  margin:7mm 0 4mm!important}
+ body[data-print-layout="onepage"] .output-body{font-size:10pt!important;line-height:1.65!important}
+ body[data-print-layout="onepage"] .output-english{margin-top:7mm!important;
+  padding-top:4mm!important;border-top:1.4pt solid #87765b!important}
+ body[data-print-layout="onepage"] .location-highlights{margin-top:6mm!important;
+  padding:0 1mm!important}
+ body[data-print-layout="onepage"] .location-header{padding:1mm 0 2mm!important;
+  border-bottom:1.3pt solid #87765b!important}
+ body[data-print-layout="onepage"] .location-header h2{font-size:16pt!important}
+ body[data-print-layout="onepage"] .location-header p{display:none!important}
+ body[data-print-layout="onepage"] .location-status{font-size:8pt!important;
+  line-height:1.3!important;margin:2mm 0 3mm!important}
+ body[data-print-layout="onepage"] .location-cards{display:grid!important;
+  grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)!important;
+  grid-template-rows:auto auto!important;gap:3mm!important;align-items:stretch!important}
+ body[data-print-layout="onepage"] .location-card,
+ body[data-print-layout="onepage"] .location-card:first-child{display:flex!important;
+  flex-direction:column!important;min-width:0!important;margin:0!important;
+  padding:3mm!important;border:1pt solid #b8aa91!important;
+  break-inside:avoid!important;page-break-inside:avoid!important;
+  background:#fff!important}
+ body[data-print-layout="onepage"] .location-card:first-child{grid-row:span 2!important;
+  border-top:3pt solid #8b785a!important}
+ body[data-print-layout="onepage"] .location-card-overline{font-size:7.4pt!important}
+ body[data-print-layout="onepage"] .location-card-name{font-size:12pt!important;
+  margin:3mm 0 2mm!important;line-height:1.35!important;overflow-wrap:anywhere}
+ body[data-print-layout="onepage"] .location-card-meta{display:block!important;
+  padding:2mm 0!important;font-size:8pt!important}
+ body[data-print-layout="onepage"] .location-card-meta strong{font-size:9.5pt!important}
+ body[data-print-layout="onepage"] .location-card-tagline{font-size:10pt!important;
+  line-height:1.45!important;margin:3mm 0 1mm!important}
+ body[data-print-layout="onepage"] .location-card-copy{font-size:8.4pt!important;
+  line-height:1.48!important;overflow-wrap:anywhere}
+ body[data-print-layout="onepage"] .location-card-source{margin-top:auto!important;
+  padding-top:3mm!important;font-size:7.5pt!important}
+ body[data-print-layout="onepage"] .location-footnote{font-size:7.3pt!important;
+  line-height:1.4!important;margin-top:3mm!important}
+ body[data-print-layout="onepage"] .location-cards:has(> .location-card:only-child){
+  display:block!important}
+ body[data-print-layout="onepage"] .location-cards:has(> .location-card:only-child) .location-card{
+  max-width:100%!important}
+}
 </style>
 </head>
 <body>
@@ -128,7 +209,7 @@
 </section>
 <section class="section" id="discover"><div class="section-top"><div><div class="eyebrow section-label">01 / DISCOVER THE LOCATION</div><h2 class="section-title">場所を選ぶ。<br>格が、生まれる。</h2></div><p class="section-intro">駅前の喧騒も、名もない路地も、土地の個性になる。検索または地図から好きな場所を選び、都市の記憶を言葉に変換してください。</p></div>
 <div class="workspace"><div class="control-pane"><label class="field-label" for="placeInput">LOCATION / 住所・地名 <span>01</span></label><div class="searchbar"><input id="placeInput" value="東京都千代田区神保町" placeholder="地名や住所を入力" autocomplete="off"><button id="searchBtn" type="button">検索 ↗</button></div><div class="results" id="searchResults" aria-live="polite"></div><p class="note" id="searchStatus">地名を検索するか、地図上の好きな地点をクリック。</p><div class="examples"><button class="chip active" type="button" data-preset="jimbocho">神保町</button><button class="chip" type="button" data-preset="nakano">中野</button><button class="chip" type="button" data-preset="kyoto">京都</button><button class="chip" type="button" data-preset="kanazawa">金沢</button><button class="chip" type="button" data-preset="yokohama">横浜</button></div><div class="controls-divider"></div><div class="field-label">STYLE / 邸宅思想を選ぶ <span>02</span></div><div class="mode-list" role="group" aria-label="ポエムの文体"><button class="mode-btn active" data-style="heritage" type="button"><span>Heritage</span><small>伝統・格式</small></button><button class="mode-btn" data-style="urban" type="button"><span>Metropolis</span><small>都市・先進</small></button><button class="mode-btn" data-style="nature" type="button"><span>Sanctuary</span><small>自然・静寂</small></button></div><div class="range-block"><div class="range-head"><label class="field-label" for="density">POETRY INDEX / ポエム濃度 <span>03</span></label><strong id="densityValue">85</strong></div><input id="density" class="range" type="range" min="0" max="100" step="5" value="85"><div class="range-ticks"><span>REALISTIC</span><span>TRANSCENDENT</span></div></div><label class="poi-detail-optin"><input id="smallPoiOptIn" type="checkbox"><span>街の小さな設備も探す <small>試験的・選択地点から450m／追加通信は選択した場合のみ</small></span></label><p id="smallPoiStatus" class="note" role="status" aria-live="polite">追加の微細設備検索は未実施</p><button class="main-button" type="button" id="generateBtn"><span id="generateText">この街を、詩にする</span><span>↗</span></button><div class="location-readout"><div><div class="eyebrow" style="color:#a39172;margin-bottom:8px">CURRENTLY SELECTED</div><span class="selected-place" id="selectedPlace">東京都千代田区神保町</span></div><span class="coords" id="selectedCoords">35.6960° N<br>139.7570° E</span></div></div><div class="map-pane"><svg class="map-placeholder" aria-hidden="true" viewBox="0 0 690 550" preserveAspectRatio="xMidYMid slice"><rect width="690" height="550" fill="#d7ddd5"/><path class="water" d="M650-40C570 125 670 235 525 330S375 520 415 600H600L760 400V-20Z"/><path class="road" d="M-60 140L680 375M60-35L550 580M-40 350L730 130M190-30L250 580M-30 480L710 480"/><path class="minor" d="M-20 50L650 290M0 235L630 420M-10 540L520 20M100-30L390 540M570-30L80 560"/><g opacity=".45"><rect class="plot" x="80" y="80" width="77" height="39"/><rect class="plot" x="265" y="70" width="86" height="49"/><rect class="plot" x="335" y="226" width="99" height="70"/><rect class="plot" x="70" y="350" width="84" height="60"/><rect class="plot" x="250" y="430" width="95" height="60"/></g><circle class="pin" cx="345" cy="265" r="12"/></svg><div id="map" role="application" aria-label="場所を選択する地図"></div><div class="map-title"><i></i> SELECT A POINT / 地図上で選択</div><div class="map-corner" id="mapStatus">地図データ：国土地理院 / 読み込み中</div></div></div></section>
-<section class="output-wrap" id="poem"><div class="output-overline"><div class="eyebrow">02 / THE GENERATED RESIDENCE</div><div class="eyebrow">AN EXERCISE IN EXCESSIVE ELEGANCE</div></div><div class="output-grid"><div class="output-text"><div><div class="output-number">No. 001 / POÈME</div><h2 class="output-header" id="poemHeadline">知の深奥に、<br>邸の答えを。</h2><p class="output-body" id="poemBody">幾千の物語が息づく、その名を神保町という。<br>街が纏う記憶を、住まいの誇りへ。<br>選ばれた座標に、人生の新たな頁がひらかれる。</p></div><div class="output-english"><strong id="poemProperty">THE JIMBOCHO RESIDENCE</strong><span>NON-EXISTENT<br>ESTATE / 001</span></div></div><div class="output-art"><svg class="building-illustration" aria-hidden="true" viewBox="0 0 820 1100" preserveAspectRatio="xMidYMid slice"><use href="#unused"/><defs><linearGradient id="artBg" x1="0" x2="1" y2="1"><stop stop-color="#57645a"/><stop offset="1" stop-color="#111814"/></linearGradient><pattern id="win2" width="51" height="32" patternUnits="userSpaceOnUse"><rect width="51" height="32" fill="#27352e"/><rect x="4" y="4" width="43" height="24" fill="#0f1814"/><path d="M0 1H51M0 31H51M2 0V32M49 0V32" stroke="#9aa89b" stroke-width="2" opacity=".5"/></pattern></defs><rect width="820" height="1100" fill="url(#artBg)"/><path d="M90 1100L202 245 497 85 815 260 815 1100Z" fill="#202a23"/><path d="M202 245L497 85 815 260V1100H202Z" fill="url(#win2)"/><path d="M202 245L497 85 815 260" fill="none" stroke="#a2b5a0" stroke-width="5" opacity=".65"/><path d="M490 88V1100M198 240V1100M280 204V1100M362 160V1100M585 130V1100M679 189V1100M771 236V1100" stroke="#a8b4aa" stroke-width="8" opacity=".3"/><path d="M202 325L813 347M196 399L810 418M190 472L810 489M180 550L809 565M173 630L810 644M165 720L810 734M157 811L810 819M149 899L813 914" stroke="#bdcabb" stroke-width="6" opacity=".3"/></svg><div class="output-art-caption">THIS IMAGE DOES NOT REPRESENT A REAL PROPERTY.</div></div></div><div class="output-actions"><button id="copyBtn" class="line-button" type="button">COPY THE POEM ↗</button><button id="copyBundleBtn" class="line-button" type="button" disabled aria-label="ポエムと施設広告をまとめてコピー">COPY POEM + LOCATION ↗</button><button id="regenerateBtn" class="line-button" type="button">REGENERATE ↻</button><button id="printBtn" class="line-button" type="button">PRINT / PDF ↗</button><span class="status-pill" id="generatedStatus">サンプル表示：神保町の地名をもとに作成</span></div><section class="location-highlights" id="locationHighlights" aria-labelledby="locationTitle">
+<section class="output-wrap" id="poem"><div class="output-overline"><div class="eyebrow">02 / THE GENERATED RESIDENCE</div><div class="eyebrow">AN EXERCISE IN EXCESSIVE ELEGANCE</div></div><div class="output-grid"><div class="output-text"><div><div class="output-number">No. 001 / POÈME</div><h2 class="output-header" id="poemHeadline">知の深奥に、<br>邸の答えを。</h2><p class="output-body" id="poemBody">幾千の物語が息づく、その名を神保町という。<br>街が纏う記憶を、住まいの誇りへ。<br>選ばれた座標に、人生の新たな頁がひらかれる。</p></div><div class="output-english"><strong id="poemProperty">THE JIMBOCHO RESIDENCE</strong><span>NON-EXISTENT<br>ESTATE / 001</span></div></div><div class="output-art"><svg class="building-illustration" aria-hidden="true" viewBox="0 0 820 1100" preserveAspectRatio="xMidYMid slice"><use href="#unused"/><defs><linearGradient id="artBg" x1="0" x2="1" y2="1"><stop stop-color="#57645a"/><stop offset="1" stop-color="#111814"/></linearGradient><pattern id="win2" width="51" height="32" patternUnits="userSpaceOnUse"><rect width="51" height="32" fill="#27352e"/><rect x="4" y="4" width="43" height="24" fill="#0f1814"/><path d="M0 1H51M0 31H51M2 0V32M49 0V32" stroke="#9aa89b" stroke-width="2" opacity=".5"/></pattern></defs><rect width="820" height="1100" fill="url(#artBg)"/><path d="M90 1100L202 245 497 85 815 260 815 1100Z" fill="#202a23"/><path d="M202 245L497 85 815 260V1100H202Z" fill="url(#win2)"/><path d="M202 245L497 85 815 260" fill="none" stroke="#a2b5a0" stroke-width="5" opacity=".65"/><path d="M490 88V1100M198 240V1100M280 204V1100M362 160V1100M585 130V1100M679 189V1100M771 236V1100" stroke="#a8b4aa" stroke-width="8" opacity=".3"/><path d="M202 325L813 347M196 399L810 418M190 472L810 489M180 550L809 565M173 630L810 644M165 720L810 734M157 811L810 819M149 899L813 914" stroke="#bdcabb" stroke-width="6" opacity=".3"/></svg><div class="output-art-caption">THIS IMAGE DOES NOT REPRESENT A REAL PROPERTY.</div></div></div><div class="output-actions"><button id="copyBtn" class="line-button" type="button" disabled>COPY THE POEM ↗</button><button id="copyBundleBtn" class="line-button" type="button" disabled aria-label="ポエムと施設広告をまとめてコピー">COPY POEM + LOCATION ↗</button><button id="regenerateBtn" class="line-button" type="button" disabled>REGENERATE ↻</button><label class="print-layout-label" for="printLayout">PRINT STYLE <select id="printLayout" aria-label="印刷レイアウトを選択"><option value="compact">案1：コンパクト</option><option value="onepage">案2：1枚広告</option></select></label><button id="printBtn" class="line-button" type="button" disabled>PRINT / PDF ↗</button><span class="status-pill" id="generatedStatus">サンプル表示：神保町の地名をもとに作成</span></div><section class="location-highlights" id="locationHighlights" aria-labelledby="locationTitle">
  <div class="location-overline">03 / LOCATION HIGHLIGHTS</div>
  <div class="location-header"><h2 id="locationTitle">街の個性を、暮らしの価値へ。</h2><p>徒歩圏という数字だけでは語れない、周辺環境のもうひとつの魅力。</p></div>
  <p id="locationStatus" class="location-status" role="status" aria-live="polite">地点を選んでポエムを生成すると、実際に取得できた施設を広告風にご紹介します。</p>
@@ -155,6 +236,7 @@ const presets={jimbocho:{label:'東京都千代田区神保町',short:'神保町
 let selected={...presets.jimbocho},style='heritage',intensity=85,generation=0,map=null,marker=null,lastPOIs=[],lastSource='地名のみ',lastHealth={kind:'unknown',retryable:true,issues:[]},apiBusy=false,searchToken=0,lastKey='';
 let selectionVersion=0,generationVersion=0,searchController=null,reverseController=null,generationController=null;
 let lastLocationCardItems=[];
+let generatedCurrent=false;
 const smallPOICache=new Map(); // A bounded per-tab cooldown; not shared across users or sessions.
 const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const setStatus=s=>$('#searchStatus').textContent=s;
@@ -173,10 +255,25 @@ function cancelPendingSearch(){
  $('#searchBtn').disabled=false;
  $('#searchResults').innerHTML='';
 }
+function invalidateGenerated(clearPoem=false){
+ generatedCurrent=false;
+ $('#copyBtn').disabled=true;
+ $('#copyBundleBtn').disabled=true;
+ $('#regenerateBtn').disabled=true;
+ $('#printBtn').disabled=true;
+ if(clearPoem){
+  $('#poemHeadline').textContent='新しい街の、まだない物語。';
+  $('#poemBody').textContent='地点を選んだあと、「この街を、詩にする」を押してください。';
+  $('#poemProperty').textContent='AWAITING A NEW LOCATION';
+  $('#evidenceTags').innerHTML='';
+  lastLocationCardItems=[];
+ }
+}
 function updateSelected(v,center=true){
  cancelPendingSearch();
  reverseController?.abort();reverseController=null;
  cancelPendingGeneration();
+ invalidateGenerated(true);
  selectionVersion++;
  selected={...v};
  $('#smallPoiStatus').textContent='この地点では微細設備をまだ検索していません。';
@@ -184,7 +281,7 @@ function updateSelected(v,center=true){
  resetLocationHighlights();
  $('#placeInput').value=v.label;$('#selectedPlace').textContent=v.label;
  $('#selectedCoords').innerHTML=`${Number(v.lat).toFixed(4)}° N<br>${Number(v.lon).toFixed(4)}° E`;
- $('#generatedStatus').textContent='前の場所の作品を表示中です。新しい場所で再生成してください。';
+ $('#generatedStatus').textContent='地点が変わりました。新しい作品を生成してください。';
  $$('.chip').forEach(el=>el.classList.toggle('active',presets[el.dataset.preset]?.label===v.label));
  if(map&&center){map.setView([v.lat,v.lon],Math.max(map.getZoom(),14));setPin(v.lat,v.lon);}
 }
@@ -854,6 +951,7 @@ if(verified&&pois.length){
 }
 async function generate(regen=false){
  if(apiBusy)return;
+ if(regen&&!generatedCurrent)return;
  if($('#placeInput').value.trim()!==selected.label){
   setStatus('入力した地名を先に検索し、候補を選択してください。');
   document.querySelector('#discover').scrollIntoView({behavior:(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'),block:'start'});return;
@@ -865,6 +963,7 @@ async function generate(regen=false){
  const selectionAtStart=selectionVersion;
  const includeSmall=$('#smallPoiOptIn').checked===true;
  const currentKey=`${place.lat.toFixed(5)},${place.lon.toFixed(5)},850,${style},small:${includeSmall}`; // 自然モードではOSM補完を増やすため、文体もキャッシュ条件に含める。
+ invalidateGenerated();
  apiBusy=true;$('#generateBtn').disabled=true;$('#generateText').textContent='土地の気配を読み解いています…';
  $('#generatedStatus').textContent='周辺の公開データを確認中…';
  $('#smallPoiStatus').textContent=includeSmall?'小さな設備も追加で照会中…':'追加の微細設備検索は未実施';
@@ -892,6 +991,10 @@ async function generate(regen=false){
   poemWrite(plan.poemPOIs,plan.poemPOIs.length>0);
   renderLocationHighlights(plan.locationCards,place);
   renderReality(pois,health,place);
+  generatedCurrent=true;
+  $('#copyBtn').disabled=false;
+  $('#regenerateBtn').disabled=false;
+  $('#printBtn').disabled=false;
   const micro=health.smallHealth;
   $('#smallPoiStatus').textContent=!includeSmall?'追加の微細設備検索は未実施':
    micro?.status==='success'?'街の小さな設備：公開データから候補を取得':
@@ -927,9 +1030,9 @@ function copyToClipboard(txt,selector,original){
  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(txt).then(()=>complete(true)).catch(fallback);
  else fallback();
 }
-function copy(){copyToClipboard(poemCopyText(),'#copyBtn','COPY THE POEM ↗')}
+function copy(){if(!generatedCurrent)return;copyToClipboard(poemCopyText(),'#copyBtn','COPY THE POEM ↗')}
 function copyBundle(){
- if(!lastLocationCardItems.length)return;
+ if(!generatedCurrent||!lastLocationCardItems.length)return;
  const ad=lastLocationCardItems.map((item,i)=>[
   `【LOCATION ${String(i+1).padStart(2,'0')} / ${item.genreLabel}】`,
   item.name,formatLocationAddress(item),`直線 約${item.distanceMeters}m`,
@@ -945,8 +1048,13 @@ $$('[data-preset]').forEach(b=>b.addEventListener('click',()=>{updateSelected(pr
 $$('[data-style]').forEach(b=>b.addEventListener('click',()=>{cancelPendingGeneration();$$('[data-style]').forEach(c=>c.classList.toggle('active',c===b));style=b.dataset.style}));
 $('#density').addEventListener('input',e=>{cancelPendingGeneration();intensity=+e.target.value;$('#densityValue').textContent=intensity});
 $('#smallPoiOptIn').addEventListener('change',()=>{cancelPendingGeneration();$('#smallPoiStatus').textContent=$('#smallPoiOptIn').checked?'次回生成時に小さな設備を追加で探します。':'追加の微細設備検索は未実施';});
-$('#searchBtn').addEventListener('click',search);$('#placeInput').addEventListener('input',()=>{cancelPendingSearch();setStatus('新しい地名を検索して候補を選択してください。')});$('#placeInput').addEventListener('keydown',e=>{if(e.key==='Enter')search()});
-$('#generateBtn').addEventListener('click',()=>generate(false));$('#regenerateBtn').addEventListener('click',()=>generate(true));$('#copyBtn').addEventListener('click',copy);$('#copyBundleBtn').addEventListener('click',copyBundle);$('#printBtn').addEventListener('click',()=>window.print());
+$('#searchBtn').addEventListener('click',search);$('#placeInput').addEventListener('input',()=>{cancelPendingSearch();cancelPendingGeneration();invalidateGenerated(true);resetLocationHighlights();resetReality();setStatus('新しい地名を検索して候補を選択してください。')});$('#placeInput').addEventListener('keydown',e=>{if(e.key==='Enter')search()});
+$('#generateBtn').addEventListener('click',()=>generate(false));$('#regenerateBtn').addEventListener('click',()=>generate(true));$('#copyBtn').addEventListener('click',copy);$('#copyBundleBtn').addEventListener('click',copyBundle);
+$('#printBtn').addEventListener('click',()=>{
+ if(!generatedCurrent)return;
+ document.body.dataset.printLayout=$('#printLayout').value==='onepage'?'onepage':'compact';
+ window.print();
+});
 window.addEventListener('load',initMap);
 })();
 </script>
