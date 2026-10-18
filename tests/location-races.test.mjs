@@ -32,9 +32,9 @@ class Element {
   get innerHTML(){return this._innerHTML;}
   appendChild(child){this.children.push(child);return child;}
   get childElementCount(){return this.children.length;}
-  scrollIntoView(){}
+  scrollIntoView(options){this.scrollOptions=options;}
 }
-function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false,withPolicy=false}={}){
+function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false,withPolicy=false,reducedMotion=false}={}){
   const items=new Map();
   const copied=[];
   const el=(key)=>{
@@ -65,7 +65,7 @@ function makeUI(fetcher,{withMap=false,withCatalog=false,withHighlights=false,wi
     createElement(){return new Element();},
     body:{appendChild(){}}
   };
-  const window={listeners:{},SubjectPolicy:withPolicy?subjectPolicy:undefined,
+  const window={listeners:{},matchMedia:()=>({matches:reducedMotion}),SubjectPolicy:withPolicy?subjectPolicy:undefined,
     PoemCatalog:withCatalog?authoredCatalog:undefined,
     LocationHighlights:withHighlights?adHighlights:undefined,
     addEventListener(type,fn){this.listeners[type]=fn;}};
@@ -1190,4 +1190,36 @@ test('UI-01 changing locality clears the ad bundle and prevents stale facility c
  assert.equal(ui.el('#copyBundleBtn').disabled,true);
  await ui.el('#copyBundleBtn').fire();
  assert.equal(ui.copied.length,0,'old LOCATION advertisement cannot be copied after location changes');
+});
+
+test('UI-01 print rules fit content instead of forcing a viewport-height advertisement',()=>{
+ assert.match(html,/@page\s*\{size:A4;margin:13mm\}/);
+ assert.match(html,/@media print\s*\{/);
+ assert.match(html,/\.output-grid\{display:block!important;height:auto!important/);
+ assert.match(html,/\.location-highlights\{break-before:page;page-break-before:always/);
+ assert.match(html,/#locationHighlights:has\(#locationCards:empty\)\{display:none!important\}/);
+ assert.match(html,/\.location-card,.location-card:first-child\{[^}]*break-inside:avoid/);
+ assert.match(html,/\.output-art\{display:none!important\}/);
+ assert.doesNotMatch(html,/@media print\{[^}]*height:100vh/);
+});
+
+test('UI-01 small-screen and reduced-motion design rules are present',()=>{
+ assert.match(html,/@media\(max-width:360px\)/);
+ assert.match(html,/\.output-actions \.line-button\{flex:1 1 100%;min-height:44px/);
+ assert.match(html,/@media\(prefers-reduced-motion:reduce\)/);
+ assert.match(html,/scroll-behavior:auto!important/);
+});
+
+test('UI-01 respects reduced-motion setting for generated-page scrolling',async()=>{
+ const rows=[{id:'p1',name:'架空公園',category:'park',lat:35.7074,lng:139.6659}];
+ const fetcher=(url)=>String(url).includes('openpoiapi.com')?
+  Promise.resolve(response({results:rows})):Promise.resolve(response({elements:[]}));
+ const reduced=makeUI(fetcher,{reducedMotion:true});
+ await reduced.presets[1].fire();
+ await reduced.el('#generateBtn').fire();
+ assert.equal(reduced.el('#poem').scrollOptions?.behavior,'auto');
+ const normal=makeUI(fetcher);
+ await normal.presets[1].fire();
+ await normal.el('#generateBtn').fire();
+ assert.equal(normal.el('#poem').scrollOptions?.behavior,'smooth');
 });
