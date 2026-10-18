@@ -71,6 +71,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [docs/PILOT_8_AD_ANALYSIS.md](docs/PILOT_8_AD_ANALYSIS.md) | **Pilot調査の一次成果**：実際の広告8物件・24ページの比較、8つの広告構文の仮説 |
 | [docs/PILOT_VISUAL_MOTION_AUDIT.md](docs/PILOT_VISUAL_MOTION_AUDIT.md) | **PC広告画面の視覚比較**：直接観察した6物件と未検証項目の区別 |
 | [docs/AD_CODING_GUIDE_V1.md](docs/AD_CODING_GUIDE_V1.md) | **広告研究の採点ルール**：P/L/R/Vの判定基準と2件の再採点 |
+| [docs/AD_QUALITY_GATES_V1_20261019.md](docs/AD_QUALITY_GATES_V1_20261019.md) | **広告会社レベルの品質規格（推定）**：実在広告の公開根拠と社内審査仮説、ハードゲート・100点審査、図版・組版・PDFの受入基準 |
 | [docs/MAIN_WAVE1_AD_ANALYSIS.md](docs/MAIN_WAVE1_AD_ANALYSIS.md) | **広告本調査 第1弾**：札幌・京都・福岡・那覇の5物件・15ページの分析 |
 | [docs/MAIN_WAVE2_AD_ANALYSIS.md](docs/MAIN_WAVE2_AD_ANALYSIS.md) | **広告本調査 第2弾**：広島・金沢・高松3物件・9ページの分析 |
 | [docs/MAIN_WAVE3_AD_ANALYSIS.md](docs/MAIN_WAVE3_AD_ANALYSIS.md) | **広告本調査 第3弾**：神戸・盛岡・岡山3物件・9ページの文章・生活情報分析 |
