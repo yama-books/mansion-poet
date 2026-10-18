@@ -66,7 +66,54 @@
 .reality-empty{font-size:12px;line-height:1.7;color:#667469}
 @media(max-width:720px){.reality{margin-top:28px}.reality-toggle{padding:23px 18px}.reality-inner{padding:0 18px 24px}.reality-list{grid-template-columns:1fr;gap:11px}.reality-group{padding:16px}}
 @media(prefers-reduced-motion:reduce){.reality-chevron{transition:none}}
-@media print{body{background:#fff!important}.header,.hero,.section,.footer,.output-overline,.output-actions,.evidence,.reality{display:none!important}.output-wrap{padding:0!important;background:white!important}.output-grid{border:0;height:100vh}.output-text{background:#222923!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.output-art{display:block!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+/* UI-01: measured layouts remain browser-/device-specific until manual acceptance. */
+@media(max-width:360px){
+ .header{padding:0 15px}.hero-left{padding-left:19px;padding-right:19px}
+ .control-pane{padding-left:16px;padding-right:16px}
+ .mode-btn{min-width:0;padding:10px 2px}.mode-btn span{font-size:16px}
+ .selected-place,.output-english strong{overflow-wrap:anywhere}
+ .output-actions .line-button{flex:1 1 100%;min-height:44px;text-align:center}
+ .location-card-name{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
+@page{size:A4;margin:13mm}
+@media print{
+ html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#202922!important}
+ .header,.hero,.section,.footer,.output-overline,.output-actions,.evidence,.reality{display:none!important}
+ .output-wrap{padding:0!important;margin:0!important;color:#202922!important;background:#fff!important}
+ .output-grid{display:block!important;height:auto!important;min-height:0!important;border:0!important}
+ .output-text{display:block!important;min-height:0!important;padding:7mm 2mm 4mm!important;
+  color:#202922!important;background:#fff!important;break-inside:avoid;page-break-inside:avoid}
+ .output-art{display:none!important}
+ .output-number{font-size:21pt;color:#716647!important}
+ .output-header{margin:9mm 0 6mm!important;font-size:27pt!important;line-height:1.45!important;
+  color:#18251e!important;overflow-wrap:anywhere}
+ .output-body{font-size:11pt!important;line-height:1.85!important;color:#28332a!important}
+ .output-english{margin-top:9mm!important;border-top:1px solid #888!important;
+  padding-top:5mm!important;align-items:start!important}
+ .output-english strong{font-size:17pt!important;color:#18251e!important;overflow-wrap:anywhere}
+ .output-english span{color:#444!important}
+ .location-highlights{break-before:page;page-break-before:always;margin:0!important;padding:2mm 1mm!important;
+  background:#fff!important;color:#202922!important;border:0!important}
+ .location-header{margin-top:2mm;padding:2mm 0 3mm!important}
+ .location-header h2{font-size:20pt!important}
+ .location-header p,.location-status{font-size:9pt!important;line-height:1.5!important}
+ .location-cards{display:block!important}
+ .location-card,.location-card:first-child{display:block!important;grid-column:auto!important;
+  padding:3mm 4mm!important;margin:0 0 3mm!important;border:1px solid #bbb!important;
+  color:#202922!important;background:#fff!important;break-inside:avoid;page-break-inside:avoid}
+ .location-card-overline,.location-card-source{font-size:8pt!important;color:#444!important}
+ .location-card-name{margin:2mm 0!important;font-size:13pt!important;overflow-wrap:anywhere}
+ .location-card-meta{padding:2mm 0!important;font-size:9pt!important;line-height:1.35!important}
+ .location-card-meta strong{font-size:11pt!important}
+ .location-card-tagline{margin:2mm 0 1mm!important;font-size:11pt!important}
+ .location-card-copy{font-size:9pt!important;line-height:1.55!important}
+ .location-card-source{margin-top:2mm!important;padding:0!important}
+ .location-footnote{margin-top:3mm!important;font-size:8pt!important;line-height:1.45!important}
+}
 </style>
 </head>
 <body>
@@ -808,7 +855,7 @@ async function generate(regen=false){
  if(apiBusy)return;
  if($('#placeInput').value.trim()!==selected.label){
   setStatus('入力した地名を先に検索し、候補を選択してください。');
-  document.querySelector('#discover').scrollIntoView({behavior:'smooth',block:'start'});return;
+  document.querySelector('#discover').scrollIntoView({behavior:(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'),block:'start'});return;
  }
  const version=++generationVersion;
  const controller=new AbortController();
@@ -853,7 +900,7 @@ async function generate(regen=false){
   if(warning)$('#generatedStatus').textContent=warning;
   else if(health.kind==='empty'||!plan.poemPOIs.length)
    $('#generatedStatus').textContent='利用できる周辺施設データが見つかりませんでした。地名のみで創作しました。';
-  document.querySelector('#poem').scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelector('#poem').scrollIntoView({behavior:(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'),block:'start'});
  }finally{
   if(version===generationVersion){
    generationController=null;
