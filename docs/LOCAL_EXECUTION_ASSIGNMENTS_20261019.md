@@ -138,7 +138,7 @@ claude
 1. GitHubのmain最新HEAD、open PR、既存の類似script・manifestを確認し、重複実装を避ける。最初に本書「0.1 PowerShellでworktreeを分ける具体手順」のA〜Cを参照し、既存worktreeがあれば再利用する。worktree新規作成は**先に作業を始める1担当だけ**が行う。
 2. docs/APP003_VISUAL_IMPLEMENTATION_PLAN_20261019.md、docs/handoff/APP003_ASSET_GENERATION_HANDOFF_20261019.md、docs/AD_QUALITY_GATES_V1_20261019.md、docs/LOCAL_EXECUTION_ASSIGNMENTS_20261019.md を読む。AGENTS.mdが実在する場合は読む。
 3. 画像の保管先候補・空き容量・Node/Pythonと画像処理ライブラリ・Git設定を調べる。Cドライブにブラウザや大量画像を無用に置かず、ユーザーが指定するDドライブ等の作業領域を使う。依存ソフトを勝手に大量導入しない。
-4. mainを直接編集せず、専用branch work/app003-img-pipe-01-20261020 と専用作業ディレクトリ D:\\dev\\worktrees\\mansion-poet-img-pipe（既存なら実パス）で進める。Claude Code用worktreeは作成後、その所有者へ渡すだけで編集しない。
+4. mainを直接編集せず、専用branch work/app003-img-pipe-01-20261020 と専用作業ディレクトリ D:\dev\worktrees\mansion-poet-img-pipe（既存なら実パス）で進める。Claude Code用worktreeは作成後、その所有者へ渡すだけで編集しない。
 
 目的：将来の原画30枚・派生100パターンに耐える「素材を受け取って整理する道具」を先に作る。画像そのもの100枚の生成やWeb本番への採用は今回の作業ではない。
 
@@ -176,7 +176,7 @@ claude
 
 作業開始：
 1. main最新HEAD、open PRと既存のPRINT-02実装・テストを確認。docs/APP003_VISUAL_IMPLEMENTATION_PLAN_20261019.md、docs/AD_QUALITY_GATES_V1_20261019.md、docs/LOCAL_EXECUTION_ASSIGNMENTS_20261019.mdを読む。AGENTS.mdがあれば読む。
-2. 別担当がIMG-PIPE-01、MAPFX-01を並行する想定。本書「0.1 PowerShellでworktreeを分ける具体手順」のA〜Cに従い、先行担当が作ったworktreeを点検して再利用する。専用branch work/app003-print03-core-20261020 と作業ディレクトリ D:\\dev\\worktrees\\mansion-poet-print03（既存なら実パス）だけを使い、Codex用worktreeを編集しない。
+2. 別担当がIMG-PIPE-01、MAPFX-01を並行する想定。本書「0.1 PowerShellでworktreeを分ける具体手順」のA〜Cに従い、先行担当が作ったworktreeを点検して再利用する。専用branch work/app003-print03-core-20261020 と作業ディレクトリ D:\dev\worktrees\mansion-poet-print03（既存なら実パス）だけを使い、Codex用worktreeを編集しない。
 3. 既存の index.html の @media print 版型を削除せず、まず独立のsrc/print-layout/・tests/print-layout/・ローカルプレビューHTMLを作成する。POEM辞書・LOCATION本文や地図は編集しない。
 
 目的：「従来画面のCSSを縮めるだけ」をやめ、同一のPOEM・主役施設・LOCATION 0〜3件・住所・注記を、別の広告版型へ安全にレンダリングする印刷エンジンをつくる。
