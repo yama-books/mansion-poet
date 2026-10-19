@@ -73,6 +73,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [docs/AD_CODING_GUIDE_V1.md](docs/AD_CODING_GUIDE_V1.md) | **広告研究の採点ルール**：P/L/R/Vの判定基準と2件の再採点 |
 | [docs/AD_QUALITY_GATES_V1_20261019.md](docs/AD_QUALITY_GATES_V1_20261019.md) | **広告会社レベルの品質規格（推定）**：実在広告の公開根拠と社内審査仮説、ハードゲート・100点審査、図版・組版・PDFの受入基準 |
 | [docs/APP003_VISUAL_IMPLEMENTATION_PLAN_20261019.md](docs/APP003_VISUAL_IMPLEMENTATION_PLAN_20261019.md) | **MAPFX-01／IMG-00／PRINT-03 統合実装計画**：地図光柱、画像スロット、実広告型A4印刷への小PR分割とテスト条件（設計のみ） |
+| [docs/LOCAL_EXECUTION_ASSIGNMENTS_20261019.md](docs/LOCAL_EXECUTION_ASSIGNMENTS_20261019.md) | **Codex／Claude Codeローカル分担手順**：IMG-PIPE-01画像処理とPRINT03-CORE印刷エンジン、別worktree／禁止編集範囲／受入条件 |
 | [docs/handoff/APP003_ASSET_GENERATION_HANDOFF_20261019.md](docs/handoff/APP003_ASSET_GENERATION_HANDOFF_20261019.md) | **別セッション用 ASSET-01 制作指示**：10点先行画像の内訳、生成プロンプト、権利・採否審査、約100バリエーションへの拡張方針 |
 | [docs/MAIN_WAVE1_AD_ANALYSIS.md](docs/MAIN_WAVE1_AD_ANALYSIS.md) | **広告本調査 第1弾**：札幌・京都・福岡・那覇の5物件・15ページの分析 |
 | [docs/MAIN_WAVE2_AD_ANALYSIS.md](docs/MAIN_WAVE2_AD_ANALYSIS.md) | **広告本調査 第2弾**：広島・金沢・高松3物件・9ページの分析 |
