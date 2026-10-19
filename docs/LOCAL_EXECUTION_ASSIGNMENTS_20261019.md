@@ -1,6 +1,6 @@
 # APP-003｜ローカルClaude Code / Codex 分担指示 v1.0
 
-策定：2026-10-19 JST
+策定：2026-10-19 JST／worktree具体手順追補：2026-10-20 JST
 状態：**実装委任の作業契約（各タスク未着手）**。本ファイル自体の保存と、画像処理／印刷機能の実装完了を混同しない。
 正本：https://github.com/yama-books/mansion-poet
 統合設計：[MAPFX-01 / IMG-00 / PRINT-03](APP003_VISUAL_IMPLEMENTATION_PLAN_20261019.md)
@@ -22,6 +22,109 @@
 
 現在のmainが作業開始時点と同一とは限らない。**日時や過去の固定SHAをcheckout対象の正本にしない。GitHubの最新mainを照合**する。
 
+## 0.1 PowerShell で worktree を分ける具体手順（Windows、実行前に確認）
+
+**worktree は同じGitリポジトリの履歴を共有しつつ、別々の作業フォルダ・作業ブランチを使う機能。** 2つのエージェントが同じフォルダを編集しないことが最も重要。作業フォルダはリポジトリ本体の**外側**に置く（子ディレクトリに入れない）。以下は `D:\dev` に空きがある場合の**例**。実在するローカルcloneの位置はまだ確認していない。
+
+想定配置：
+
+~~~text
+D:\dev\mansion-poet\                         ← 親となるclone（mainの参照・Git管理用）
+D:\dev\worktrees\mansion-poet-img-pipe\      ← Codex専用／IMG-PIPE-01
+D:\dev\worktrees\mansion-poet-print03\       ← Claude Code専用／PRINT03-CORE
+~~~
+
+### A. 初回の状態確認（既存cloneがある場合は必ず優先）
+
+**PowerShellを1つ開き、この確認だけを先に行う。** すでに別の位置に正しいcloneがあるなら `$repo` をその実パスに修正し、二重cloneを作らない。既存のブランチ、未commit作業、既存worktreeを破棄しない。
+
+~~~powershell
+$repo = 'D:\dev\mansion-poet'
+$wtRoot = 'D:\dev\worktrees'
+$img = Join-Path $wtRoot 'mansion-poet-img-pipe'
+$print = Join-Path $wtRoot 'mansion-poet-print03'
+
+# $repo がまだ存在せず、他所にも同一cloneがない場合に限りcloneする
+if (!(Test-Path $repo)) {
+  git clone https://github.com/yama-books/mansion-poet.git $repo
+}
+
+# 正しいRepoか、未commit変更や既存worktree/branchがないかを表示
+git -C $repo rev-parse --show-toplevel
+git -C $repo remote -v
+git -C $repo status --short
+git -C $repo worktree list
+git -C $repo branch --list 'work/app003-*'
+~~~
+
+確認ポイント：
+- `remote -v` の origin が `yama-books/mansion-poet` を指すこと（SSH URLも可）。違う／Git Repoでない場合は**停止して報告**。
+- `status --short` に変更があれば**触らず保持**。worktree追加自体は通常、親cloneの作業ツリーの変更を消さないが、ユーザーの未保存内容を勝手にcheckout/stash/resetしない。
+- `worktree list` に同じ担当用パスやブランチがあれば**その既存worktreeを優先再利用**する。中断からの再開で新たなworktreeを乱立させない。
+- 同じbranch名が別worktreeに割り当て済みのときは、新規worktreeを強行しない。
+
+### B. 2つのworktreeを作る（上記を確認し、未作成の場合のみ）
+
+**新規作成は1つのPowerShellセッション／1人の担当で実施。** CodexとClaude Codeに同時に `git worktree add` を命じない。現行の `origin/main` から新規分岐し、親cloneのmainは切り替えない。
+
+~~~powershell
+# Aでremoteと既存worktreeを確認できた後に実行
+git -C $repo fetch origin main
+New-Item -ItemType Directory -Force -Path $wtRoot | Out-Null
+
+# すでに同じパス・branchがある場合は実行せず、既存を確認して再利用
+git -C $repo worktree add -b work/app003-img-pipe-01-20261020 $img origin/main
+git -C $repo worktree add -b work/app003-print03-core-20261020 $print origin/main
+~~~
+
+`worktree add` が「already exists」「already checked out」等を返した場合は、**ディレクトリ削除、`--force`、branch名の重複強行をしない**。`git worktree list`、`git branch --list`、各 `git status --short` を調べて既存作業の所在を明らかにし、再利用か修復の方針を報告する。ネットワーク認証やorigin/mainが取得できない場合も停止して報告する。
+
+### C. 分離できたことを確認してから各エージェントを起動
+
+~~~powershell
+git -C $repo worktree list
+git -C $img branch --show-current
+git -C $print branch --show-current
+git -C $img status --short
+git -C $print status --short
+git -C $img rev-parse HEAD
+git -C $print rev-parse HEAD
+~~~
+
+期待結果：2つのブランチ名が別々で、初回両HEADは同じ最新origin/mainを指す。**Codexは`$img`だけ**、**Claude Codeは`$print`だけ**を作業ディレクトリにする。具体的にはPowerShellウィンドウも別にする。
+
+~~~powershell
+# PowerShell窓A：Codex専用
+Set-Location 'D:\dev\worktrees\mansion-poet-img-pipe'
+codex
+
+# PowerShell窓B：Claude Code専用（別ウィンドウで実行）
+Set-Location 'D:\dev\worktrees\mansion-poet-print03'
+claude
+~~~
+
+`codex`や`claude`がコマンド認識されない場合、CLIが未インストール／PATH不一致かもしれない。**無断のインストールや動作済み報告はしない**。実際のローカル環境の起動方法を確認する。エージェントが現在どのworktreeにいるかは毎回 `pwd` と `git branch --show-current` でチェック。
+
+### D. 作業中とPR提出
+
+- 担当外ファイル、特に`index.html`、`src/poem-catalog.js`、`src/location-highlights.js`、他担当ディレクトリは編集しない。両エージェントともmainへの直接commit・mergeは禁止。
+- 各worktreeで `git status --short`、`git diff --stat` とテストを確認してから、自分の担当branchだけにcommit。push/PRはユーザーの権限と承認範囲に従う。
+- 同じリポジトリのGit refsは共有されるが、作業フォルダ／未追跡ファイル／依存パッケージは分かれる。生成した大量画像や一時PDFを**他worktreeへ直接書き込まない**。
+- mainが更新された場合、独断で進行中の両worktreeをreset/rebaseしない。HEAD差分・未committed内容・PRの競合を確認し、必要時に調整する。
+- 各担当の報告には`git worktree list`、自worktreeの`git status`、ブランチ名、commit SHA、CI結果を添える。
+
+### E. 作業終了後の片づけ（PRレビュー・保存を終えるまではしない）
+
+1. 必要な成果をcommit/push済か、レビュー済か、該当PRが閉じたかを確認。`git status --short` で**未保存の変更・未追跡成果がない**ことを確認。
+2. 自分のエージェントを終了してから、**親cloneのPowerShell**で `git -C $repo worktree remove $img` などを行う。まだ継続作業があるならremoveしない。`--force`やエクスプローラからのフォルダ強制削除をしない。
+3. local branchを消す必要はない。`git branch -d` がsquash merge等で拒否されたら、無理に `-D` で削除せず確認する。
+4. `git worktree list` で残った有効worktreeを確認。実際のフォルダ・branchが不明なまま`git worktree prune`を実行しない。
+
+### 失敗時に最初に見るもの
+
+`git -C $repo worktree list`、`git -C $repo branch -avv`、`git -C $img status --short`（パスが存在する場合）、`git -C $print status --short`（同）、`git -C $repo remote -v`。この出力を報告すれば、既存変更を壊さずに次の手順を決められる。
+
+
 ## 1. Codexに送る指示書：IMG-PIPE-01
 
 以下のテキストをCodexのローカルチャットへそのまま貼る。
@@ -32,10 +135,10 @@
 正本Repo：https://github.com/yama-books/mansion-poet
 
 開始条件：
-1. GitHubのmain最新HEAD、open PR、既存の類似script・manifestを確認し、重複実装を避ける。
+1. GitHubのmain最新HEAD、open PR、既存の類似script・manifestを確認し、重複実装を避ける。最初に本書「0.1 PowerShellでworktreeを分ける具体手順」のA〜Cを参照し、既存worktreeがあれば再利用する。worktree新規作成は**先に作業を始める1担当だけ**が行う。
 2. docs/APP003_VISUAL_IMPLEMENTATION_PLAN_20261019.md、docs/handoff/APP003_ASSET_GENERATION_HANDOFF_20261019.md、docs/AD_QUALITY_GATES_V1_20261019.md、docs/LOCAL_EXECUTION_ASSIGNMENTS_20261019.md を読む。AGENTS.mdが実在する場合は読む。
 3. 画像の保管先候補・空き容量・Node/Pythonと画像処理ライブラリ・Git設定を調べる。Cドライブにブラウザや大量画像を無用に置かず、ユーザーが指定するDドライブ等の作業領域を使う。依存ソフトを勝手に大量導入しない。
-4. mainを直接編集せず、専用branch work/app003-img-pipe-01-20261019 と専用作業ディレクトリ／worktreeで進める。
+4. mainを直接編集せず、専用branch work/app003-img-pipe-01-20261020 と専用作業ディレクトリ D:\dev\worktrees\mansion-poet-img-pipe（既存なら実パス）で進める。Claude Code用worktreeは作成後、その所有者へ渡すだけで編集しない。
 
 目的：将来の原画30枚・派生100パターンに耐える「素材を受け取って整理する道具」を先に作る。画像そのもの100枚の生成やWeb本番への採用は今回の作業ではない。
 
@@ -73,7 +176,7 @@
 
 作業開始：
 1. main最新HEAD、open PRと既存のPRINT-02実装・テストを確認。docs/APP003_VISUAL_IMPLEMENTATION_PLAN_20261019.md、docs/AD_QUALITY_GATES_V1_20261019.md、docs/LOCAL_EXECUTION_ASSIGNMENTS_20261019.mdを読む。AGENTS.mdがあれば読む。
-2. 別担当がIMG-PIPE-01、MAPFX-01を並行する想定。専用branch work/app003-print03-core-20261019 とworktreeを使う。
+2. 別担当がIMG-PIPE-01、MAPFX-01を並行する想定。本書「0.1 PowerShellでworktreeを分ける具体手順」のA〜Cに従い、先行担当が作ったworktreeを点検して再利用する。専用branch work/app003-print03-core-20261020 と作業ディレクトリ D:\dev\worktrees\mansion-poet-print03（既存なら実パス）だけを使い、Codex用worktreeを編集しない。
 3. 既存の index.html の @media print 版型を削除せず、まず独立のsrc/print-layout/・tests/print-layout/・ローカルプレビューHTMLを作成する。POEM辞書・LOCATION本文や地図は編集しない。
 
 目的：「従来画面のCSSを縮めるだけ」をやめ、同一のPOEM・主役施設・LOCATION 0〜3件・住所・注記を、別の広告版型へ安全にレンダリングする印刷エンジンをつくる。
@@ -106,7 +209,7 @@
 
 ## 4. 同時実行時の運用と統合順序
 
-1. 今セッションのdocsと画像制作指示は正本。ローカル担当は必ず同じmain HEADから分岐する必要はなく、**現在最新のmain**から作業する。
+1. 今セッションのdocsと画像制作指示は正本。worktree新規作成時は本書0.1に従い最新の origin/main から分岐する。既に着手済みのworktreeは現HEADと作業状態を優先して再利用し、開始時点のSHAが古いからといって勝手にresetしない。
 2. IMG-PIPE-01とPRINT03-COREはファイル所有権を分離する。作業dirとブランチは別々。前者はスクリプト、後者は独立rendererを扱う。
 3. MAPFX-01は小規模地図変更としてChatGPT GitHub側で実装可。index.htmlを編集するのはこの担当だけとし、同時に別のエージェントが触らない。
 4. IMG-PIPEの型とIMG-00のmanifestの食い違いは、公開を始める前に仕様確認PRで解消する。
