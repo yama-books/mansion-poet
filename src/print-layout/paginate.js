@@ -151,5 +151,34 @@ function mount(container,templateId,data,opts={}){
  const layout=paginate(container,rendered);
  return {rendered,layout,report:verify(container,rendered,layout)};
 }
-root.PrintPaginate=Object.freeze({paginate,verify,mount,FINE_MIN_PT,CREATIVE_MIN_PT});
+/* Map-enabled mount. Every GSI tile is preloaded first; only when all of them
+ * load is the sheet laid out with the map. Any failure or timeout falls back to
+ * the tile-free coordinate diagram, so the PDF never shows a partial map or a
+ * map credit for a map that is not printed. */
+function preload(urls,timeoutMs,doc){
+ const view=doc.defaultView;
+ return Promise.all(urls.map(url=>new Promise(resolve=>{
+  const img=new view.Image();
+  const t=view.setTimeout(()=>resolve(false),timeoutMs);
+  img.onload=()=>{view.clearTimeout(t);resolve(img.naturalWidth>0)};
+  img.onerror=()=>{view.clearTimeout(t);resolve(false)};
+  img.src=url;
+ })));
+}
+async function mountWithMap(container,templateId,data,opts={}){
+ const want=RC.render(templateId,data,{...opts,mapTiles:'gsi-pale'});
+ const urls=RC.tileUrls(want);
+ let used=false,failed=0;
+ if(want.mapTiles&&urls.length&&!opts.simulateTileFailure){
+  const ok=await preload(urls,opts.tileTimeoutMs||12000,container.ownerDocument);
+  failed=ok.filter(x=>!x).length;
+  used=failed===0;
+ }else if(opts.simulateTileFailure)failed=urls.length;
+ const result=used?{rendered:want}:{rendered:RC.render(templateId,data,{...opts,mapTiles:false})};
+ const layout=paginate(container,result.rendered);
+ const report=verify(container,result.rendered,layout);
+ report.mapTiles={requested:want.mapTiles,used,tiles:urls.length,failed};
+ return {...result,layout,report};
+}
+root.PrintPaginate=Object.freeze({paginate,verify,mount,mountWithMap,FINE_MIN_PT,CREATIVE_MIN_PT});
 })(typeof globalThis==='object'?globalThis:this);

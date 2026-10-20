@@ -240,6 +240,40 @@ test('position diagram is omitted (never guessed) when coordinates are missing o
  assert.ok(RC.render('location',F01()).credits.includes(PD.POSITION_MAP_NOTE));
 });
 
+test('map tiles: only integer GSI tile URLs, aligned on the selected point',()=>{
+ const r=RC.render('type_poem',byId('F01_jimbocho_3').data,{sheet:'duplex',mapTiles:'gsi-pale'});
+ assert.equal(r.mapTiles,true);
+ const urls=RC.tileUrls(r);
+ assert.ok(urls.length>=4&&urls.length<=49,String(urls.length));
+ for(const u of urls)assert.match(u,RC.TILE_URL);
+ // the tile containing the selected point is part of the layer
+ const {lat,lon}=r.data.place;
+ const z=+urls[0].split('/')[5];
+ const tx=Math.floor((lon+180)/360*2**z);
+ const ty=Math.floor((1-Math.log(Math.tan(lat*Math.PI/180)+1/Math.cos(lat*Math.PI/180))/Math.PI)/2*2**z);
+ assert.ok(urls.includes(`https://cyberjapandata.gsi.go.jp/xyz/pale/${z}/${tx}/${ty}.png`));
+ assert.ok(z>=14&&z<=16,String(z));
+ // credit and the tile variant of the note appear only on the side that prints the map
+ assert.ok(r.sides.required.includes(PD.MAP_TILE_CREDIT));
+ assert.ok(r.sides.required.includes(PD.POSITION_MAP_TILE_NOTE));
+ assert.ok(!r.sides.required.includes(PD.POSITION_MAP_NOTE));
+ assert.ok(!r.required.includes(PD.MAP_TILE_CREDIT));
+ // without the option nothing points to the network
+ assert.deepEqual(RC.tileUrls(RC.render('type_poem',byId('F01_jimbocho_3').data,{sheet:'duplex'})),[]);
+ // no coordinates: no tiles even when asked
+ assert.equal(RC.render('type_poem',byId('F07_xss').data,{sheet:'duplex',mapTiles:'gsi-pale'}).mapTiles,false);
+});
+
+test('serializer: href only for a GSI tile image, never for other hosts or tags',()=>{
+ const {h,toHTML}=RC;
+ const ok='https://cyberjapandata.gsi.go.jp/xyz/pale/16/58210/25803.png';
+ assert.match(toHTML(h('image',{href:ok})),/href=/);
+ for(const bad of ['https://example.com/xyz/pale/16/1/1.png','javascript:alert(1)',
+  'https://cyberjapandata.gsi.go.jp/xyz/pale/16/1/1.png?x=<script>','https://cyberjapandata.gsi.go.jp/xyz/std/16/1/1.png'])
+  assert.throws(()=>toHTML(h('image',{href:bad})),/not allowed/,bad);
+ assert.throws(()=>toHTML(h('a',{href:ok})),/not allowed/);
+});
+
 test('fromAppSnapshot maps index.html values without re-deriving them',()=>{
  const d=PD.fromAppSnapshot({generationToken:'v12',place:{label:'神保町',en:'JIMBOCHO'},propertyName:'THE JIMBOCHO RESIDENCE',
   headline:'知の深奥に、\n邸の答えを。',body:'一行目\n二行目',mainEvidenceId:'node/1',verified:true,

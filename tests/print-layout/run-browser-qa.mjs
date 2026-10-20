@@ -35,23 +35,26 @@ for(const f of list)for(const t of RC.templateIds())cases.push({f,t,fonts:'local
 // front/back sheet with the back-side position diagram, every fixture, type_poem + location
 for(const f of list)for(const t of ['type_poem','location'])cases.push({f,t,fonts:'local',sheet:'duplex'});
 cases.push({f:list[0],t:'type_poem',fonts:'broken',sheet:'auto'});
+// map fallbacks: forced tile failure, and map switched off
+cases.push({f:list[0],t:'type_poem',fonts:'local',sheet:'duplex',map:'fail'});
+cases.push({f:list[0],t:'type_poem',fonts:'local',sheet:'duplex',map:'off'});
 const python=process.env.PYTHON||'python';
 const rows=[];
-for(const {f,t,fonts,sheet} of cases){
+for(const {f,t,fonts,sheet,map='gsi'} of cases){
  if(only&&f.fixtureId!==only)continue;
- const name=`${t}__${f.fixtureId}${fonts==='broken'?'__fontfail':''}${sheet==='duplex'?'__duplex':''}`;
- const url=`${preview}?fixture=${encodeURIComponent(f.fixtureId)}&template=${t}&fonts=${fonts}&sheet=${sheet}`;
- const row={case:name,template:t,fixture:f.fixtureId,fonts,sheet};
+ const name=`${t}__${f.fixtureId}${fonts==='broken'?'__fontfail':''}${sheet==='duplex'?'__duplex':''}${map!=='gsi'?'__map'+map:''}`;
+ const url=`${preview}?fixture=${encodeURIComponent(f.fixtureId)}&template=${t}&fonts=${fonts}&sheet=${sheet}&map=${map}`;
+ const row={case:name,template:t,fixture:f.fixtureId,fonts,sheet,map};
  try{
   const dom=execFileSync(browser,[...flags,'--dump-dom',url],{encoding:'utf8',maxBuffer:64<<20,timeout:150000});
   const m=dom.match(/<script id="pl-report" type="application\/json">([\s\S]*?)<\/script>/);
   const rep=m?JSON.parse(m[1]):null;
   const r=rep?.reports?.[0];
-  row.dom=r?{ok:r.ok,pageCount:r.pageCount,mode:r.mode,level:r.level,backLevel:r.backLevel,minFontPt:r.minFontPt,minCreativePt:r.minCreativePt,failures:r.failures,error:r.error}:{ok:false,error:'no report in DOM'};
+  row.dom=r?{mapTiles:r.mapTiles??null,ok:r.ok,pageCount:r.pageCount,mode:r.mode,level:r.level,backLevel:r.backLevel,minFontPt:r.minFontPt,minCreativePt:r.minCreativePt,failures:r.failures,error:r.error}:{ok:false,error:'no report in DOM'};
   const pdf=join(out,name+'.pdf');
   if(existsSync(pdf))rmSync(pdf);
   execFileSync(browser,[...flags,'--no-pdf-header-footer',`--print-to-pdf=${pdf}`,url],{stdio:'ignore',timeout:150000});
-  const rr=RC.render(t,f.data,{sheet});
+  const rr=RC.render(t,f.data,{sheet,mapTiles:row.dom.mapTiles?.used?'gsi-pale':false});
   const required=row.dom.mode==='duplex'?rr.sides.required:rr.required;
   row.positionMap=row.dom.mode==='duplex'?rr.sides.positionMap:null;
   const reqPath=join(out,name+'.required.json');writeFileSync(reqPath,JSON.stringify(required));
@@ -61,7 +64,7 @@ for(const {f,t,fonts,sheet} of cases){
   row.ok=row.dom.ok&&row.pdf.a4&&!pdfr.missing.length&&!pdfr.outside.length&&pdfr.pageCount===row.dom.pageCount;
  }catch(e){row.ok=false;row.error=String(e.message||e).slice(0,400)}
  rows.push(row);
- console.log(`${row.ok?'PASS':'FAIL'} ${name} dom=${row.dom?.pageCount??'-'}p(${row.dom?.mode??'-'} L${row.dom?.level??'-'}${row.dom?.backLevel!=null?'/'+row.dom.backLevel:''} min ${row.dom?.minFontPt??'-'}pt creative ${row.dom?.minCreativePt??'-'}pt) pdf=${row.pdf?.pageCount??'-'}p a4=${row.pdf?.a4??'-'} missing=${row.pdf?.missing?.length??'-'}${row.positionMap!=null?' map='+row.positionMap:''}${row.error?' ERR '+row.error:''}${row.dom?.failures?.length?' '+JSON.stringify(row.dom.failures).slice(0,300):''}`);
+ console.log(`${row.ok?'PASS':'FAIL'} ${name} dom=${row.dom?.pageCount??'-'}p(${row.dom?.mode??'-'} L${row.dom?.level??'-'}${row.dom?.backLevel!=null?'/'+row.dom.backLevel:''} min ${row.dom?.minFontPt??'-'}pt creative ${row.dom?.minCreativePt??'-'}pt) pdf=${row.pdf?.pageCount??'-'}p a4=${row.pdf?.a4??'-'} missing=${row.pdf?.missing?.length??'-'}${row.positionMap!=null?' diagram='+row.positionMap:''}${row.dom?.mapTiles?' tiles='+(row.dom.mapTiles.used?'gsi':'none')+'('+row.dom.mapTiles.tiles+'/'+row.dom.mapTiles.failed+'fail)':''}${row.error?' ERR '+row.error:''}${row.dom?.failures?.length?' '+JSON.stringify(row.dom.failures).slice(0,300):''}`);
 }
 if(!only){
  try{console.log('compare sheet: '+execFileSync(python,['-P',join(here,'make_compare_sheet.py'),out],{encoding:'utf8'}).trim())}

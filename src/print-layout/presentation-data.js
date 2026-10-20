@@ -78,10 +78,14 @@ function positionGeometry(data){
 }
 const POSITION_MAP_NOTE='位置関係図は選択地点と施設の座標から描いた参考図です。距離の円と線は直線距離を示し、道路・経路・徒歩時間・施設の敷地範囲を示すものではありません。地図データは使用していません。';
 const SCHEMATIC_MAP_NOTE='位置図は概念図です。縮尺・方位・道路距離・徒歩時間を示すものではありません。';
+// Used instead of POSITION_MAP_NOTE when GSI map tiles are actually printed under the diagram.
+const POSITION_MAP_TILE_NOTE='位置関係図は国土地理院の地図に、選択地点と施設の座標から直線距離の円と線を重ねた参考図です。道路・経路・徒歩時間・施設の敷地範囲を示すものではありません。';
+const MAP_TILE_CREDIT='地図：国土地理院「地理院タイル（淡色地図）」を加工して作成';
+function positionNotes(mapTiles){return mapTiles?[POSITION_MAP_TILE_NOTE,MAP_TILE_CREDIT]:[POSITION_MAP_NOTE]}
 
 /* Compose the credit / creative-note lines from what is actually printed.
  * Each line is required print content (H-06 checks it is not dropped). */
-function composeCredits(data,{schematicMap=false,positionMap=false,illustration=true}={}){
+function composeCredits(data,{schematicMap=false,positionMap=false,illustration=true,mapTiles=false}={}){
  const lines=['物件と広告文章は創作です。実際の販売・募集情報ではありません。'];
  if(illustration)lines.push('図版は架空建築の抽象線画です。実在の建物・計画を表すものではありません。');
  if(data.locations.length){
@@ -103,7 +107,7 @@ function composeCredits(data,{schematicMap=false,positionMap=false,illustration=
  // are consistent, otherwise the rank-based schematic.
  if((schematicMap||positionMap)&&data.locations.length){
   const geo=positionGeometry(data);
-  if(geo.ok)lines.push(POSITION_MAP_NOTE);
+  if(geo.ok)lines.push(...positionNotes(mapTiles));
   else if(schematicMap)lines.push(SCHEMATIC_MAP_NOTE);
  }
  return Object.freeze(lines);
@@ -212,7 +216,8 @@ function requiredStrings(data,credits){
 }
 
 const api=Object.freeze({SCHEMA,SOURCES,validate,build,fromAppSnapshot,composeCredits,requiredStrings,
- formatAddress,formatDistance,formatWalk,formatSource,positionGeometry,POSITION_MAP_NOTE,SCHEMATIC_MAP_NOTE});
+ formatAddress,formatDistance,formatWalk,formatSource,positionGeometry,positionNotes,
+ POSITION_MAP_NOTE,POSITION_MAP_TILE_NOTE,MAP_TILE_CREDIT,SCHEMATIC_MAP_NOTE});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PrintPresentationData=api;
 })(typeof globalThis==='object'?globalThis:this);

@@ -77,6 +77,17 @@
 .pl-posmap-fig{margin:0}
 .pl-posmap-fig .pl-caption{text-align:left}
 .pl-pm-ground{fill:var(--pl-tint)}
+/* map tiles: warm, quiet base so rings, lines and markers stay the subject */
+.pl-pm-tiles{filter:grayscale(.9) sepia(.15) contrast(.88) brightness(1.06)}
+.pl-pm-wash{fill:var(--pl-paper);opacity:.36}
+.pl-posmap-tiled .pl-pm-ring{opacity:1;stroke-width:.9;stroke:var(--pl-deep);stroke-dasharray:1.6 1.6}
+.pl-posmap-tiled .pl-pm-ray{stroke-width:.9}
+.pl-posmap-tiled .pl-pm-ray-chief{stroke-width:1.6}
+.pl-posmap-tiled .pl-pm-axis{opacity:0}
+.pl-posmap-tiled .pl-pm-sub{stroke-width:1.3}
+.pl-posmap-tiled .pl-pm-sitelabel{paint-order:stroke;stroke:var(--pl-paper);stroke-width:2.2px;stroke-linejoin:round}
+.pl-posmap-tiled .pl-pm-ringlabel{paint-order:stroke;stroke:var(--pl-paper);stroke-width:2px;stroke-linejoin:round}
+.pl-mono .pl-pm-tiles{filter:grayscale(1) contrast(.9) brightness(1.06)}
 .pl-pm-axis{stroke:var(--pl-rule);stroke-width:.35;fill:none;vector-effect:non-scaling-stroke}
 .pl-pm-ring{fill:none;stroke:var(--pl-accent);stroke-width:.5;stroke-dasharray:1.2 1.6;vector-effect:non-scaling-stroke;opacity:.8}
 .pl-pm-ray{stroke:var(--pl-deep);stroke-width:.6;stroke-dasharray:3 2;fill:none;vector-effect:non-scaling-stroke}
