@@ -71,6 +71,38 @@
 .pl-back-head .pl-mast-right{letter-spacing:.14em}
 .pl-locs-back .pl-loc-name{font-size:11.5pt}
 
+/* position diagram (coordinates only: north up, true scale, straight lines) */
+.pl-page{--map-w:104mm}
+.pl-posmap-grid{display:grid;grid-template-columns:var(--map-w) minmax(0,1fr);gap:7mm;align-items:center}
+.pl-posmap-fig{margin:0}
+.pl-posmap-fig .pl-caption{text-align:left}
+.pl-pm-ground{fill:var(--pl-tint)}
+.pl-pm-axis{stroke:var(--pl-rule);stroke-width:.35;fill:none;vector-effect:non-scaling-stroke}
+.pl-pm-ring{fill:none;stroke:var(--pl-accent);stroke-width:.5;stroke-dasharray:1.2 1.6;vector-effect:non-scaling-stroke;opacity:.8}
+.pl-pm-ray{stroke:var(--pl-deep);stroke-width:.6;stroke-dasharray:3 2;fill:none;vector-effect:non-scaling-stroke}
+.pl-pm-ray-chief{stroke-width:1.1;stroke-dasharray:none}
+.pl-pm-site{fill:var(--pl-accent)}
+.pl-pm-site-halo{fill:none;stroke:var(--pl-accent);stroke-width:.7;vector-effect:non-scaling-stroke}
+.pl-pm-sitelabel{font:500 6.4px var(--pl-sans);fill:var(--pl-ink);letter-spacing:.08em}
+.pl-pm-ringlabel{font:500 6px var(--pl-latin);fill:var(--pl-accent);letter-spacing:.04em}
+.pl-pm-chief{fill:var(--pl-deep);stroke:var(--pl-paper);stroke-width:1.2;vector-effect:non-scaling-stroke}
+.pl-pm-sub{fill:var(--pl-paper);stroke:var(--pl-deep);stroke-width:.9;vector-effect:non-scaling-stroke}
+.pl-pm-num{font:600 6.2px var(--pl-latin);fill:var(--pl-deep)}
+.pl-pm-num-chief{fill:var(--pl-paper);font-size:7px}
+.pl-pm-north-arrow{fill:var(--pl-ink)}
+.pl-pm-scalebar{stroke:var(--pl-ink);stroke-width:.8;fill:none;vector-effect:non-scaling-stroke}
+.pl-posmap-legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3mm}
+.pl-pm-item{display:grid;grid-template-columns:9mm minmax(0,1fr);gap:3mm;align-items:start;border-top:.3pt solid var(--pl-rule);padding-top:2mm}
+.pl-pm-badge{font-family:var(--pl-latin);font-size:15pt;line-height:1;color:var(--pl-deep)}
+.pl-pm-item-chief .pl-pm-badge{color:var(--pl-paper);background:var(--pl-deep);border-radius:50%;width:8mm;height:8mm;display:flex;align-items:center;justify-content:center;font-size:11pt}
+.pl-pm-text{display:flex;flex-direction:column;gap:.4mm;min-width:0}
+.pl-pm-genre{font-size:var(--fine);color:var(--pl-accent);letter-spacing:.08em}
+.pl-pm-name{font-family:var(--pl-serif);font-weight:600;font-size:10.5pt;line-height:1.4}
+.pl-pm-dist{font-family:var(--pl-serif);font-size:9pt;color:var(--pl-deep);font-variant-numeric:tabular-nums}
+.pl-mono .pl-pm-ground{fill:#f2f2f2}
+:is(.pl-fit-2,.pl-fit-3).pl-side-back{--map-w:90mm}
+.pl-fit-4.pl-side-back{--map-w:76mm}
+
 /* (a) TYPE POEM */
 .pl-tpl-type_poem .pl-hero{display:grid;grid-template-columns:minmax(0,1fr) 46mm;gap:8mm;align-items:end;padding-top:3mm}
 .pl-tpl-type_poem .pl-hero-text{display:flex;flex-direction:column;gap:4mm;min-width:0}

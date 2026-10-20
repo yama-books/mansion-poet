@@ -29,6 +29,7 @@
  <label>fixture <select id="fx"></select></label>
  <label>template <select id="tpl"><option value="compare">3版型比較</option></select></label>
  <label>fonts <select id="fonts"><option value="local">local</option><option value="broken">broken (fallback probe)</option></select></label>
+ <label>sheet <select id="sheet"><option value="auto">auto（A4一枚優先）</option><option value="duplex">duplex（表裏・裏面に位置関係図）</option></select></label>
  <button id="print" type="button">PRINT / PDF</button>
 </div>
 <div class="qa-banner pl-noprint">試験データです。施設名・住所・距離は組版検証用の架空値で、実在施設の情報ではありません。</div>
@@ -49,9 +50,11 @@ for(const id of PrintRenderCore.templateIds())tplSel.add(new Option(PrintRenderC
 fxSel.value=q.get('fixture')||PrintFixtures.list[0].fixtureId;
 tplSel.value=q.get('template')||'compare';
 fontSel.value=q.get('fonts')==='broken'?'broken':'local';
+const sheetSel=document.getElementById('sheet');
+sheetSel.value=q.get('sheet')==='duplex'?'duplex':'auto';
 document.documentElement.dataset.fonts=fontSel.value;
-const go=()=>{const p=new URLSearchParams({fixture:fxSel.value,template:tplSel.value,fonts:fontSel.value});location.search=p.toString()};
-[fxSel,tplSel,fontSel].forEach(s=>s.addEventListener('change',go));
+const go=()=>{const p=new URLSearchParams({fixture:fxSel.value,template:tplSel.value,fonts:fontSel.value,sheet:sheetSel.value});location.search=p.toString()};
+[fxSel,tplSel,fontSel,sheetSel].forEach(s=>s.addEventListener('change',go));
 document.getElementById('print').addEventListener('click',()=>window.print());
 const fixture=PrintFixtures.byId(fxSel.value);
 const out=document.getElementById('out');
@@ -67,7 +70,7 @@ function run(){
    const t=document.createElement('h2');t.textContent=PrintRenderCore.templateInfo(id).label;host.append(t,stage)}
   wrap.appendChild(host);
   try{
-   const {report}=PrintPaginate.mount(stage,id,fixture.data,{expectedToken:fixture.data.generationToken});
+   const {report}=PrintPaginate.mount(stage,id,fixture.data,{expectedToken:fixture.data.generationToken,sheet:sheetSel.value});
    reports.push({templateId:id,...report});
    if(ids.length>1)host.style.height=`calc(${report.pageCount} * (297mm + 6mm) * .5 + 24px)`;
   }catch(e){reports.push({templateId:id,ok:false,error:String(e.message||e)})}

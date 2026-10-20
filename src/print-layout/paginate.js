@@ -78,14 +78,15 @@ function layoutMulti(container,rendered,level){
 
 function paginate(container,rendered){
  container.textContent='';
- const one=fitSide(container,rendered,rendered.blocks,'');
+ const one=rendered.sheet==='duplex'?null:fitSide(container,rendered,rendered.blocks,'');
  if(one)return finish([one.page],rendered,{level:one.level,mode:'single',warnings:[]});
  if(rendered.sides){
   const front=fitSide(container,rendered,rendered.sides.front,'pl-side-front');
   const back=front&&fitSide(container,rendered,rendered.sides.back,'pl-side-back');
   if(front&&back)return finish([front.page,back.page],rendered,{level:front.level,backLevel:back.level,mode:'duplex',warnings:[],
    sideLabels:['表面','裏面'],
-   reason:'A4 1枚に収まらないため、表面（広告）と裏面（周辺施設の詳細・注記）の表裏構成にしました。本文は削っていません。'});
+   reason:rendered.sheet==='duplex'?'表裏指定のため、表面（広告）と裏面（位置関係図・周辺施設の詳細・注記）で構成しました。':
+    'A4 1枚に収まらないため、表面（広告）と裏面（周辺施設の詳細・注記）の表裏構成にしました。本文は削っていません。'});
   container.textContent='';
  }
  const r=layoutMulti(container,rendered,2);
@@ -104,7 +105,9 @@ function verify(container,rendered,layout){
  const failures=[];
  const pages=[...container.querySelectorAll('.pl-page')];
  const all=squash(pages.map(p=>p.textContent).join(''));
- const missing=rendered.required.filter(s=>!all.includes(squash(s)));
+ const duplex=layout.mode==='duplex';
+ const required=duplex?rendered.sides.required:rendered.required;
+ const missing=required.filter(s=>!all.includes(squash(s)));
  if(missing.length)failures.push({gate:'H-06',kind:'missing_text',items:missing});
  let minFont=Infinity,minCreative=Infinity;
  pages.forEach((page,pi)=>{
@@ -137,7 +140,9 @@ function verify(container,rendered,layout){
  if(layout.mode==='duplex'&&!pages[0].querySelector('.pl-front-note'))failures.push({gate:'H-01',kind:'creative_note_missing_on_front'});
  return {ok:!failures.length,failures,pageCount:pages.length,level:layout.level,backLevel:layout.backLevel??null,mode:layout.mode,
   reason:layout.reason||null,warnings:layout.warnings,minFontPt:+(minFont/PT).toFixed(2),
-  minCreativePt:Number.isFinite(minCreative)?+(minCreative/PT).toFixed(2):null,requiredChecked:rendered.required.length};
+  minCreativePt:Number.isFinite(minCreative)?+(minCreative/PT).toFixed(2):null,requiredChecked:required.length,
+  requiredSet:duplex?'duplex':'single',positionMap:duplex?rendered.sides.positionMap:null,
+  positionMapReason:duplex?rendered.sides.positionMapReason:null};
 }
 
 /* One call for the harness / future app: refuses stale tokens via render(). */

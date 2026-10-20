@@ -136,7 +136,7 @@ test('credits are composed from what is printed',()=>{
  assert.match(withCards,/徒歩所要時間ではありません/);
  assert.match(withCards,/物件と広告文章は創作です/);
  const loc=RC.render('location',byId('F01_jimbocho_3').data).credits.join('\n');
- assert.match(loc,/位置図は概念図です/);
+ assert.match(loc,/位置関係図は選択地点と施設の座標から描いた参考図です/);
  assert.doesNotMatch(loc,/架空建築の抽象線画/);
  const none=RC.render('location',byId('F04_residential_0').data).credits.join('\n');
  assert.doesNotMatch(none,/位置図|OpenStreetMap/);
@@ -185,7 +185,7 @@ test('front/back: supporting cards are brief on the front and complete on the ba
  }
  assert.match(front,/所在地・紹介文・出典は裏面/);
  const one=RC.render('type_poem',byId('F02_nakano_1').data).sides.back.map(b=>b.id);
- assert.deepEqual(one,['back-head','notes']);
+ assert.deepEqual(one,['back-head','position-map','notes']);
  const zero=RC.render('type_poem',byId('F04_residential_0').data);
  assert.equal(zero.sides.front.some(b=>b.id==='locations'),false);
 });
@@ -193,6 +193,51 @@ test('front/back: supporting cards are brief on the front and complete on the ba
 test('creative-work note is marked so the 8pt floor can be enforced',()=>{
  const html=RC.renderToHTML('type_poem',byId('F01_jimbocho_3').data);
  assert.match(html,/<p class="pl-note pl-creative">物件と広告文章は創作です/);
+});
+
+test('position diagram: back side carries the coordinate map and its note',()=>{
+ const r=RC.render('type_poem',byId('F01_jimbocho_3').data,{sheet:'duplex'});
+ assert.equal(r.sheet,'duplex');
+ assert.equal(r.sides.positionMap,true);
+ const ids=r.sides.back.map(b=>b.id);
+ assert.deepEqual(ids,['back-head','position-map','locations-back','notes']);
+ assert.ok(r.sides.required.includes(PD.POSITION_MAP_NOTE));
+ // the single-page set does not claim a diagram it does not print
+ assert.ok(!r.required.includes(PD.POSITION_MAP_NOTE));
+ const back=htmlText(r.sides.back.map(b=>RC.toHTML(RC.blockNode(b))).join(''));
+ assert.match(back,/道路・経路・徒歩時間/);
+ assert.doesNotMatch(back,/徒歩約\d/);
+});
+
+test('position diagram: north is up and scale follows the coordinates',()=>{
+ const d=PD.build(byId('F01_jimbocho_3').data);
+ const g=PD.positionGeometry(d);
+ assert.equal(g.ok,true);
+ // jb-1 was placed at bearing 35°: north-east of the selected point
+ assert.ok(g.points[0].east>0&&g.points[0].north>0);
+ // jb-2 at 200°: south (and slightly west)
+ assert.ok(g.points[1].north<0&&g.points[1].east<0);
+ for(const p of g.points)assert.ok(Math.abs(Math.hypot(p.east,p.north)-p.distance)<5);
+});
+
+test('position diagram is omitted (never guessed) when coordinates are missing or disagree',()=>{
+ // no LOCATION data: a requested back side is not printed (it would be empty)
+ assert.equal(RC.render('type_poem',byId('F04_residential_0').data,{sheet:'duplex'}).sheet,'auto');
+ const xss=RC.render('type_poem',byId('F07_xss').data,{sheet:'duplex'});
+ assert.equal(xss.sides.positionMap,false);
+ assert.equal(xss.sides.positionMapReason,'no_place_coordinates');
+ const bad=F01();bad.locations[1].distanceMeters=900;  // printed 900 m, coordinates say ~260 m
+ const v=PD.validate(bad);
+ assert.equal(v.ok,true);
+ assert.ok(v.warnings.some(w=>w.startsWith('H-02')));
+ const r=RC.render('type_poem',bad,{sheet:'duplex'});
+ assert.equal(r.sides.positionMap,false);
+ assert.equal(r.sides.positionMapReason,'distance_mismatch');
+ assert.equal(r.sides.back.some(b=>b.id==='position-map'),false);
+ assert.ok(!r.sides.required.includes(PD.POSITION_MAP_NOTE));
+ // the location template falls back to the labelled schematic, not a false map
+ assert.ok(RC.render('location',bad).credits.includes(PD.SCHEMATIC_MAP_NOTE));
+ assert.ok(RC.render('location',F01()).credits.includes(PD.POSITION_MAP_NOTE));
 });
 
 test('fromAppSnapshot maps index.html values without re-deriving them',()=>{

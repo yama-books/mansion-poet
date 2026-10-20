@@ -64,12 +64,16 @@ function withSides(blocks,data,credits,title){
   node:h('header',{class:'pl-masthead pl-back-head','data-block':'back-head'},
    h('span',{class:'pl-brand'},'POÈME / ESTATE'),
    h('span',{class:'pl-mast-right'},'LOCATION DATA — '+data.property.name))}];
+ // Back-side position diagram only when the coordinates agree with the printed distances.
+ const geo=PD.positionGeometry(data);
+ const backCredits=geo.ok&&!credits.includes(PD.POSITION_MAP_NOTE)?Object.freeze([...credits,PD.POSITION_MAP_NOTE]):credits;
+ if(geo.ok)back.push(positionMapBlock(data,geo));
  if(locs.length>1)back.push({id:'locations-back',required:true,splittable:true,
   shell:h('section',{class:'pl-locs pl-locs-back','data-block':'locations-back'},
    h('div',{class:'pl-section-head'},h('span',{class:'pl-eyebrow'},'LOCATION DATA'),h('span',{class:'pl-section-sub'},'周辺施設の詳細（表面の補足）'))),
   units:locs.slice(1).map(loc=>locationCard(loc,'band'))});
- back.push(notesBlock(credits));
- return {front,back};
+ back.push(notesBlock(backCredits));
+ return {front,back,credits:backCredits,required:PD.requiredStrings(data,backCredits),positionMap:geo.ok,positionMapReason:geo.ok?null:geo.reason};
 }
 function finalize(blocks,data,credits,title){
  const list=blocks.filter(Boolean);
@@ -112,7 +116,57 @@ function artEditorial(){
   h('path',{d:'M270 270V214A30 30 0 0 1 330 214V270',class:'pl-art-line'}),
   h('circle',{cx:'540',cy:'60',r:'22',class:'pl-art-sun'}));
 }
+/* Position diagram drawn from coordinates: true north up, true scale, distance
+ * rings and straight lines only. No roads, no routes, no map tiles. */
+const NICE_RADII=[100,150,200,300,400,500,600,800,1000,1200,1500,2000];
+function positionMapSvg(data,geo,{compact=false}={}){
+ const C=120,P=compact?96:100;
+ const R=NICE_RADII.find(r=>r>=geo.maxDistance*1.08)||Math.ceil(geo.maxDistance*1.1/500)*500;
+ const k=P/R;
+ const ring=r=>h('circle',{cx:C,cy:C,r:(r*k).toFixed(2),class:'pl-pm-ring'});
+ const ringLabel=r=>{const a=-Math.PI/4,x=C+r*k*Math.cos(a)+2,y=C+r*k*Math.sin(a)-2;
+  return h('text',{x:x.toFixed(1),y:y.toFixed(1),class:'pl-pm-ringlabel'},r+'m')};
+ const pts=geo.points.map(p=>({...p,x:C+p.east*k,y:C-p.north*k}));
+ const bar=R/2,barLen=bar*k;
+ return h('svg',{class:'pl-art pl-posmap-svg',viewBox:'0 0 240 240','aria-hidden':'true',focusable:'false'},
+  h('rect',{x:'0',y:'0',width:'240',height:'240',class:'pl-pm-ground'}),
+  h('path',{d:`M${C} ${C-P-8}V${C+P+8}M${C-P-8} ${C}H${C+P+8}`,class:'pl-pm-axis'}),
+  ring(R/4),ring(R/2),ring(R),
+  ringLabel(R/2),ringLabel(R),
+  pts.map(p=>h('path',{d:`M${C} ${C}L${p.x.toFixed(1)} ${p.y.toFixed(1)}`,class:p.rank===1?'pl-pm-ray pl-pm-ray-chief':'pl-pm-ray'})),
+  h('circle',{cx:C,cy:C,r:'7',class:'pl-pm-site-halo'}),
+  h('circle',{cx:C,cy:C,r:'3.2',class:'pl-pm-site'}),
+  h('text',{x:C,y:C+15,'text-anchor':'middle',class:'pl-pm-sitelabel'},'選択地点'),
+  pts.slice().reverse().map(p=>h('g',{class:'pl-pm-mark'},
+   h('circle',{cx:p.x.toFixed(1),cy:p.y.toFixed(1),r:p.rank===1?'8.5':'6.8',class:p.rank===1?'pl-pm-chief':'pl-pm-sub'}),
+   h('text',{x:p.x.toFixed(1),y:(p.y+2.9).toFixed(1),'text-anchor':'middle',class:p.rank===1?'pl-pm-num pl-pm-num-chief':'pl-pm-num'},pad2(p.rank)))),
+  // north arrow
+  h('g',{class:'pl-pm-north'},
+   h('path',{d:'M222 10L227 24L222 21L217 24Z',class:'pl-pm-north-arrow'}),
+   h('text',{x:'222',y:'34','text-anchor':'middle',class:'pl-pm-ringlabel'},'N')),
+  // scale bar
+  h('g',{class:'pl-pm-scale'},
+   h('path',{d:`M10 228H${(10+barLen).toFixed(1)}M10 224V231M${(10+barLen).toFixed(1)} 224V231M${(10+barLen/2).toFixed(1)} 226V231`,class:'pl-pm-scalebar'}),
+   h('text',{x:(10+barLen+4).toFixed(1),y:'231',class:'pl-pm-ringlabel'},bar+'m')));
+}
+function positionMapBlock(data,geo){
+ return {id:'position-map',required:true,splittable:false,
+  node:h('section',{class:'pl-posmap','data-block':'position-map'},
+   h('div',{class:'pl-section-head'},h('span',{class:'pl-eyebrow'},'POSITION'),h('span',{class:'pl-section-sub'},'選択地点と周辺施設の位置関係')),
+   h('div',{class:'pl-posmap-grid'},
+    h('figure',{class:'pl-posmap-fig'},positionMapSvg(data,geo),
+     h('figcaption',{class:'pl-caption'},'座標から作図・北が上・直線距離のみ（道路・経路は示しません）')),
+    h('ol',{class:'pl-posmap-legend'},data.locations.map(loc=>
+     h('li',{class:'pl-pm-item'+(loc.rank===1?' pl-pm-item-chief':'')},
+      h('span',{class:'pl-pm-badge'},pad2(loc.rank)),
+      h('span',{class:'pl-pm-text'},
+       h('span',{class:'pl-pm-genre'},loc.genreLabel),
+       h('span',{class:'pl-pm-name'},loc.name),
+       h('span',{class:'pl-pm-dist'},PD.formatDistance(loc))))))))};
+}
 function artSchematic(data){
+ const geo=PD.positionGeometry(data);
+ if(geo.ok)return positionMapSvg(data,geo,{compact:true});
  const marks=data.locations.map((loc,i)=>{
   const a=(-90+i*125)*Math.PI/180;
   const r=22+64*Math.min(1,Math.sqrt(Math.max(0,loc.distanceMeters)/850));
@@ -182,7 +236,7 @@ RC.register({id:'location',label:'LOCATION EDITION／ロケーション型',stat
    headlineLines(data.poem.headline,'pl-headline pl-lo-headline'));
   const top=data.locations.length?
    h('section',{class:'pl-lo-top','data-block':'diagram'},
-    h('figure',{class:'pl-lo-map'},artSchematic(data),h('figcaption',{class:'pl-caption'},'位置関係の模式図（縮尺・方位なし）')),side):
+    h('figure',{class:'pl-lo-map'},artSchematic(data),h('figcaption',{class:'pl-caption'},PD.positionGeometry(data).ok?'位置関係図（座標から作図・北が上・直線距離のみ）':'位置関係の模式図（縮尺・方位なし）')),side):
    h('section',{class:'pl-lo-top pl-lo-nomap','data-block':'diagram'},side);
   const blocks=[
    masthead(data,'LOCATION EDITION'),
