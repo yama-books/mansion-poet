@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PRINT03 preview harness</title>
+<link rel="stylesheet" href="../../src/print-layout/print-layout.css">
+<style>
+ body{margin:0;background:#d9d6cf;font:13px/1.6 system-ui,sans-serif;color:#222}
+ .qa-bar{position:sticky;top:0;z-index:5;background:#1f2622;color:#eee;padding:8px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+ .qa-bar select,.qa-bar button{font:inherit}
+ .qa-banner{background:#fff3cd;color:#5a4300;padding:6px 14px;font-size:12px}
+ .qa-report{margin:8px auto;max-width:210mm;background:#fff;padding:8px 12px;font:12px/1.5 ui-monospace,monospace;white-space:pre-wrap}
+ .qa-ok{color:#0a6b2d}.qa-ng{color:#a40000}
+ .qa-compare{display:flex;gap:6mm;justify-content:center;align-items:flex-start;padding:6mm;overflow-x:auto}
+ .qa-col{flex:none;width:calc(210mm * .5)}
+ .qa-col h2{font-size:13px;margin:0 0 4px}
+ .qa-col .pl-stage{transform:scale(.5);transform-origin:top left;width:210mm;padding:0;gap:6mm}
+ /* broken web font probe: first family in the stack 404s and must fall back */
+ html[data-fonts=broken] .pl-page{--pl-serif:"PL Missing Serif","Yu Mincho","YuMincho","Hiragino Mincho ProN",serif;--pl-sans:"PL Missing Sans","Yu Gothic","Meiryo",sans-serif;--pl-latin:"PL Missing Latin","Times New Roman",serif}
+ @font-face{font-family:"PL Missing Serif";src:url("./__missing__/serif.woff2") format("woff2")}
+ @font-face{font-family:"PL Missing Sans";src:url("./__missing__/sans.woff2") format("woff2")}
+ @font-face{font-family:"PL Missing Latin";src:url("./__missing__/latin.woff2") format("woff2")}
+</style>
+</head>
+<body>
+<div class="qa-bar pl-noprint">
+ <strong>PRINT03 preview</strong>
+ <label>fixture <select id="fx"></select></label>
+ <label>template <select id="tpl"><option value="compare">3版型比較</option></select></label>
+ <label>fonts <select id="fonts"><option value="local">local</option><option value="broken">broken (fallback probe)</option></select></label>
+ <button id="print" type="button">PRINT / PDF</button>
+</div>
+<div class="qa-banner pl-noprint">試験データです。施設名・住所・距離は組版検証用の架空値で、実在施設の情報ではありません。</div>
+<div id="report" class="qa-report pl-noprint"></div>
+<main id="out"></main>
+<script id="pl-report" type="application/json">null</script>
+<script src="../../src/print-layout/presentation-data.js"></script>
+<script src="../../src/print-layout/render-core.js"></script>
+<script src="../../src/print-layout/templates.js"></script>
+<script src="../../src/print-layout/paginate.js"></script>
+<script src="./fixtures.js"></script>
+<script>
+(function(){'use strict';
+const q=new URLSearchParams(location.search);
+const fxSel=document.getElementById('fx'),tplSel=document.getElementById('tpl'),fontSel=document.getElementById('fonts');
+for(const f of PrintFixtures.list)fxSel.add(new Option(f.fixtureId+' — '+f.description,f.fixtureId));
+for(const id of PrintRenderCore.templateIds())tplSel.add(new Option(PrintRenderCore.templateInfo(id).label+' ['+PrintRenderCore.templateInfo(id).status+']',id));
+fxSel.value=q.get('fixture')||PrintFixtures.list[0].fixtureId;
+tplSel.value=q.get('template')||'compare';
+fontSel.value=q.get('fonts')==='broken'?'broken':'local';
+document.documentElement.dataset.fonts=fontSel.value;
+const go=()=>{const p=new URLSearchParams({fixture:fxSel.value,template:tplSel.value,fonts:fontSel.value});location.search=p.toString()};
+[fxSel,tplSel,fontSel].forEach(s=>s.addEventListener('change',go));
+document.getElementById('print').addEventListener('click',()=>window.print());
+const fixture=PrintFixtures.byId(fxSel.value);
+const out=document.getElementById('out');
+function run(){
+ const ids=tplSel.value==='compare'?PrintRenderCore.templateIds():[tplSel.value];
+ const reports=[];
+ const wrap=ids.length>1?Object.assign(document.createElement('div'),{className:'qa-compare'}):out;
+ if(ids.length>1)out.appendChild(wrap);
+ for(const id of ids){
+  const stage=document.createElement('div');stage.className='pl-stage';
+  let host=stage;
+  if(ids.length>1){host=document.createElement('section');host.className='qa-col';
+   const t=document.createElement('h2');t.textContent=PrintRenderCore.templateInfo(id).label;host.append(t,stage)}
+  wrap.appendChild(host);
+  try{
+   const {report}=PrintPaginate.mount(stage,id,fixture.data,{expectedToken:fixture.data.generationToken});
+   reports.push({templateId:id,...report});
+   if(ids.length>1)host.style.height=`calc(${report.pageCount} * (297mm + 6mm) * .5 + 24px)`;
+  }catch(e){reports.push({templateId:id,ok:false,error:String(e.message||e)})}
+ }
+ const result={fixtureId:fixture.fixtureId,fonts:fontSel.value,reports};
+ document.getElementById('pl-report').textContent=JSON.stringify(result).replace(/</g,'\u003c');
+ window.__PL_REPORT=result;
+ const r=document.getElementById('report');
+ r.textContent='';
+ for(const x of reports){
+  const line=document.createElement('div');line.className=x.ok?'qa-ok':'qa-ng';
+  line.textContent=`${x.templateId}: ${x.ok?'PASS':'FAIL'} pages=${x.pageCount??'-'} mode=${x.mode??'-'} level=${x.level??'-'} minFont=${x.minFontPt??'-'}pt required=${x.requiredChecked??'-'}`+
+   (x.reason?`\n  ${x.reason}`:'')+(x.error?`\n  ${x.error}`:'')+(x.failures?.length?`\n  ${JSON.stringify(x.failures)}`:'');
+  r.appendChild(line);
+ }
+}
+(document.fonts?document.fonts.ready:Promise.resolve()).then(run);
+})();
+</script>
+</body>
+</html>

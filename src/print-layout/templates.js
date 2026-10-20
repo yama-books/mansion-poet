@@ -1,0 +1,162 @@
+/* PRINT03-CORE: three A4 advertisement templates over the same PresentationData.
+ * type_poem  : complete first prototype (text-led, no photo needed)
+ * editorial  : skeleton (illustration-led, original line art until IMG-00 assets)
+ * location   : skeleton (schematic position diagram + chief / supporting cards)
+ * All artwork is original inline SVG; it carries no data strings.
+ */
+(function(root){'use strict';
+const node=typeof module==='object'&&module.exports;
+const PD=node?require('./presentation-data.js'):root.PrintPresentationData;
+const RC=node?require('./render-core.js'):root.PrintRenderCore;
+const {h}=RC;
+const pad2=n=>String(n).padStart(2,'0');
+
+function headlineLines(text,cls){
+ return h('h1',{class:cls},text.split('\n').map(line=>h('span',{class:'pl-line'},line)));
+}
+function poemUnits(body){
+ return body.split('\n').map(line=>line.trim()?h('p',{class:'pl-poem-line'},line):h('p',{class:'pl-poem-gap','aria-hidden':'true'}));
+}
+function locationCard(loc,variant){
+ return h('article',{class:'pl-loc pl-loc-'+variant,'data-rank':loc.rank},
+  h('div',{class:'pl-loc-over'},
+   h('span',{class:'pl-loc-label'},'LOCATION '),h('span',{class:'pl-loc-rank'},pad2(loc.rank)),
+   h('span',{class:'pl-loc-sep'},' / '),h('span',{class:'pl-loc-genre'},loc.genreLabel)),
+  h('h3',{class:'pl-loc-name'},loc.name),
+  h('div',{class:'pl-loc-meta'},
+   h('span',{class:'pl-loc-addr'},PD.formatAddress(loc)),
+   h('strong',{class:'pl-loc-dist'},PD.formatDistance(loc)),
+   loc.walkMinutes!=null&&h('span',{class:'pl-loc-walk'},PD.formatWalk(loc))),
+  h('h4',{class:'pl-loc-tag'},loc.headline),
+  h('p',{class:'pl-loc-body'},loc.body),
+  h('div',{class:'pl-loc-src'},PD.formatSource(loc)));
+}
+function notesBlock(credits){
+ return {id:'notes',required:true,splittable:true,
+  shell:h('section',{class:'pl-notes','data-block':'notes'},h('div',{class:'pl-notes-head'},'NOTES / 注記')),
+  units:credits.map(line=>h('p',{class:'pl-note'},line))};
+}
+function locationsBlock(data,{title,variantOf}){
+ if(!data.locations.length)return null;  // 0 cards: never print an empty slot
+ return {id:'locations',required:true,splittable:true,
+  shell:h('section',{class:'pl-locs','data-block':'locations'},
+   h('div',{class:'pl-section-head'},h('span',{class:'pl-eyebrow'},'LOCATION'),h('span',{class:'pl-section-sub'},title))),
+  units:data.locations.map((loc,i)=>locationCard(loc,variantOf(i)))};
+}
+function masthead(data,right){
+ return {id:'masthead',required:true,splittable:false,
+  node:h('header',{class:'pl-masthead','data-block':'masthead'},
+   h('span',{class:'pl-brand'},'POÈME / ESTATE'),
+   h('span',{class:'pl-mast-right'},'No. '+data.property.serial+' — '+right))};
+}
+
+/* --- original line art ------------------------------------------------- */
+function artTypePoem(){
+ const v=[];
+ for(let i=0;i<9;i++)v.push(h('path',{d:`M${24+i*14} 40V232`,class:'pl-art-thin'}));
+ return h('svg',{class:'pl-art pl-art-type',viewBox:'0 0 180 260','aria-hidden':'true',focusable:'false'},
+  h('circle',{cx:'128',cy:'58',r:'30',class:'pl-art-sun'}),
+  v,
+  h('path',{d:'M14 232H166M14 236H166',class:'pl-art-rule'}),
+  h('path',{d:'M38 232V132A52 52 0 0 1 142 132V232',class:'pl-art-line'}),
+  h('path',{d:'M60 232V142A30 30 0 0 1 120 142V232',class:'pl-art-line'}));
+}
+function artEditorial(){
+ const rows=[];
+ for(let y=70;y<=250;y+=22)rows.push(h('path',{d:`M118 ${y}H482`,class:'pl-art-thin'}));
+ const cols=[];
+ for(let x=138;x<=462;x+=36)cols.push(h('path',{d:`M${x} 56V270`,class:'pl-art-thin'}));
+ return h('svg',{class:'pl-art pl-art-editorial',viewBox:'0 0 600 300',preserveAspectRatio:'xMidYMid meet','aria-hidden':'true',focusable:'false'},
+  h('path',{d:'M0 270H600',class:'pl-art-rule'}),
+  h('path',{d:'M100 270V56L300 22 500 56V270',class:'pl-art-line'}),
+  rows,cols,
+  h('path',{d:'M270 270V214A30 30 0 0 1 330 214V270',class:'pl-art-line'}),
+  h('circle',{cx:'540',cy:'60',r:'22',class:'pl-art-sun'}));
+}
+function artSchematic(data){
+ const marks=data.locations.map((loc,i)=>{
+  const a=(-90+i*125)*Math.PI/180;
+  const r=22+64*Math.min(1,Math.sqrt(Math.max(0,loc.distanceMeters)/850));
+  const x=(100+r*Math.cos(a)).toFixed(1),y=(100+r*Math.sin(a)).toFixed(1);
+  return h('g',{class:'pl-map-mark'},
+   h('circle',{cx:x,cy:y,r:i===0?'9':'7',class:i===0?'pl-map-chief':'pl-map-sub'}),
+   h('text',{x,y:(+y+3.2).toFixed(1),'text-anchor':'middle',class:'pl-map-num'},pad2(loc.rank)));
+ });
+ return h('svg',{class:'pl-art pl-art-map',viewBox:'0 0 200 200','aria-hidden':'true',focusable:'false'},
+  h('circle',{cx:'100',cy:'100',r:'86',class:'pl-art-thin'}),
+  h('circle',{cx:'100',cy:'100',r:'54',class:'pl-art-thin'}),
+  h('path',{d:'M100 8V192M8 100H192',class:'pl-art-thin'}),
+  h('circle',{cx:'100',cy:'100',r:'4',class:'pl-map-center'}),
+  marks);
+}
+
+/* --- (a) TYPE POEM: complete ------------------------------------------- */
+RC.register({id:'type_poem',label:'TYPE POEM／文字主役型',status:'complete',
+ creditOptions:{illustration:true},
+ build(data,credits){
+  const blocks=[
+   masthead(data,'NON-EXISTENT ESTATE'),
+   {id:'hero',required:true,splittable:false,
+    node:h('section',{class:'pl-hero','data-block':'hero'},
+     h('div',{class:'pl-hero-text'},
+      h('div',{class:'pl-eyebrow'},'POÈME No. '+data.property.serial),
+      headlineLines(data.poem.headline,'pl-headline'),
+      h('div',{class:'pl-property'},data.property.name)),
+     h('figure',{class:'pl-hero-art'},artTypePoem(),h('figcaption',{class:'pl-caption'},h('span',{class:'pl-line'},'ABSTRACT LINE'),h('span',{class:'pl-line'},'架空建築の線画'))))},
+   {id:'poem',required:true,splittable:true,
+    shell:h('section',{class:'pl-poem','data-block':'poem'}),units:poemUnits(data.poem.body)},
+   locationsBlock(data,{title:'周辺の公開データより',variantOf:i=>i===0?'chief':'band'}),
+   notesBlock(credits)
+  ].filter(Boolean);
+  return {blocks};
+ }});
+
+/* --- (b) EDITORIAL: skeleton ------------------------------------------- */
+RC.register({id:'editorial',label:'EDITORIAL LUXE／高級誌面型',status:'skeleton',
+ creditOptions:{illustration:true},
+ build(data,credits){
+  const blocks=[
+   masthead(data,'EDITORIAL'),
+   {id:'hero',required:true,splittable:false,
+    node:h('figure',{class:'pl-ed-figure','data-block':'hero'},artEditorial(),
+     h('figcaption',{class:'pl-caption'},'架空建築イメージ（抽象線画）— 実在の建物ではありません'))},
+   {id:'title',required:true,splittable:false,
+    node:h('section',{class:'pl-ed-title','data-block':'title'},
+     headlineLines(data.poem.headline,'pl-headline pl-ed-headline'),
+     h('div',{class:'pl-property'},data.property.name))},
+   {id:'poem',required:true,splittable:true,
+    shell:h('section',{class:'pl-poem pl-ed-poem','data-block':'poem'}),units:poemUnits(data.poem.body)},
+   locationsBlock(data,{title:'THE NEIGHBOURHOOD',variantOf:i=>i===0?'chief':'col'}),
+   notesBlock(credits)
+  ].filter(Boolean);
+  return {blocks};
+ }});
+
+/* --- (c) LOCATION EDITION: skeleton ------------------------------------ */
+RC.register({id:'location',label:'LOCATION EDITION／ロケーション型',status:'skeleton',
+ creditOptions:{illustration:false,schematicMap:true},
+ build(data,credits){
+  // Vertical setting only for short Japanese headlines; long Latin runs stay horizontal.
+  const lines=data.poem.headline.split('\n');
+  const vertical=lines.length<=3&&lines.every(l=>l.length<=14&&!/[\x21-\x7e]{6,}/.test(l));
+  const side=h('div',{class:'pl-lo-side'+(vertical?' pl-vertical':'')},
+   headlineLines(data.poem.headline,'pl-headline pl-lo-headline'));
+  const top=data.locations.length?
+   h('section',{class:'pl-lo-top','data-block':'diagram'},
+    h('figure',{class:'pl-lo-map'},artSchematic(data),h('figcaption',{class:'pl-caption'},'位置関係の模式図（縮尺・方位なし）')),side):
+   h('section',{class:'pl-lo-top pl-lo-nomap','data-block':'diagram'},side);
+  const blocks=[
+   masthead(data,'LOCATION EDITION'),
+   {id:'diagram',required:true,splittable:false,node:top},
+   {id:'property',required:true,splittable:false,node:h('div',{class:'pl-property pl-lo-property','data-block':'property'},data.property.name)},
+   {id:'poem',required:true,splittable:true,shell:h('section',{class:'pl-poem pl-lo-poem','data-block':'poem'}),units:poemUnits(data.poem.body)},
+   locationsBlock(data,{title:'主役の施設と、街の補助線',variantOf:i=>i===0?'chief':'col'}),
+   notesBlock(credits)
+  ].filter(Boolean);
+  return {blocks};
+ }});
+
+const api=Object.freeze({ids:['type_poem','editorial','location']});
+if(node)module.exports=api;
+root.PrintTemplates=api;
+})(typeof globalThis==='object'?globalThis:this);
