@@ -18,10 +18,18 @@ function poemUnits(body){
  return body.split('\n').map(line=>line.trim()?h('p',{class:'pl-poem-line'},line):h('p',{class:'pl-poem-gap','aria-hidden':'true'}));
 }
 function locationCard(loc,variant){
- return h('article',{class:'pl-loc pl-loc-'+variant,'data-rank':loc.rank},
-  h('div',{class:'pl-loc-over'},
-   h('span',{class:'pl-loc-label'},'LOCATION '),h('span',{class:'pl-loc-rank'},pad2(loc.rank)),
-   h('span',{class:'pl-loc-sep'},' / '),h('span',{class:'pl-loc-genre'},loc.genreLabel)),
+ const over=h('div',{class:'pl-loc-over'},
+  h('span',{class:'pl-loc-label'},'LOCATION '),h('span',{class:'pl-loc-rank'},pad2(loc.rank)),
+  h('span',{class:'pl-loc-sep'},' / '),h('span',{class:'pl-loc-genre'},loc.genreLabel));
+ if(variant==='brief'){
+  // Front-side summary of a supporting card. The full card is printed on the back.
+  return h('article',{class:'pl-loc pl-loc-brief','data-rank':loc.rank},over,
+   h('h3',{class:'pl-loc-name'},loc.name),
+   h('div',{class:'pl-loc-meta'},h('strong',{class:'pl-loc-dist'},PD.formatDistance(loc)),
+    h('span',{class:'pl-loc-more'},'所在地・紹介文・出典は裏面')),
+   h('h4',{class:'pl-loc-tag'},loc.headline));
+ }
+ return h('article',{class:'pl-loc pl-loc-'+variant,'data-rank':loc.rank},over,
   h('h3',{class:'pl-loc-name'},loc.name),
   h('div',{class:'pl-loc-meta'},
    h('span',{class:'pl-loc-addr'},PD.formatAddress(loc)),
@@ -31,10 +39,41 @@ function locationCard(loc,variant){
   h('p',{class:'pl-loc-body'},loc.body),
   h('div',{class:'pl-loc-src'},PD.formatSource(loc)));
 }
+// credits[0] is always the creative-work note (H-01); it is never set as fine print.
 function notesBlock(credits){
  return {id:'notes',required:true,splittable:true,
   shell:h('section',{class:'pl-notes','data-block':'notes'},h('div',{class:'pl-notes-head'},'NOTES / 注記')),
-  units:credits.map(line=>h('p',{class:'pl-note'},line))};
+  units:credits.map((line,i)=>h('p',{class:i?'pl-note':'pl-note pl-creative'},line))};
+}
+/* Front / back sheet used when one A4 page cannot hold everything.
+ * Front: the advertisement itself (chief card in full, supporting cards brief).
+ * Back : LOCATION DATA with every supporting card in full, plus all notes.
+ * Nothing is dropped: every required string is on one of the two sides. */
+function withSides(blocks,data,credits,title){
+ const front=blocks.filter(b=>b.id!=='locations'&&b.id!=='notes');
+ const locs=data.locations;
+ if(locs.length)front.push({id:'locations',required:true,splittable:true,
+  shell:h('section',{class:'pl-locs','data-block':'locations'},
+   h('div',{class:'pl-section-head'},h('span',{class:'pl-eyebrow'},'LOCATION'),h('span',{class:'pl-section-sub'},title))),
+  units:locs.map((loc,i)=>locationCard(loc,i===0?'chief':'brief'))});
+ front.push({id:'front-note',required:true,splittable:false,
+  node:h('div',{class:'pl-front-note','data-block':'front-note'},
+   h('p',{class:'pl-creative'},credits[0]),
+   h('p',{class:'pl-creative'},locs.length>1?'裏面に周辺施設の所在地・紹介文・出典と注記を掲載しています。':'裏面に注記と出典を掲載しています。'))});
+ const back=[{id:'back-head',required:true,splittable:false,
+  node:h('header',{class:'pl-masthead pl-back-head','data-block':'back-head'},
+   h('span',{class:'pl-brand'},'POÈME / ESTATE'),
+   h('span',{class:'pl-mast-right'},'LOCATION DATA — '+data.property.name))}];
+ if(locs.length>1)back.push({id:'locations-back',required:true,splittable:true,
+  shell:h('section',{class:'pl-locs pl-locs-back','data-block':'locations-back'},
+   h('div',{class:'pl-section-head'},h('span',{class:'pl-eyebrow'},'LOCATION DATA'),h('span',{class:'pl-section-sub'},'周辺施設の詳細（表面の補足）'))),
+  units:locs.slice(1).map(loc=>locationCard(loc,'band'))});
+ back.push(notesBlock(credits));
+ return {front,back};
+}
+function finalize(blocks,data,credits,title){
+ const list=blocks.filter(Boolean);
+ return {blocks:list,sides:withSides(list,data,credits,title)};
 }
 function locationsBlock(data,{title,variantOf}){
  if(!data.locations.length)return null;  // 0 cards: never print an empty slot
@@ -107,8 +146,8 @@ RC.register({id:'type_poem',label:'TYPE POEM／文字主役型',status:'complete
     shell:h('section',{class:'pl-poem','data-block':'poem'}),units:poemUnits(data.poem.body)},
    locationsBlock(data,{title:'周辺の公開データより',variantOf:i=>i===0?'chief':'band'}),
    notesBlock(credits)
-  ].filter(Boolean);
-  return {blocks};
+  ];
+  return finalize(blocks,data,credits,'周辺の公開データより');
  }});
 
 /* --- (b) EDITORIAL: skeleton ------------------------------------------- */
@@ -128,8 +167,8 @@ RC.register({id:'editorial',label:'EDITORIAL LUXE／高級誌面型',status:'ske
     shell:h('section',{class:'pl-poem pl-ed-poem','data-block':'poem'}),units:poemUnits(data.poem.body)},
    locationsBlock(data,{title:'THE NEIGHBOURHOOD',variantOf:i=>i===0?'chief':'col'}),
    notesBlock(credits)
-  ].filter(Boolean);
-  return {blocks};
+  ];
+  return finalize(blocks,data,credits,'THE NEIGHBOURHOOD');
  }});
 
 /* --- (c) LOCATION EDITION: skeleton ------------------------------------ */
@@ -152,8 +191,8 @@ RC.register({id:'location',label:'LOCATION EDITION／ロケーション型',stat
    {id:'poem',required:true,splittable:true,shell:h('section',{class:'pl-poem pl-lo-poem','data-block':'poem'}),units:poemUnits(data.poem.body)},
    locationsBlock(data,{title:'主役の施設と、街の補助線',variantOf:i=>i===0?'chief':'col'}),
    notesBlock(credits)
-  ].filter(Boolean);
-  return {blocks};
+  ];
+  return finalize(blocks,data,credits,'主役の施設と、街の補助線');
  }});
 
 const api=Object.freeze({ids:['type_poem','editorial','location']});

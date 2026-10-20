@@ -54,7 +54,8 @@ function register(def){
 }
 /* render(templateId,data,{expectedToken}) -> {templateId,data,credits,blocks,footer}
  * Each block: {id,required,splittable,shell:node,units:node[]|null,node}. A block
- * with units can be continued on the next page between whole units only. */
+ * with units can be continued on the next page between whole units only.
+ * sides: {front,back} block lists for the two-sided fallback sheet. */
 function render(templateId,data,opts={}){
  const def=templates.get(templateId);
  if(!def)throw new Error('PRINT03: unknown template '+templateId);
@@ -64,7 +65,7 @@ function render(templateId,data,opts={}){
  const credits=PD.composeCredits(pd,def.creditOptions||{});
  const out=def.build(pd,credits,{h});
  return Object.freeze({templateId,label:def.label,status:def.status,data:pd,credits,
-  blocks:out.blocks,footerText:out.footerText||'POÈME / ESTATE — 架空の物件を題材にした創作広告です。実在の物件・取引を案内しません。',
+  blocks:out.blocks,sides:out.sides||null,footerText:out.footerText||'POÈME / ESTATE — 架空の物件を題材にした創作広告です。実在の物件・取引を案内しません。',
   required:PD.requiredStrings(pd,credits)});
 }
 function blockNode(block){

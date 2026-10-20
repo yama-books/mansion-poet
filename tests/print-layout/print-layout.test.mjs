@@ -159,6 +159,42 @@ test('long poem stays whole: one unit per line so pagination never cuts a line',
  assert.equal(notes.id,'notes');
 });
 
+const sideText=blocks=>squash(htmlText(blocks.map(b=>RC.toHTML(RC.blockNode(b))).join('')));
+for(const t of TEMPLATES)test(`${t}: front/back sheet keeps every required string across both sides`,()=>{
+ for(const f of list){
+  const r=RC.render(t,f.data);
+  const front=sideText(r.sides.front),back=sideText(r.sides.back);
+  const missing=r.required.filter(s=>!(front+back).includes(squash(s)));
+  assert.deepEqual(missing,[],f.fixtureId);
+  // creative-work note on the front itself, not only on the back (H-01)
+  assert.ok(front.includes(squash(r.credits[0])),f.fixtureId);
+  assert.equal(r.sides.back.at(-1).id,'notes',f.fixtureId);
+  // the chief card is printed in full on the front
+  if(f.data.locations.length)assert.ok(front.includes(squash(f.data.locations[0].body)),f.fixtureId);
+ }
+});
+
+test('front/back: supporting cards are brief on the front and complete on the back',()=>{
+ const f=byId('F01_jimbocho_3');
+ const r=RC.render('type_poem',f.data);
+ const front=sideText(r.sides.front),back=sideText(r.sides.back);
+ for(const loc of f.data.locations.slice(1)){
+  assert.ok(front.includes(squash(loc.name))&&front.includes(squash(loc.headline)));
+  assert.ok(!front.includes(squash(loc.body)),'body moved to back');
+  assert.ok(back.includes(squash(loc.body))&&back.includes(squash(PD.formatAddress(loc))));
+ }
+ assert.match(front,/所在地・紹介文・出典は裏面/);
+ const one=RC.render('type_poem',byId('F02_nakano_1').data).sides.back.map(b=>b.id);
+ assert.deepEqual(one,['back-head','notes']);
+ const zero=RC.render('type_poem',byId('F04_residential_0').data);
+ assert.equal(zero.sides.front.some(b=>b.id==='locations'),false);
+});
+
+test('creative-work note is marked so the 8pt floor can be enforced',()=>{
+ const html=RC.renderToHTML('type_poem',byId('F01_jimbocho_3').data);
+ assert.match(html,/<p class="pl-note pl-creative">物件と広告文章は創作です/);
+});
+
 test('fromAppSnapshot maps index.html values without re-deriving them',()=>{
  const d=PD.fromAppSnapshot({generationToken:'v12',place:{label:'神保町',en:'JIMBOCHO'},propertyName:'THE JIMBOCHO RESIDENCE',
   headline:'知の深奥に、\n邸の答えを。',body:'一行目\n二行目',mainEvidenceId:'node/1',verified:true,
