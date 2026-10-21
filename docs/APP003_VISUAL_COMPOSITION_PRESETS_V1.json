@@ -1,0 +1,384 @@
+{
+  "schemaVersion": "app003.visual.recipe.v1",
+  "status": "design_reference_not_runtime_config",
+  "source": "2026-10-22 concept sheets 1 and 2, visual inference not physical measurement",
+  "coordinateSystem": "relative_to_A4_printable_body_excluding_masthead_and_footer",
+  "coordinateUnits": "fractions_0_to_1",
+  "note": "Zone rectangles are composition intentions only; use flow layout/DOM measurement, reflow and pages when content overflows.",
+  "paper": {
+    "format": "A4_portrait",
+    "marginMm": {
+      "top": 14,
+      "right": 14,
+      "bottom": 14,
+      "left": 14
+    }
+  },
+  "imageRule": "Asset-only no burned-in text, false real POI, logos, prices, walking times or generated maps. Use validated local URLs with SVG fallback.",
+  "dataRule": "Do not mutate PresentationData or fabricate sales/POI/route claims; omit optional components if no evidence.",
+  "compositions": [
+    {
+      "id": "type_poem.ink_right",
+      "templateId": "type_poem",
+      "artMode": "ink_watercolor",
+      "palette": "warm_paper_ink",
+      "designReference": "concept_sheet_1_top_left",
+      "regions": {
+        "headline": {
+          "x": 0.02,
+          "y": 0.04,
+          "w": 0.56,
+          "h": 0.29
+        },
+        "art": {
+          "x": 0.58,
+          "y": 0.05,
+          "w": 0.4,
+          "h": 0.35
+        },
+        "poem": {
+          "x": 0.03,
+          "y": 0.35,
+          "w": 0.55,
+          "h": 0.21
+        },
+        "property": {
+          "x": 0.03,
+          "y": 0.57,
+          "w": 0.94,
+          "h": 0.08
+        },
+        "location": {
+          "x": 0.03,
+          "y": 0.66,
+          "w": 0.94,
+          "h": 0.19
+        },
+        "notes": {
+          "x": 0.03,
+          "y": 0.87,
+          "w": 0.94,
+          "h": 0.1
+        }
+      },
+      "rendering": {
+        "artSlot": "ink_streetscape",
+        "artPlacement": "top_right",
+        "primaryLocation": "wide_feature_band",
+        "secondaryLocations": "two_columns_or_rows",
+        "heroTextOverlay": false
+      },
+      "fallback": "abstract_architecture_svg"
+    },
+    {
+      "id": "type_poem.ink_lower_left",
+      "templateId": "type_poem",
+      "artMode": "ink_watercolor",
+      "palette": "clean_editorial",
+      "designReference": "concept_sheet_2_top_left",
+      "regions": {
+        "headline": {
+          "x": 0.03,
+          "y": 0.03,
+          "w": 0.54,
+          "h": 0.38
+        },
+        "propertyAndPoem": {
+          "x": 0.61,
+          "y": 0.04,
+          "w": 0.36,
+          "h": 0.4
+        },
+        "art": {
+          "x": 0.03,
+          "y": 0.46,
+          "w": 0.55,
+          "h": 0.34
+        },
+        "location": {
+          "x": 0.61,
+          "y": 0.5,
+          "w": 0.36,
+          "h": 0.3
+        },
+        "notes": {
+          "x": 0.03,
+          "y": 0.86,
+          "w": 0.94,
+          "h": 0.12
+        }
+      },
+      "rendering": {
+        "artSlot": "ink_streetscape",
+        "artPlacement": "lower_left",
+        "primaryLocation": "sidebar",
+        "secondaryLocations": "compact_list",
+        "heroTextOverlay": false
+      },
+      "fallback": "abstract_architecture_svg"
+    },
+    {
+      "id": "editorial.dusk_overlay",
+      "templateId": "editorial",
+      "artMode": "photographic",
+      "palette": "dusk_ink_cream",
+      "designReference": "concept_sheet_1_top_middle",
+      "regions": {
+        "heroImage": {
+          "x": 0.03,
+          "y": 0.03,
+          "w": 0.94,
+          "h": 0.51
+        },
+        "headlineOnImage": {
+          "x": 0.07,
+          "y": 0.25,
+          "w": 0.56,
+          "h": 0.25
+        },
+        "propertyAndPoem": {
+          "x": 0.04,
+          "y": 0.59,
+          "w": 0.48,
+          "h": 0.25
+        },
+        "supportImages": {
+          "x": 0.55,
+          "y": 0.59,
+          "w": 0.41,
+          "h": 0.22
+        },
+        "location": {
+          "x": 0.04,
+          "y": 0.82,
+          "w": 0.92,
+          "h": 0.07
+        },
+        "notes": {
+          "x": 0.04,
+          "y": 0.91,
+          "w": 0.92,
+          "h": 0.07
+        }
+      },
+      "rendering": {
+        "artSlot": "print_hero",
+        "artPlacement": "upper_full_width",
+        "primaryLocation": "below_photo",
+        "secondaryLocations": "compact",
+        "headlineColor": "white",
+        "heroTextOverlay": true,
+        "optionalSupportSlots": [
+          "print_support_1",
+          "print_support_2",
+          "print_support_3"
+        ]
+      },
+      "fallback": "abstract_architecture_svg"
+    },
+    {
+      "id": "editorial.facade_split",
+      "templateId": "editorial",
+      "artMode": "photographic",
+      "palette": "clean_editorial",
+      "designReference": "concept_sheet_2_top_middle",
+      "regions": {
+        "heroImage": {
+          "x": 0.03,
+          "y": 0.03,
+          "w": 0.48,
+          "h": 0.52
+        },
+        "headline": {
+          "x": 0.54,
+          "y": 0.04,
+          "w": 0.43,
+          "h": 0.29
+        },
+        "poem": {
+          "x": 0.54,
+          "y": 0.36,
+          "w": 0.43,
+          "h": 0.18
+        },
+        "property": {
+          "x": 0.03,
+          "y": 0.57,
+          "w": 0.94,
+          "h": 0.1
+        },
+        "supportImages": {
+          "x": 0.03,
+          "y": 0.69,
+          "w": 0.94,
+          "h": 0.17
+        },
+        "location": {
+          "x": 0.03,
+          "y": 0.87,
+          "w": 0.94,
+          "h": 0.05
+        },
+        "notes": {
+          "x": 0.03,
+          "y": 0.94,
+          "w": 0.94,
+          "h": 0.05
+        }
+      },
+      "rendering": {
+        "artSlot": "print_hero",
+        "artPlacement": "upper_left_tall",
+        "primaryLocation": "short_below_visual",
+        "secondaryLocations": "defer_to_back_if_too_long",
+        "heroTextOverlay": false,
+        "optionalSupportSlots": [
+          "print_support_1",
+          "print_support_2",
+          "print_support_3"
+        ]
+      },
+      "fallback": "abstract_architecture_svg"
+    },
+    {
+      "id": "location.river_sketch",
+      "templateId": "location",
+      "artMode": "ink_watercolor",
+      "palette": "warm_paper_water_green",
+      "designReference": "concept_sheet_1_top_right",
+      "regions": {
+        "headline": {
+          "x": 0.03,
+          "y": 0.04,
+          "w": 0.51,
+          "h": 0.21
+        },
+        "poem": {
+          "x": 0.03,
+          "y": 0.28,
+          "w": 0.5,
+          "h": 0.13
+        },
+        "art": {
+          "x": 0.56,
+          "y": 0.05,
+          "w": 0.41,
+          "h": 0.31
+        },
+        "map": {
+          "x": 0.03,
+          "y": 0.46,
+          "w": 0.53,
+          "h": 0.37
+        },
+        "legend": {
+          "x": 0.59,
+          "y": 0.44,
+          "w": 0.38,
+          "h": 0.4
+        },
+        "notes": {
+          "x": 0.03,
+          "y": 0.88,
+          "w": 0.94,
+          "h": 0.1
+        }
+      },
+      "rendering": {
+        "artSlot": "riverside_scene",
+        "artPlacement": "upper_right",
+        "mapSource": "GSI_or_true_coordinate_schematic",
+        "legend": "numbered_list",
+        "noSyntheticMap": true
+      },
+      "fallback": "map_and_text_without_scene"
+    },
+    {
+      "id": "location.photo_strip",
+      "templateId": "location",
+      "artMode": "photographic",
+      "palette": "clean_green_editorial",
+      "designReference": "concept_sheet_2_top_right",
+      "regions": {
+        "headline": {
+          "x": 0.03,
+          "y": 0.04,
+          "w": 0.53,
+          "h": 0.15
+        },
+        "intro": {
+          "x": 0.59,
+          "y": 0.04,
+          "w": 0.38,
+          "h": 0.15
+        },
+        "supportImages": {
+          "x": 0.03,
+          "y": 0.22,
+          "w": 0.94,
+          "h": 0.23
+        },
+        "map": {
+          "x": 0.03,
+          "y": 0.49,
+          "w": 0.55,
+          "h": 0.37
+        },
+        "legend": {
+          "x": 0.61,
+          "y": 0.49,
+          "w": 0.36,
+          "h": 0.37
+        },
+        "notes": {
+          "x": 0.03,
+          "y": 0.9,
+          "w": 0.94,
+          "h": 0.09
+        }
+      },
+      "rendering": {
+        "optionalSupportSlots": [
+          "print_support_1",
+          "print_support_2",
+          "print_support_3"
+        ],
+        "artPlacement": "three_equal_landscape_thumbnails",
+        "mapSource": "GSI_or_true_coordinate_schematic",
+        "legend": "numbered_list",
+        "noSyntheticMap": true
+      },
+      "fallback": "map_and_text_without_scene"
+    }
+  ],
+  "caseModifiers": [
+    {
+      "id": "case.0_locations",
+      "behavior": "hide location list and location/map-only notes; enlarge poem/art, never fabricate facilities"
+    },
+    {
+      "id": "case.3_locations",
+      "behavior": "main location 01 prominent, support locations 02/03 condensed or moved to back"
+    },
+    {
+      "id": "case.long_name",
+      "behavior": "allow wrapping, never ellipsis for required names; fallback to duplex/multipage"
+    },
+    {
+      "id": "case.high_density",
+      "behavior": "move full support card bodies, notes and numbered 04-10 legend to back, preserve citations"
+    },
+    {
+      "id": "case.duplex_map",
+      "behavior": "back page uses sourced GSI tiles if available, else coordinate diagram; preserve required notes"
+    },
+    {
+      "id": "case.mono",
+      "behavior": "maintain all semantic distinctions in strokes/labels without color"
+    },
+    {
+      "id": "case.image_unavailable",
+      "behavior": "existing original SVG fallback; keep caption and copyright/disclosure accurate"
+    }
+  ]
+}
