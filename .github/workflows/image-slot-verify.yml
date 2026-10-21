@@ -1,0 +1,25 @@
+name: Verify approved image slots
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/image-assets/**'
+      - 'tests/image-assets/**'
+      - '.github/workflows/image-slot-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  image-slot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run safe image-slot tests
+        run: node --test tests/image-assets/*.test.mjs
