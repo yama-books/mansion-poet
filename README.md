@@ -74,6 +74,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [docs/AD_QUALITY_GATES_V1_20261019.md](docs/AD_QUALITY_GATES_V1_20261019.md) | **広告会社レベルの品質規格（推定）**：実在広告の公開根拠と社内審査仮説、ハードゲート・100点審査、図版・組版・PDFの受入基準 |
 | [docs/APP003_VISUAL_IMPLEMENTATION_PLAN_20261019.md](docs/APP003_VISUAL_IMPLEMENTATION_PLAN_20261019.md) | **MAPFX-01／IMG-00／PRINT-03 統合実装計画**：地図光柱、画像スロット、実広告型A4印刷への小PR分割とテスト条件（設計のみ） |
 | [docs/APP003_VISUAL_COMPOSITION_RECIPES_20261022.md](docs/APP003_VISUAL_COMPOSITION_RECIPES_20261022.md) | **2枚の広告イメージ見本の作図再現仕様**：3基本版型×各2構図、墨線・水彩・写真の素材別プロンプト、A4グリッド・書体・地図・表裏・施設0件・長名・密集条件と品質受入 |
+| [docs/APP003_VISUAL_COMPOSITION_PRESETS_V1.json](docs/APP003_VISUAL_COMPOSITION_PRESETS_V1.json) | **6構図の数値化した配置ガイド**：見出し・図版・地図・施設一覧等を印刷可能領域の相対座標（未実装）で記述。写真欠損・施設0件・表裏ほか7つの状態分岐 |
 | [docs/LOCAL_EXECUTION_ASSIGNMENTS_20261019.md](docs/LOCAL_EXECUTION_ASSIGNMENTS_20261019.md) | **Codex／Claude Codeローカル分担手順**：IMG-PIPE-01画像処理とPRINT03-CORE印刷エンジン、別worktree／禁止編集範囲／受入条件 |
 | [docs/handoff/APP003_ASSET_GENERATION_HANDOFF_20261019.md](docs/handoff/APP003_ASSET_GENERATION_HANDOFF_20261019.md) | **別セッション用 ASSET-01 制作指示**：10点先行画像の内訳、生成プロンプト、権利・採否審査、約100バリエーションへの拡張方針 |
 | [docs/MAIN_WAVE1_AD_ANALYSIS.md](docs/MAIN_WAVE1_AD_ANALYSIS.md) | **広告本調査 第1弾**：札幌・京都・福岡・那覇の5物件・15ページの分析 |
