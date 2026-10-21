@@ -356,6 +356,32 @@ test('neighbourhood: one ordinary medical facility, never care / mental-health /
  assert.ok(!RC.render('type_poem',byId('F02_nakano_1').data,{sheet:'duplex'}).sides.required.includes(PD.MEDICAL_NOTE));
 });
 
+test('neighbourhood: medical re-admission needs an ordinary healthcare kind and a single policy reason',()=>{
+ const base=byId('F01_jimbocho_3').rawPois.find(p=>p.sourceId==='node/m1');
+ const mk=(id,name,tags)=>({...base,sourceId:id,name,tags});
+ for(const p of [
+  mk('node/q1','試験心理相談室',{amenity:'doctors',healthcare:'psychotherapist'}),
+  mk('node/q2','試験クリニックB',{amenity:'clinic',healthcare:'alternative'}),
+  mk('node/q3','試験カウンセリングルーム',{amenity:'clinic'}),
+  mk('node/q4','試験病院内特別支援学校',{amenity:'hospital'})])
+  assert.equal(NB.curate([p],{subjectPolicy:SP,seed:'g'}).length,0,p.name);
+ assert.equal(NB.curate([mk('node/q5','試験内科',{amenity:'clinic',healthcare:'clinic'})],{subjectPolicy:SP,seed:'g'})[0]?.tier,'medical');
+ // a decision carrying any further reason is never re-admitted
+ const twoReasons={decideSubject:p=>({...SP.decideSubject(p),reasons:[...SP.decideSubject(p).reasons,'other_reason']})};
+ assert.equal(NB.curate([base],{subjectPolicy:twoReasons,seed:'g'}).length,0);
+ const fixture=byId('F01_jimbocho_3').rawPois.find(p=>p.tier==='plain'||p.tags?.man_made==='manhole');
+ assert.equal(NB.curate([fixture],{subjectPolicy:twoReasons,seed:'g'}).length,0);
+});
+
+test('neighbourhood: the draw depends on the generation token, not on POI order',()=>{
+ const pois=byId('F01_jimbocho_3').rawPois;
+ for(const seed of ['gen-a','gen-b','gen-c']){
+  const a=NB.curate(pois,{subjectPolicy:SP,seed,exclude:JB_CARDS,firstRank:4});
+  const b=NB.curate([...pois].reverse(),{subjectPolicy:SP,seed,exclude:JB_CARDS,firstRank:4});
+  assert.deepEqual(b,a,seed);
+ }
+});
+
 test('neighbourhood: few attractive places -> the list is filled with everyday places',()=>{
  const nb=byId('F02_nakano_1').data.neighborhood;
  const others=nb.filter(n=>n.tier!=='plain');
@@ -396,4 +422,20 @@ test('fromAppSnapshot maps index.html values without re-deriving them',()=>{
  assert.equal(PD.formatAddress(d.locations[0]),'所在地（地域情報のみ）：x');
  assert.throws(()=>PD.fromAppSnapshot({generationToken:'v1',place:{label:'x'},propertyName:'P',headline:'h',body:'b',
   mainEvidenceId:'node/2',verified:true,locationCards:[{sourceId:'node/1',name:'A',distanceMeters:1,headline:'h',body:'b',source:'OSM'}]}),/SELECT-01/);
+});
+
+test('H-07: an older map mount still loading tiles never lays out over a newer one',async()=>{
+ globalThis.PrintRenderCore=RC;
+ require('../../src/print-layout/paginate.js');
+ const PG=globalThis.PrintPaginate;
+ const pending=[];
+ const view={setTimeout:()=>0,clearTimeout:()=>{},Image:class{set src(u){pending.push(this)}}};
+ const container={ownerDocument:{defaultView:view}};
+ const d=F01();
+ const older=PG.mountWithMap(container,'type_poem',d,{sheet:'duplex'});
+ const loaded=pending.length;
+ assert.ok(loaded>0);
+ PG.mountWithMap(container,'type_poem',{...d,generationToken:'gen-new-location'},{sheet:'duplex'});  // stays loading
+ pending.slice(0,loaded).forEach(img=>{img.naturalWidth=256;img.onload()});
+ await assert.rejects(older,/H-07: superseded/);
 });

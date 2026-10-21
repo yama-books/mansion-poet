@@ -88,12 +88,16 @@ function overpassPlainQuery(lat,lon,radius=400,perGenre=3){
  * addiction, hospice and similar services stay excluded. */
 // drugstores are ordinary shops here; a dispensing pharmacy counts as medical
 const MEDICAL_CODES=new Set(['hospital','clinic','doctors','dentist','pharmacy']);
-const MEDICAL_EXCLUDE=/social_facility|welfare|nursing|care_home|hospice|mental|psychiatr|addiction|rehabilitation|counsel|disab|assisted|group_home|shelter/;
-const MEDICAL_EXCLUDE_NAME=/精神|心療|依存|ホスピス|介護|福祉|療育|障害|支援センター|リハビリ|更生/;
+// an explicit OSM healthcare=* must itself be one of these (psychotherapist,
+// counselling, alternative, rehabilitation ... are not re-admitted)
+const MEDICAL_HEALTHCARE=new Set(['hospital','clinic','doctor','doctors','dentist','pharmacy']);
+const MEDICAL_EXCLUDE=/social_facility|welfare|nursing|care_home|hospice|mental|psych|addiction|rehabilitation|counsel|disab|assisted|group_home|shelter/;
+const MEDICAL_EXCLUDE_NAME=/精神|心療|メンタル|カウンセリング|依存|ホスピス|介護|福祉|療育|発達|障害|特別支援|支援センター|困窮|被害者|難病|リハビリ|更生/;
 function medicalKind(p){
  const t=p.tags||{};
  const codes=[t.amenity,t.healthcare,t.shop,p.providerBusinessType,p.providerCategory,t.business_type,t.category].map(norm).filter(Boolean);
  if(!codes.some(c=>MEDICAL_CODES.has(c)))return false;
+ if(t.healthcare!=null&&!MEDICAL_HEALTHCARE.has(norm(t.healthcare)))return false;
  const all=[...codes,...Object.entries(t).map(([k,v])=>norm(k)+'='+norm(v))].join(' ');
  return !(MEDICAL_EXCLUDE.test(all)||MEDICAL_EXCLUDE_NAME.test(String(p.name||'')));
 }
@@ -109,12 +113,13 @@ function eligible(p,policy){
  if((p.classificationFlags||[]).some(f=>/conflict|unverified/.test(f)))return false;
  const d=policy.decideSubject(p);
  if(d.eligibility==='allow')return true;
- const reasons=d.reasons||[];
- // re-admit narrowly: ordinary medical facilities (suppressed only as POEM subjects)
- if(d.eligibility==='suppress'&&reasons.includes('protected_care_support_or_education')&&medicalKind(p))return true;
+ // re-admit narrowly, and only when that one reason is the whole decision
+ const only=r=>Array.isArray(d.reasons)&&d.reasons.length===1&&d.reasons[0]===r;
+ // ordinary medical facilities (suppressed only as POEM subjects)
+ if(d.eligibility==='suppress'&&only('protected_care_support_or_education')&&medicalKind(p))return true;
  // and catalogue fixtures whose tag keys (power, emergency, barrier ...) the POEM
  // policy does not know; protected places were already suppressed before this
- if(d.eligibility==='needs_review'&&reasons.includes('unsupported_or_unverified_type')&&plainGenre(p))return true;
+ if(d.eligibility==='needs_review'&&only('unsupported_or_unverified_type')&&plainGenre(p))return true;
  return false;
 }
 const keyOf=p=>p.sourceId?`${p.source}:${p.sourceId}`:`${p.source}:${p.name}@${(+p.lat).toFixed(5)},${(+p.lon).toFixed(5)}`;

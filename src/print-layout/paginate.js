@@ -145,9 +145,14 @@ function verify(container,rendered,layout){
   positionMapReason:duplex?rendered.sides.positionMapReason:null};
 }
 
+/* The latest mount per container. A location change starts a new mount
+ * while an older one may still be waiting for tiles; the older one must never
+ * lay out its (stale) sheet over the newer one (H-07). */
+const latestMount=new WeakMap();
 /* One call for the harness / future app: refuses stale tokens via render(). */
 function mount(container,templateId,data,opts={}){
  const rendered=RC.render(templateId,data,opts);
+ latestMount.set(container,rendered);
  const layout=paginate(container,rendered);
  return {rendered,layout,report:verify(container,rendered,layout)};
 }
@@ -167,6 +172,7 @@ function preload(urls,timeoutMs,doc){
 }
 async function mountWithMap(container,templateId,data,opts={}){
  const want=RC.render(templateId,data,{...opts,mapTiles:'gsi-pale'});
+ const ticket={};latestMount.set(container,ticket);
  const urls=RC.tileUrls(want);
  let used=false,failed=0;
  if(want.mapTiles&&urls.length&&!opts.simulateTileFailure){
@@ -174,6 +180,8 @@ async function mountWithMap(container,templateId,data,opts={}){
   failed=ok.filter(x=>!x).length;
   used=failed===0;
  }else if(opts.simulateTileFailure)failed=urls.length;
+ if(latestMount.get(container)!==ticket)
+  throw new Error('H-07: superseded by a newer print mount; refusing to lay out an old location');
  const result=used?{rendered:want}:{rendered:RC.render(templateId,data,{...opts,mapTiles:false})};
  const layout=paginate(container,result.rendered);
  const report=verify(container,result.rendered,layout);

@@ -243,7 +243,7 @@ function fromAppSnapshot(s){
    address:c.address,addressPrecision:c.addressPrecision,distanceMeters:c.distanceMeters,
    walkMinutes:c.walkMinutes,routeVerified:c.walkMinutes!=null&&c.routeVerified===true,
    headline:c.headline,body:c.body,source:c.source,retrievedAt:c.retrievedAt,lat:c.lat,lon:c.lon})),
-  // already curated with PrintNeighborhood.curate(pois,{subjectPolicy,exclude:card ids})
+  // already curated with PrintNeighborhood.curate(pois,{subjectPolicy,seed:generationToken,exclude:card ids})
   neighborhood:s.neighborhood||[],
   evidence:{mode:s.verified?'poi':'place_only'}
  });
