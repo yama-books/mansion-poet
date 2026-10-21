@@ -9,7 +9,7 @@
 | 作業フォルダ | `D:\dev\worktrees\mansion-poet-print03`（独立clone。`D:\dev\mansion-poet` 自体はGitリポジトリではなかったため。画像担当の `D:\dev\mansion-poet\img-pipe-01` とは別） |
 | ブランチ | `work/app003-print03-core-20261020`（`origin/main` 39ce37f から分岐、main未更新のため再分岐不要） |
 | PR | [yama-books/mansion-poet#31](https://github.com/yama-books/mansion-poet/pull/31)（Draft・未マージ） |
-| commit | c7040a8 → 9d79246 → 1f3d222 → aa5dfac → 02a156c → ff66ab6（6件、45ファイル、+2339/−1） |
+| commit | c7040a8 → 9d79246 → 1f3d222 → aa5dfac → 02a156c → ff66ab6 → 868c254（本書）→ 1c1d255（監査修正、§8） |
 | 変更していないもの | `index.html`、`src/poem-catalog.js`、`src/location-highlights.js`、`src/subject-policy.js`、画像パイプライン、main |
 | 担当範囲外の変更 | `.github/workflows/quality.yml` に `tests/print-layout/*.test.mjs` を1行追加（計画書「独立でCIへ載せる」に基づく） |
 
@@ -18,9 +18,9 @@
 | 項目 | 状態 |
 |---|---|
 | 実装 | 済（§3） |
-| Nodeテスト | 192件成功（新規62、既存130）、ローカル Node 24 |
-| CI | PR #31 の `test` 成功（最新 ff66ab6） |
-| ローカル実PDF | 53/53合格（Edge headless、Windows 11、地理院タイル取得のためネットワーク接続下）。合格条件：DOMプリフライト合格、PDFページ数＝DOMページ数、全ページA4、必須文字列（ポエム全行・カード全項目・注記・出典）のPDFテキスト層欠落0 |
+| Nodeテスト | 195件成功（新規65、既存130）、ローカル Node 24.19（2026-10-21 再監査後、1c1d255） |
+| CI | PR #31 の `test` 成功：1c1d255（run 39561802831、195件 pass / 0 fail）。前回 868c254 も成功（192件） |
+| ローカル実PDF | 868c254 で 53/53合格。1c1d255 での再実行は**未実施**（§8-3：Edgeが更新待ちでheadless起動が無出力終了）。代替として全fixture×3版型×表裏×地図有無の120通りの描画結果（データ・HTML・必須文字列）が868c254と完全一致することを確認したため、53/53の結果は1c1d255にもそのまま当てはまる。868c254の条件：Windows 11、地理院タイル取得のためネットワーク接続下）。合格条件：DOMプリフライト合格、PDFページ数＝DOMページ数、全ページA4、必須文字列（ポエム全行・カード全項目・注記・出典）のPDFテキスト層欠落0 |
 | index.html への接続 | 未実施 |
 | Pages配信・Safari/iPhone実機印刷 | 未確認 |
 | PDF/X・CMYK | 未対応（Consumer PDFのみ） |
@@ -50,7 +50,7 @@
 
 ## 5. 未実施・引継ぎ（優先順）
 
-1. **ポエム本文の言い回し修正**（承認済み・未着手）：`src/poem-catalog.js:60`「周辺の公開データに記された『◯◯』。」、`index.html:928`「◯◯など、近隣で確認された風景や施設。」、`index.html:930`「◯◯が近隣にあることも…」。置換案は [PRINT03_CORE §2.3](PRINT03_CORE_20261020.md)。印刷PRとは別ブランチ・別PRで行い、着手前に他担当が `index.html` を同時に編集していないかを確認する。
+1. **ポエム本文の言い回し修正**（2026-10-21 実施、[yama-books/mansion-poet#32](https://github.com/yama-books/mansion-poet/pull/32) Draft、§8-4）：旧記述→`src/poem-catalog.js:60`「周辺の公開データに記された『◯◯』。」、`index.html:928`「◯◯など、近隣で確認された風景や施設。」、`index.html:930`「◯◯が近隣にあることも…」。置換案は [PRINT03_CORE §2.3](PRINT03_CORE_20261020.md)。印刷PRとは別ブランチ・別PRで行い、着手前に他担当が `index.html` を同時に編集していないかを確認する。
 2. **取得条件の拡充**（`index.html`、提案のみ）：表裏印刷時のOSM補完の常時実行と店舗・郵便局・医療等の追加、都市設備31ジャンルの取得（`overpassPlainQuery()` 利用）と分類表の追加。
 3. **index.html への接続**：PRINT STYLE への追加、`fromAppSnapshot()` への値の受け渡し（重複除去後の全POI・座標・生成トークン）、表裏を既定にするかどうかの決定。
 4. 実機確認：Safari / iPhone の印刷、6.5pt細字の実紙での可読性。
@@ -66,4 +66,63 @@ tests/print-layout/preview.html                # ローカルプレビュー（f
 
 ## 7. 次の1操作
 
-監査元がPR #31の差分と本書を確認し、Draft解除・マージ可否を判断する。並行して、§5-1のポエム文言修正を別PRとして発行する。
+監査元が PR #31（1c1d255）と PR #32 の差分・本書§8を確認し、それぞれのDraft解除・マージ可否を判断する。
+
+## 8. 再監査（2026-10-21 第2セッション）
+
+### 8-1. 開始時の照合
+
+| 項目 | 値 |
+|---|---|
+| origin/main | 39ce37f（PR #31 分岐元から変化なし） |
+| PR #31 | Draft・MERGEABLE、HEAD 868c254、CI成功 |
+| PR #30（画像） | Draft、`work/app003-img-pipe-01-20261020` d0a7dc2。画像パイプラインのみで本PRと重なるファイルなし。今回も未接触 |
+| 作業フォルダ | 既存clone再利用、未コミット変更・stash なし |
+
+### 8-2. 監査結果（重点9項目）
+
+| # | 項目 | 結果 |
+|---|---|---|
+| 1 | POEMとLOCATION 01の主役一致 | 問題なし（`mainSubjectId` と `locations[0].sourceId` の不一致を検証で拒否） |
+| 2 | 地点変更時の旧データ | **修正**：`mountWithMap()` はタイル先読みの待ち時間があり、その間に新しい地点の描画が始まっても、古い呼出しが後から同じ容器に旧紙面を組んでしまう余地があった。容器ごとに最新の呼出しを記録し、古い呼出しは H-07 で中止する。トークン照合（`expectedToken`）は従来どおり |
+| 3 | 直線距離・施設位置・地図座標の整合 | 問題なし（座標由来距離と表示距離が25m／15%超で食い違えば図を描かない。周辺施設も同条件で除外） |
+| 4 | 地理院タイル欠損時 | 問題なし（1枚でも失敗で地図なしの図に戻り、地図出典・地図注記も出ない。mapfail のPNGで確認） |
+| 5 | 本文・施設名・住所・出典・注記の欠落 | 問題なし（必須文字列の照合。単面・表裏で別集合） |
+| 6 | 表裏切替と長文の複数ページ | 問題なし（1枚→表裏→ブロック単位の複数ページの順。行・カードの途中では切らない） |
+| 7 | 保護対象・分類未確定施設の復帰 | **修正**：医療例外が `healthcare=psychotherapist` 等（心理療法・カウンセリング・代替医療など）も医療機関として復帰させていた。明示の `healthcare=*` は病院・診療所・歯科・薬局に限定し、名称除外語（メンタル・カウンセリング・特別支援・発達・困窮・被害者・難病）を追加。SubjectPolicy 例外は理由が1件だけの場合に限定（`includes` では将来理由が増えた際に他の理由を素通りさせるため）。分類未確定（low/medium・flag付き）は従来どおり除外 |
+| 8 | ランダム選択の再現性 | 問題なし。同じ生成トークン＋POIの並び順違いで同一結果になるテストを追加。`fromAppSnapshot()` の注記に `seed: generationToken` を明記 |
+| 9 | 6.5pt細字・創作注記8pt | 設計どおり（6.5ptは最終段 fit-4 の住所・出典・注記のみ。`.pl-creative` と柱は8pt固定、プリフライトで検査）。ただし地図SVG内の番号・距離ラベルはプリフライト対象外（下記） |
+
+修正commit：**1c1d255**（`neighborhood.js`、`paginate.js`、`presentation-data.js` の注記1行、テスト3件追加）。描画結果は120通りすべて修正前と同一。
+
+### 8-3. 実ブラウザPDFの再検証
+
+- `node tests/print-layout/run-browser-qa.mjs` を実行したが、全ケースでPDF・DOMレポートが出力されず中断（21件時点で全件FAIL、原因は環境）。Edge（`msedge.exe` 154）に更新待ちの `new_msedge.exe`（155）があり、headless 起動がエラー表示なしで即終了する。`about:blank` でも同じ。Playwright 同梱 Chromium は実行権限なし。ユーザーの通常のEdgeが起動中のため、更新適用（Edge再起動）は行っていない。
+- 代替確認：上記120通りの描画結果一致（CSS変更なし）により、868c254 の 53/53 合格（神保町3施設・京都長名・施設0件・長文・白黒・地図取得失敗を含む）が 1c1d255 にも当てはまる。
+- 目視（868c254 のPNG）：文字階層（見出し→物件名→ポエム→主役カード→補助カード→注記）と読順は良好。地図失敗時は淡色地図・地図出典が消え、注記が「地図データは使用していません」に切り替わる。京都の長い施設名も折返しで欠けない。所見（デザイン受入で判断、今回は未修正）：
+  - 裏面地図の周辺施設番号（04〜）と距離目盛りがSVG内で約5pt相当と小さい。プリフライトの6.5pt下限はSVG外の文字のみが対象。
+  - 1枚版（神保町）は下部約1/5が空白で、紙面がやや未完に見える。
+- 実機 Safari / iPhone：未確認。PDF/X・CMYK：対象外。
+
+### 8-4. ポエム文言修正（別PR）
+
+- ブランチ `work/app003-poem-wording-20261021`（origin/main 39ce37f から）、[yama-books/mansion-poet#32](https://github.com/yama-books/mansion-poet/pull/32) Draft、commit 0a58838。
+- `src/poem-catalog.js` の1行目を3種の広告文（生成番号で切替、施設名は「」で保持）、強度90以上の結び「事実」→「日常」。`index.html` は汎用ポエムの2行のみ。630件の詩句は不変。
+- 着手時、`index.html` を変更中のオープンPRなし（#30・#31 とも非接触）。
+- テスト：132件成功（既存130＋新規2）。主役一致・コピー機能の既存テストは無変更で成功。
+
+### 8-5. 各HEAD（記録時点）
+
+| 参照 | HEAD |
+|---|---|
+| origin/main | 39ce37f |
+| PR #31 `work/app003-print03-core-20261020` | 本書更新commit（1c1d255 の次） |
+| PR #32 `work/app003-poem-wording-20261021` | 0a58838 |
+| PR #30 `work/app003-img-pipe-01-20261020` | d0a7dc2 |
+
+### 8-6. 未完了・未確認
+
+1. 1c1d255 での実ブラウザPDF再実行（Edge更新適用後に `node tests/print-layout/run-browser-qa.mjs`）。
+2. Safari / iPhone 実機印刷、6.5pt細字と地図内ラベルの実紙での可読性。
+3. Jev完了監査：`jev-audit-pack.ps1` が send_allowed=false（not_in_standing_approval）のため未送信、skipped として記録。
+4. index.html への印刷エンジン接続、POI取得条件の拡充（§5-2・5-3、今回対象外）。
