@@ -274,6 +274,76 @@ test('serializer: href only for a GSI tile image, never for other hosts or tags'
  assert.throws(()=>toHTML(h('a',{href:ok})),/not allowed/);
 });
 
+test('sources: map and facility attributions are gathered at the end of the notes',()=>{
+ const r=RC.render('type_poem',byId('F03_kyoto_3_longnames').data,{sheet:'duplex',mapTiles:'gsi-pale'});
+ const notes=r.sides.back.at(-1);
+ const last=notes.units.at(-1);
+ assert.equal(last.attrs.class,'pl-sources');
+ const html=RC.toHTML(last);
+ for(const s of [PD.MAP_TILE_CREDIT,'施設データ：© OpenStreetMap contributors','施設データ：OpenPOI API'])assert.ok(htmlText(html).includes(s),s);
+ // nothing attribution-like is left among the other notes
+ for(const u of notes.units.slice(0,-1))assert.ok(!PD.isSourceCredit(htmlText(RC.toHTML(u))));
+ // the figure caption points to the end instead of repeating the source
+ assert.match(htmlText(RC.toHTML(RC.blockNode(r.sides.back.find(b=>b.id==='position-map')))),/地図の出典は末尾に記載/);
+ // no sources section when nothing needs attribution
+ const zero=RC.render('type_poem',byId('F04_residential_0').data).blocks.at(-1);
+ assert.ok(!zero.units.some(u=>u.attrs.class==='pl-sources'));
+});
+
+const NB=require('../../src/print-layout/neighborhood.js');
+const SP=require('../../src/subject-policy.js');
+test('neighbourhood: attractive places with a few plain fixtures blended in',()=>{
+ const nb=byId('F01_jimbocho_3').data.neighborhood;
+ assert.equal(nb.length,7);
+ const tiers=nb.map(n=>n.tier);
+ assert.equal(tiers.filter(t=>t==='plain').length,2);
+ // blended in, not appended: the first plain item is not at the end
+ assert.ok(tiers.indexOf('plain')<nb.length-2,tiers.join());
+ assert.deepEqual(nb.map(n=>n.rank),[4,5,6,7,8,9,10]);  // continues after LOCATION 01-03
+ // at most 2 per kind; the three bookstores never all appear
+ const kinds=new Map();for(const n of nb)kinds.set(n.kindLabel,(kinds.get(n.kindLabel)||0)+1);
+ for(const [k,c] of kinds)assert.ok(c<=2,k);
+});
+
+test('neighbourhood: one ordinary medical facility, never care / mental-health / worship',()=>{
+ const nb=byId('F01_jimbocho_3').data.neighborhood;
+ const names=nb.map(n=>n.name);
+ assert.equal(nb.filter(n=>n.tier==='medical').length,1);
+ assert.ok(names.includes('試験総合病院'));
+ for(const banned of ['試験心療内科クリニック','試験福祉センター','試験神社','名前だけ書店','すずらん古書館（試験データ）'])
+  assert.ok(!names.includes(banned),banned);
+ // medical never becomes the plain (joke) tier
+ assert.ok(!nb.some(n=>n.tier==='plain'&&/病院|診療所/.test(n.kindLabel)));
+ // note printed only when a medical facility is listed
+ const r=RC.render('type_poem',byId('F01_jimbocho_3').data,{sheet:'duplex'});
+ assert.ok(r.sides.required.includes(PD.MEDICAL_NOTE));
+ assert.ok(!RC.render('type_poem',byId('F02_nakano_1').data,{sheet:'duplex'}).sides.required.includes(PD.MEDICAL_NOTE));
+});
+
+test('neighbourhood: plain items stay a minority when attractive places are scarce',()=>{
+ const nb=byId('F02_nakano_1').data.neighborhood;
+ assert.ok(nb.filter(n=>n.tier==='plain').length<=nb.filter(n=>n.tier!=='plain').length);
+ assert.deepEqual(NB.curate([],{subjectPolicy:SP}),[]);
+ assert.throws(()=>NB.curate([],{}),/subjectPolicy is required/);
+});
+
+test('neighbourhood: printed on the back only, as name / kind / distance, and not as ad copy',()=>{
+ const f=byId('F01_jimbocho_3');
+ const r=RC.render('type_poem',f.data,{sheet:'duplex'});
+ const block=r.sides.back.find(b=>b.id==='position-map');
+ const text=htmlText(RC.toHTML(RC.blockNode(block)));
+ for(const n of f.data.neighborhood)assert.ok(squash(text).includes(squash(n.kindLabel+n.name+'直線 約'+n.distanceMeters+'m')),n.name);
+ assert.doesNotMatch(text,/allure|plain|medical|おすすめ|徒歩/);
+ // single-page sheet does not claim the list or its sources
+ assert.ok(!r.required.some(s=>s.includes('北の丸試験公園')));
+ assert.ok(r.sides.required.some(s=>s.includes('北の丸試験公園')));
+ assert.ok(r.sides.required.some(s=>s.startsWith('「周辺の施設」は')));
+ // items whose coordinates disagree with the distance are dropped, with a warning
+ const d=F01();d.neighborhood=[{...d.neighborhood[0],distanceMeters:5}];
+ assert.equal(PD.build(d).neighborhood.length,0);
+ assert.ok(PD.validate(d).warnings.some(w=>/neighborhood items dropped/.test(w)));
+});
+
 test('fromAppSnapshot maps index.html values without re-deriving them',()=>{
  const d=PD.fromAppSnapshot({generationToken:'v12',place:{label:'神保町',en:'JIMBOCHO'},propertyName:'THE JIMBOCHO RESIDENCE',
   headline:'知の深奥に、\n邸の答えを。',body:'一行目\n二行目',mainEvidenceId:'node/1',verified:true,

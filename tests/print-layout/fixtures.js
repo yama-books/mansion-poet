@@ -15,14 +15,59 @@ const place=(l,[lat,lon])=>{
  return {...rest,lat:+(lat+l.distanceMeters*Math.cos(b)/110574).toFixed(6),
   lon:+(lon+l.distanceMeters*Math.sin(b)/(111320*Math.cos(lat*Math.PI/180))).toFixed(6)};
 };
+const node=typeof module==='object'&&module.exports;
+const NB=node?require('../../src/print-layout/neighborhood.js'):root.PrintNeighborhood;
+const SP=node?require('../../src/subject-policy.js'):root.SubjectPolicy;
+/* Raw POIs shaped like index.html normalizePOIs() output (invented test data). */
+const poi=(o)=>({name:o.name,nameIsFallback:!!o.fallback,source:o.source||'OSM',sourceId:o.id,
+ category:o.category,theme:o.theme,classificationConfidence:o.conf||'high',classificationFlags:[],
+ tags:o.tags||{},providerBusinessType:o.bt||null,providerCategory:o.pc||null,
+ distanceMeters:o.d,distance:o.d,bearing:o.b,retrievedAt:'2026-10-18T09:00:00Z'});
+const JIMBO_POIS=[
+ poi({id:'way/p1',name:'北の丸試験公園',category:'公園',theme:'green',tags:{leisure:'park'},d:620,b:280}),
+ poi({id:'node/p2',name:'試験区立図書館',category:'図書館',theme:'knowledge',tags:{amenity:'library'},d:350,b:120}),
+ poi({id:'node/p3',name:'試験古書博物館',category:'博物館',theme:'culture',tags:{tourism:'museum'},d:540,b:60}),
+ poi({id:'node/p4',name:'試験の碑',category:'史跡',theme:'history',tags:{historic:'monument'},d:300,b:160}),
+ poi({id:'node/p5',name:'試験町駅',category:'駅',theme:'transport',tags:{railway:'station'},d:150,b:250}),
+ poi({id:'op-6',source:'OpenPOI',name:'試験書房',category:'書店',theme:'commerce',bt:'bookstore',pc:'shopping',tags:{business_type:'bookstore',category:'shopping'},d:90,b:20}),
+ poi({id:'op-7',source:'OpenPOI',name:'第二試験書房',category:'書店',theme:'commerce',bt:'bookstore',pc:'shopping',tags:{business_type:'bookstore',category:'shopping'},d:120,b:300}),
+ poi({id:'op-8',source:'OpenPOI',name:'第三試験書房',category:'書店',theme:'commerce',bt:'bookstore',pc:'shopping',tags:{business_type:'bookstore',category:'shopping'},d:140,b:100}),
+ poi({id:'node/p9',name:'試験大学',category:'大学',theme:'knowledge',tags:{amenity:'university'},d:480,b:330}),
+ poi({id:'way/p10',name:'試験川',category:'河川',theme:'water',tags:{waterway:'river'},d:700,b:10}),
+ poi({id:'op-11',source:'OpenPOI',name:'喫茶 試験',category:'カフェ',theme:'dining',bt:'cafe',pc:'food',tags:{business_type:'cafe',category:'food'},d:200,b:210}),
+ // plain tier: small urban fixtures
+ poi({id:'node/s1',name:'郵便差出箱（名称未登録）',fallback:true,category:'郵便差出箱',theme:'urban_detail',tags:{amenity:'post_box'},d:40,b:90}),
+ poi({id:'node/s2',name:'マンホール（名称未登録）',fallback:true,category:'マンホール',theme:'urban_detail',tags:{man_made:'manhole'},d:25,b:180}),
+ poi({id:'way/s3',name:'側溝（名称未登録）',fallback:true,category:'側溝',theme:'urban_detail',tags:{waterway:'ditch'},d:60,b:315}),
+ poi({id:'node/s4',name:'カーブミラー（名称未登録）',fallback:true,category:'カーブミラー',theme:'urban_detail',tags:{highway:'traffic_mirror'},d:75,b:45}),
+ // medical: listed (one at most), name / kind / distance only
+ poi({id:'node/m1',name:'試験総合病院',category:'病院',theme:'daily',tags:{amenity:'hospital'},d:200,b:30}),
+ poi({id:'node/m2',name:'試験クリニック',category:'診療所',theme:'daily',tags:{amenity:'clinic'},d:230,b:70}),
+ // must never be listed (care / mental health / worship / unverified / duplicate of a LOCATION card)
+ poi({id:'node/x5',name:'試験心療内科クリニック',category:'診療所',theme:'daily',tags:{amenity:'clinic'},d:160,b:240}),
+ poi({id:'node/x2',name:'試験福祉センター',category:'福祉施設',theme:'daily',tags:{amenity:'social_facility'},d:250,b:140}),
+ poi({id:'node/x3',name:'試験神社',category:'神社',theme:'culture',tags:{amenity:'place_of_worship'},d:310,b:200}),
+ poi({id:'op-x4',source:'OpenPOI',name:'名前だけ書店',category:'書店',theme:'commerce',conf:'medium',d:110,b:10}),
+ poi({id:'fixture/jb-1',name:'すずらん古書館（試験データ）',category:'書店',theme:'commerce',tags:{shop:'books'},d:180,b:35})
+];
+const NAKANO_POIS=[
+ poi({id:'way/n1',name:'試験の森公園',category:'公園',theme:'green',tags:{leisure:'park'},d:520,b:30}),
+ poi({id:'node/n2',name:'郵便差出箱（名称未登録）',fallback:true,category:'郵便差出箱',theme:'urban_detail',tags:{amenity:'post_box'},d:30,b:10}),
+ poi({id:'node/n3',name:'マンホール（名称未登録）',fallback:true,category:'マンホール',theme:'urban_detail',tags:{man_made:'manhole'},d:20,b:200}),
+ poi({id:'way/n4',name:'側溝（名称未登録）',fallback:true,category:'側溝',theme:'urban_detail',tags:{waterway:'ditch'},d:55,b:100}),
+ poi({id:'node/n5',name:'カーブミラー（名称未登録）',fallback:true,category:'カーブミラー',theme:'urban_detail',tags:{highway:'traffic_mirror'},d:70,b:250})
+];
 const base=(id,o)=>{
  const c=o.noCoords?null:CENTRES[o.place];
  const locations=(o.locations||[]).map(l=>c?place(l,c):(({bearing,...rest})=>rest)(l));
- return {fixtureId:id,description:o.description,data:{
+ const rawPois=c&&o.pois?o.pois.map(p=>place(p,c)):[];
+ const neighborhood=rawPois.length?NB.curate(rawPois,{subjectPolicy:SP,exclude:locations.map(l=>l.sourceId),
+  firstRank:locations.length+1}):[];
+ return {fixtureId:id,description:o.description,rawPois,data:{
  generationToken:'gen-'+id+'-001',place:{label:o.place,en:o.en||null,...(c?{lat:c[0],lon:c[1]}:{})},
  property:{name:o.property,serial:o.serial||'001'},poem:{headline:o.headline,body:o.body},
  mainSubjectId:locations.length?locations[0].sourceId:null,
- locations,evidence:{mode:locations.length?'poi':(o.mode||'place_only')},
+ locations,neighborhood,evidence:{mode:locations.length?'poi':(o.mode||'place_only')},
  colorMode:o.colorMode||'color'}}};
 
 const jimboLocs=[
@@ -37,12 +82,12 @@ const list=[
  base('F01_jimbocho_3',{description:'標準：神保町・LOCATION 3件',place:'神保町',en:'JIMBOCHO',property:'THE JIMBOCHO RESIDENCE',
   headline:'知の深奥に、\n邸の答えを。',
   body:'すずらん古書館（試験データ）など、近隣で確認された風景や施設。\n学びと知性の気配を宿す街。\n街の輪郭を、住まいの美学へ。\n選ばれた座標に、人生の新たな頁がひらかれる。',
-  locations:jimboLocs}),
+  locations:jimboLocs,pois:JIMBO_POIS}),
  base('F02_nakano_1',{description:'LOCATION 1件',place:'中野',en:'NAKANO',property:'THE NAKANO RESIDENCE',serial:'002',
   headline:'都市は、\nここから変わる。',
   body:'中野。都市は、この名を覚えている。\n日常の交差点から、次の物語が始まる。\nこの街から、これからの暮らしを。\nここに生まれる、存在しないランドマーク。',
   locations:[loc(1,{id:'nk-1',bearing:120,genre:'郵便差出箱',name:'差出箱 中野試験前（試験データ）',address:'中野区中野五丁目',precision:'area',d:95,
-   headline:'投函口は、街がひらく最小の扉。',body:'赤い筐体が、手紙と都市をつなぐ。差出の一瞬に、暮らしの律動が宿る。'})]}),
+   headline:'投函口は、街がひらく最小の扉。',body:'赤い筐体が、手紙と都市をつなぐ。差出の一瞬に、暮らしの律動が宿る。'})],pois:NAKANO_POIS}),
  base('F03_kyoto_3_longnames',{description:'長い漢字名・長い英字・英数字混在',place:'京都',en:'KYOTO',property:'THE KYOTO RESIDENCE — HIGASHIYAMA·OKAZAKI·SHISHIGATANI PROMENADE EDITION',serial:'003',
   headline:'時の深層に、\n邸宅を刻む。',
   body:'京都という名が重ねてきた、かけがえのない時間。\n歳月が描いてきた街の輪郭。\n悠久の記憶を継承する、邸宅の最終到達点。\n選ばれた座標に、人生の新たな頁がひらかれる。',
@@ -68,11 +113,11 @@ const list=[
  base('F06_long_poem',{description:'長文POEM＋長文カード3件（複数ページへの安全な移行）',place:'神保町',en:'JIMBOCHO',property:'THE JIMBOCHO RESIDENCE',serial:'006',
   headline:'知の深奥に、\n邸の答えを。\nそして、\n頁の先へ。',
   body:Array.from({length:22},(_,i)=>`第${i+1}行　背表紙の連なりが街の書架となり、頁をめくる音が石畳に溶けてゆく。選ばれた座標に、人生の新たな頁がひらかれる。`).join('\n'),
-  locations:jimboLocs.map(l=>({...l,body:l.body+'　'+'古書の匂い、紙の手ざわり、灯りの色。'.repeat(6)}))}),
+  locations:jimboLocs.map(l=>({...l,body:l.body+'　'+'古書の匂い、紙の手ざわり、灯りの色。'.repeat(6)})),pois:JIMBO_POIS}),
  base('F10_dense_cards',{description:'通常POEM＋長い紹介文のカード3件（表裏構成の確認）',place:'神保町',en:'JIMBOCHO',property:'THE JIMBOCHO RESIDENCE',serial:'010',
   headline:'知の深奥に、\n邸の答えを。',
   body:'すずらん古書館（試験データ）など、近隣で確認された風景や施設。\n学びと知性の気配を宿す街。\n街の輪郭を、住まいの美学へ。\n選ばれた座標に、人生の新たな頁がひらかれる。',
-  locations:jimboLocs.map(l=>({...l,body:l.body+'　'+'古書の匂い、紙の手ざわり、灯りの色。'.repeat(9)}))}),
+  locations:jimboLocs.map(l=>({...l,body:l.body+'　'+'古書の匂い、紙の手ざわり、灯りの色。'.repeat(9)})),pois:JIMBO_POIS}),
  base('F07_xss',{description:'HTML注入文字列（テキストとして表示されること）',place:'試験地<script>',property:'THE <b>BOLD</b> RESIDENCE',serial:'007',
   headline:'<img src=x onerror=alert(1)>\n& "quotes" \'single\'',
   body:'<script>alert("x")</script>\n</p><p class="pl-note">偽の注記</p>',
@@ -84,11 +129,11 @@ const list=[
   locations:[loc(1,{id:'wk-1',bearing:330,genre:'公園',name:'試験の森公園（試験データ）',address:'中野区試験町',d:400,walk:6,route:true,
    headline:'緑陰の先に、邸の哲学を。',body:'木々の間をぬける風が、季節の頁をめくる。'}),
    loc(2,{id:'wk-2',bearing:110,genre:'広場',name:'試験広場（試験データ）',address:'中野区試験町',precision:'area',d:650,
-   headline:'ひらけた空を、日常に。',body:'経路未確認のため徒歩時間は表示しません。'})]}),
+   headline:'ひらけた空を、日常に。',body:'経路未確認のため徒歩時間は表示しません。'})],pois:NAKANO_POIS}),
  base('F09_jimbocho_mono',{description:'白黒印刷（F01と同一データ・mono）',place:'神保町',en:'JIMBOCHO',property:'THE JIMBOCHO RESIDENCE',serial:'009',
   headline:'知の深奥に、\n邸の答えを。',
   body:'すずらん古書館（試験データ）など、近隣で確認された風景や施設。\n学びと知性の気配を宿す街。\n街の輪郭を、住まいの美学へ。\n選ばれた座標に、人生の新たな頁がひらかれる。',
-  locations:jimboLocs,colorMode:'mono'})
+  locations:jimboLocs,pois:JIMBO_POIS,colorMode:'mono'})
 ];
 const api=Object.freeze({list,byId:id=>list.find(f=>f.fixtureId===id)});
 if(typeof module==='object'&&module.exports)module.exports=api;

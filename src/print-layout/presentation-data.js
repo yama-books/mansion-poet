@@ -74,7 +74,34 @@ function positionGeometry(data){
   points.push({rank:loc.rank,east,north,distance:loc.distanceMeters});
  }
  if(mismatches.length)return {ok:false,reason:'distance_mismatch',mismatches,points:[]};
- return {ok:true,points,maxDistance:Math.max(...points.map(p=>p.distance))};
+ // neighbourhood items were already checked for coordinate consistency in build()
+ const neighbors=(data.neighborhood||[]).map(n=>({rank:n.rank,east:(n.lon-c.lon)*Math.cos(c.lat*Math.PI/180)*111320,
+  north:(n.lat-c.lat)*110574,distance:n.distanceMeters,neighbor:true}));
+ return {ok:true,points,neighbors,maxDistance:Math.max(...points.map(p=>p.distance)),
+  maxDistanceAll:Math.max(...points.map(p=>p.distance),...neighbors.map(p=>p.distance))};
+}
+/* Neighbourhood (back-side list, user decision 2026-10-21): curated, name /
+ * kind / straight-line distance only, never ad copy. Items whose coordinates do
+ * not agree with their distance, or that repeat a LOCATION card, are dropped. */
+function normalizeNeighborhood(input,locations,place){
+ const raw=Array.isArray(input.neighborhood)?input.neighborhood.slice(0,12):[];
+ const used=new Set(locations.map(l=>l.sourceId).filter(Boolean));
+ const out=[],dropped=[];
+ raw.forEach((n,i)=>{
+  const item={rank:locations.length+out.length+1,sourceId:clean(n?.sourceId)||null,name:clean(n?.name),
+   kindLabel:clean(n?.kindLabel)||'周辺施設',distanceMeters:typeof n?.distanceMeters==='number'?Math.round(n.distanceMeters):NaN,
+   lat:coord(n?.lat,90),lon:coord(n?.lon,180),source:clean(n?.source),retrievedAt:clean(n?.retrievedAt).slice(0,10)||null,
+   // selection tier is kept for notes/QA only; it is never printed
+   tier:['allure','plain','medical'].includes(n?.tier)?n.tier:null};
+  const why=!item.name?'name':!SOURCES[item.source]?'source':!Number.isFinite(item.distanceMeters)||item.distanceMeters<0?'distance':
+   item.lat==null||item.lon==null||place.lat==null||place.lon==null?'coordinates':
+   item.sourceId&&used.has(item.sourceId)?'duplicate':
+   Math.abs(haversine(place,item)-item.distanceMeters)>Math.max(DIST_TOLERANCE_M,item.distanceMeters*DIST_TOLERANCE_RATIO)?'distance_mismatch':null;
+  if(why){dropped.push({index:i,reason:why});return}
+  if(item.sourceId)used.add(item.sourceId);
+  out.push(Object.freeze(item));
+ });
+ return {items:Object.freeze(out),dropped};
 }
 const POSITION_MAP_NOTE='位置関係図は選択地点と施設の座標から描いた参考図です。距離の円と線は直線距離を示し、道路・経路・徒歩時間・施設の敷地範囲を示すものではありません。地図データは使用していません。';
 const SCHEMATIC_MAP_NOTE='位置図は概念図です。縮尺・方位・道路距離・徒歩時間を示すものではありません。';
@@ -82,16 +109,23 @@ const SCHEMATIC_MAP_NOTE='位置図は概念図です。縮尺・方位・道路
 const POSITION_MAP_TILE_NOTE='位置関係図は国土地理院の地図に、選択地点と施設の座標から直線距離の円と線を重ねた参考図です。道路・経路・徒歩時間・施設の敷地範囲を示すものではありません。';
 const MAP_TILE_CREDIT='地図：国土地理院「地理院タイル（淡色地図）」を加工して作成';
 function positionNotes(mapTiles){return mapTiles?[POSITION_MAP_TILE_NOTE,MAP_TILE_CREDIT]:[POSITION_MAP_NOTE]}
+const MEDICAL_NOTE='医療機関は名称と直線距離のみを掲載しています。診療科目・受診可否・診療時間は掲載していません。利用前に各機関へ確認してください。';
+// Attribution lines (data and map sources); templates print them together at the end.
+const isSourceCredit=line=>/^(施設データ|地図)：/.test(line);
 
 /* Compose the credit / creative-note lines from what is actually printed.
  * Each line is required print content (H-06 checks it is not dropped). */
-function composeCredits(data,{schematicMap=false,positionMap=false,illustration=true,mapTiles=false}={}){
+function composeCredits(data,{schematicMap=false,positionMap=false,illustration=true,mapTiles=false,includeNeighborhood=false}={}){
  const lines=['物件と広告文章は創作です。実際の販売・募集情報ではありません。'];
  if(illustration)lines.push('図版は架空建築の抽象線画です。実在の建物・計画を表すものではありません。');
  if(data.locations.length){
   lines.push('周辺施設名・直線距離は取得時点の公開データに基づく参考情報です。距離は選択地点からの直線距離で、徒歩所要時間ではありません。所在地・営業状況・施設への立入可否は保証しません。');
+  if(includeNeighborhood&&data.neighborhood.length)
+   lines.push('「周辺の施設」は取得できた公開データから選んだ一部で、地域のすべての施設や評価・おすすめ順を示すものではありません。');
+  if(includeNeighborhood&&data.neighborhood.some(n=>n.tier==='medical'))
+   lines.push(MEDICAL_NOTE);
   const bySource=new Map();
-  for(const loc of data.locations){
+  for(const loc of [...data.locations,...(includeNeighborhood?data.neighborhood:[])]){
    const dates=bySource.get(loc.source)||new Set();
    if(loc.retrievedAt)dates.add(loc.retrievedAt);
    bySource.set(loc.source,dates);
@@ -155,10 +189,14 @@ function validate(input){
  if(input.colorMode!=null&&input.colorMode!=='color'&&input.colorMode!=='mono')errors.push('colorMode must be color or mono');
  if(input.outputMode!=null&&input.outputMode!=='ConsumerPDF')
   errors.push('outputMode: only ConsumerPDF is implemented (PDF/X and CMYK are not)');
+ if(input.neighborhood!=null&&!Array.isArray(input.neighborhood))errors.push('neighborhood must be an array');
  if(!errors.length&&locs.length){
-  const geo=positionGeometry(build(input,true));
+  const built=build(input,true);
+  const geo=positionGeometry(built);
   if(!geo.ok&&geo.reason==='distance_mismatch')
    warnings.push('H-02: coordinates disagree with printed distances; the position diagram is omitted '+JSON.stringify(geo.mismatches));
+  if(built.neighborhoodDropped.length)
+   warnings.push('neighborhood items dropped (not printed): '+JSON.stringify(built.neighborhoodDropped));
  }
  return {ok:!errors.length,errors,warnings};
 }
@@ -168,15 +206,21 @@ function build(input,skipValidation=false){
   const v=validate(input);
   if(!v.ok){const e=new Error('Invalid PresentationData: '+v.errors.join(' / '));e.validation=v;throw e}
  }
+ const place=Object.freeze({label:clean(input.place.label),en:clean(input.place.en)||null,
+  lat:coord(input.place.lat,90),lon:coord(input.place.lon,180)});
+ const locations=Object.freeze((input.locations||[]).map(normalizeLocation));
+ // neighbourhood only accompanies LOCATION cards (it is printed on their back side)
+ const nb=locations.length?normalizeNeighborhood(input,locations,place):{items:Object.freeze([]),dropped:[]};
  const data={
   schemaVersion:SCHEMA,
   generationToken:clean(input.generationToken),
-  place:Object.freeze({label:clean(input.place.label),en:clean(input.place.en)||null,
-   lat:coord(input.place.lat,90),lon:coord(input.place.lon,180)}),
+  place,
   property:Object.freeze({name:clean(input.property.name),serial:clean(input.property.serial)||'001'}),
   poem:Object.freeze({headline:clean(input.poem.headline),body:clean(input.poem.body)}),
   mainSubjectId:clean(input.mainSubjectId)||null,
-  locations:Object.freeze((input.locations||[]).map(normalizeLocation)),
+  locations,
+  neighborhood:nb.items,
+  neighborhoodDropped:Object.freeze(nb.dropped),
   evidence:Object.freeze({mode:input.evidence.mode}),
   colorMode:input.colorMode==='mono'?'mono':'color',
   outputMode:'ConsumerPDF',
@@ -199,25 +243,30 @@ function fromAppSnapshot(s){
    address:c.address,addressPrecision:c.addressPrecision,distanceMeters:c.distanceMeters,
    walkMinutes:c.walkMinutes,routeVerified:c.walkMinutes!=null&&c.routeVerified===true,
    headline:c.headline,body:c.body,source:c.source,retrievedAt:c.retrievedAt,lat:c.lat,lon:c.lon})),
+  // already curated with PrintNeighborhood.curate(pois,{subjectPolicy,exclude:card ids})
+  neighborhood:s.neighborhood||[],
   evidence:{mode:s.verified?'poi':'place_only'}
  });
 }
+const formatNeighbor=n=>[pad2(n.rank),n.kindLabel,n.name,'直線 約'+n.distanceMeters+'m'];
+function pad2(n){return String(n).padStart(2,'0')}
 
 /* Every string a template must print. Used by the node tests and the browser
  * verifier to prove nothing (body, note, credit) was dropped. */
-function requiredStrings(data,credits){
+function requiredStrings(data,credits,{neighborhood=false}={}){
  const out=[data.property.name,data.poem.headline,...data.poem.body.split('\n')];
  for(const l of data.locations){
   out.push(l.name,l.genreLabel,formatAddress(l),formatDistance(l),l.headline,l.body,formatSource(l));
   if(l.walkMinutes!=null)out.push(formatWalk(l));
  }
+ if(neighborhood)for(const n of data.neighborhood)out.push(formatNeighbor(n).slice(1).join(''));
  out.push(...credits);
  return out.map(s=>s.trim()).filter(Boolean);
 }
 
 const api=Object.freeze({SCHEMA,SOURCES,validate,build,fromAppSnapshot,composeCredits,requiredStrings,
- formatAddress,formatDistance,formatWalk,formatSource,positionGeometry,positionNotes,
- POSITION_MAP_NOTE,POSITION_MAP_TILE_NOTE,MAP_TILE_CREDIT,SCHEMATIC_MAP_NOTE});
+ formatAddress,formatDistance,formatWalk,formatSource,formatNeighbor,positionGeometry,positionNotes,isSourceCredit,
+ POSITION_MAP_NOTE,POSITION_MAP_TILE_NOTE,MAP_TILE_CREDIT,SCHEMATIC_MAP_NOTE,MEDICAL_NOTE});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PrintPresentationData=api;
 })(typeof globalThis==='object'?globalThis:this);

@@ -70,7 +70,9 @@ function render(templateId,data,opts={}){
   throw new Error('H-07: stale generationToken; refusing to render an old location');
  const mapTiles=opts.mapTiles==='gsi-pale'&&PD.positionGeometry(pd).ok;
  const credits=PD.composeCredits(pd,{...(def.creditOptions||{}),mapTiles});
- const out=def.build(pd,credits,{h,mapTiles});
+ // the back side also prints the neighbourhood list, so its sources/notes differ
+ const sideCredits=PD.composeCredits(pd,{...(def.creditOptions||{}),mapTiles,includeNeighborhood:true});
+ const out=def.build(pd,credits,{h,mapTiles,sideCredits});
  return Object.freeze({templateId,label:def.label,status:def.status,data:pd,credits,mapTiles,
   blocks:out.blocks,sides:out.sides||null,
   // a requested back side is only printed when there is LOCATION data to put on it

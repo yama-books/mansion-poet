@@ -43,13 +43,19 @@ function locationCard(loc,variant){
 function notesBlock(credits){
  return {id:'notes',required:true,splittable:true,
   shell:h('section',{class:'pl-notes','data-block':'notes'},h('div',{class:'pl-notes-head'},'NOTES / 注記')),
-  units:credits.map((line,i)=>h('p',{class:i?'pl-note':'pl-note pl-creative'},line))};
+  units:[
+   ...credits.filter(l=>!PD.isSourceCredit(l)).map((line,i)=>h('p',{class:i?'pl-note':'pl-note pl-creative'},line)),
+   // all attributions gathered at the very end as one unbreakable unit
+   ...(credits.some(PD.isSourceCredit)?[h('div',{class:'pl-sources'},
+    h('div',{class:'pl-sources-head'},'SOURCES / 出典'),
+    credits.filter(PD.isSourceCredit).map(line=>h('p',{class:'pl-note pl-source'},line)))]:[])
+  ]};
 }
 /* Front / back sheet used when one A4 page cannot hold everything.
  * Front: the advertisement itself (chief card in full, supporting cards brief).
  * Back : LOCATION DATA with every supporting card in full, plus all notes.
  * Nothing is dropped: every required string is on one of the two sides. */
-function withSides(blocks,data,credits,title,tiles){
+function withSides(blocks,data,credits,title,ctx){
  const front=blocks.filter(b=>b.id!=='locations'&&b.id!=='notes');
  const locs=data.locations;
  if(locs.length)front.push({id:'locations',required:true,splittable:true,
@@ -66,19 +72,23 @@ function withSides(blocks,data,credits,title,tiles){
    h('span',{class:'pl-mast-right'},'LOCATION DATA — '+data.property.name))}];
  // Back-side position diagram only when the coordinates agree with the printed distances.
  const geo=PD.positionGeometry(data);
- const notes=PD.positionNotes(tiles);
- const backCredits=geo.ok?Object.freeze([...credits,...notes.filter(n=>!credits.includes(n))]):credits;
- if(geo.ok)back.push(positionMapBlock(data,geo,tiles));
+ // The neighbourhood list is keyed to map markers, so it needs the diagram.
+ const withNeighbors=geo.ok&&data.neighborhood.length>0;
+ const base=withNeighbors&&ctx.sideCredits?ctx.sideCredits:credits;
+ const notes=PD.positionNotes(ctx.mapTiles);
+ const backCredits=geo.ok?Object.freeze([...base,...notes.filter(n=>!base.includes(n))]):base;
+ if(geo.ok)back.push(positionMapBlock(data,geo,ctx.mapTiles,withNeighbors));
  if(locs.length>1)back.push({id:'locations-back',required:true,splittable:true,
   shell:h('section',{class:'pl-locs pl-locs-back','data-block':'locations-back'},
    h('div',{class:'pl-section-head'},h('span',{class:'pl-eyebrow'},'LOCATION DATA'),h('span',{class:'pl-section-sub'},'周辺施設の詳細（表面の補足）'))),
   units:locs.slice(1).map(loc=>locationCard(loc,'band'))});
  back.push(notesBlock(backCredits));
- return {front,back,credits:backCredits,required:PD.requiredStrings(data,backCredits),positionMap:geo.ok,positionMapReason:geo.ok?null:geo.reason};
+ return {front,back,credits:backCredits,required:PD.requiredStrings(data,backCredits,{neighborhood:withNeighbors}),
+  positionMap:geo.ok,positionMapReason:geo.ok?null:geo.reason,neighborhood:withNeighbors?data.neighborhood.length:0};
 }
 function finalize(blocks,data,credits,title,ctx){
  const list=blocks.filter(Boolean);
- return {blocks:list,sides:withSides(list,data,credits,title,!!ctx?.mapTiles)};
+ return {blocks:list,sides:withSides(list,data,credits,title,ctx||{})};
 }
 function locationsBlock(data,{title,variantOf}){
  if(!data.locations.length)return null;  // 0 cards: never print an empty slot
@@ -143,11 +153,11 @@ function tileLayer(lat0,lon0,k,C){
  }
  return h('g',{class:'pl-pm-tiles','data-zoom':z},imgs);
 }
-function positionMapSvg(data,geo,{compact=false,tiles=false}={}){
+function positionMapSvg(data,geo,{compact=false,tiles=false,neighbors=false}={}){
  const C=120,P=compact?96:100;
  // With a map, show at least the 400 m neighbourhood: close facilities would
  // otherwise over-enlarge the zoom-16 tiles into a few blurred giant labels.
- const need=Math.max(geo.maxDistance*1.08,tiles?MIN_MAP_RADIUS_M:0);
+ const need=Math.max((neighbors?geo.maxDistanceAll:geo.maxDistance)*1.08,tiles?MIN_MAP_RADIUS_M:0);
  const R=NICE_RADII.find(r=>r>=need)||Math.ceil(need/500)*500;
  const k=P/R;
  const ring=r=>h('circle',{cx:C,cy:C,r:(r*k).toFixed(2),class:'pl-pm-ring'});
@@ -163,6 +173,11 @@ function positionMapSvg(data,geo,{compact=false,tiles=false}={}){
   ring(R/4),ring(R/2),ring(R),
   ringLabel(R/2),ringLabel(R),
   pts.map(p=>h('path',{d:`M${C} ${C}L${p.x.toFixed(1)} ${p.y.toFixed(1)}`,class:p.rank===1?'pl-pm-ray pl-pm-ray-chief':'pl-pm-ray'})),
+  // neighbourhood markers: smaller, no connecting line, drawn under the cards
+  neighbors&&geo.neighbors.map(p=>{const x=C+p.east*k,y=C-p.north*k;
+   return h('g',{class:'pl-pm-nb'},
+    h('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:'4.6',class:'pl-pm-nb-dot'}),
+    h('text',{x:x.toFixed(1),y:(y+1.9).toFixed(1),'text-anchor':'middle',class:'pl-pm-nb-num'},pad2(p.rank)))}),
   h('circle',{cx:C,cy:C,r:'7',class:'pl-pm-site-halo'}),
   h('circle',{cx:C,cy:C,r:'3.2',class:'pl-pm-site'}),
   h('text',{x:C,y:C+15,'text-anchor':'middle',class:'pl-pm-sitelabel'},'選択地点'),
@@ -178,20 +193,31 @@ function positionMapSvg(data,geo,{compact=false,tiles=false}={}){
    h('path',{d:`M10 228H${(10+barLen).toFixed(1)}M10 224V231M${(10+barLen).toFixed(1)} 224V231M${(10+barLen/2).toFixed(1)} 226V231`,class:'pl-pm-scalebar'}),
    h('text',{x:(10+barLen+4).toFixed(1),y:'231',class:'pl-pm-ringlabel'},bar+'m')));
 }
-function positionMapBlock(data,geo,tiles){
+function positionMapBlock(data,geo,tiles,neighbors=false){
  return {id:'position-map',required:true,splittable:false,
   node:h('section',{class:'pl-posmap','data-block':'position-map'},
    h('div',{class:'pl-section-head'},h('span',{class:'pl-eyebrow'},'POSITION'),h('span',{class:'pl-section-sub'},'選択地点と周辺施設の位置関係')),
    h('div',{class:'pl-posmap-grid'},
-    h('figure',{class:'pl-posmap-fig'},positionMapSvg(data,geo,{tiles}),
-     h('figcaption',{class:'pl-caption'},tiles?'地図：国土地理院（淡色地図）・北が上・円と線は直線距離（経路ではありません）':'座標から作図・北が上・直線距離のみ（道路・経路は示しません）')),
-    h('ol',{class:'pl-posmap-legend'},data.locations.map(loc=>
-     h('li',{class:'pl-pm-item'+(loc.rank===1?' pl-pm-item-chief':'')},
-      h('span',{class:'pl-pm-badge'},pad2(loc.rank)),
-      h('span',{class:'pl-pm-text'},
-       h('span',{class:'pl-pm-genre'},loc.genreLabel),
-       h('span',{class:'pl-pm-name'},loc.name),
-       h('span',{class:'pl-pm-dist'},PD.formatDistance(loc))))))))};
+    h('figure',{class:'pl-posmap-fig'},positionMapSvg(data,geo,{tiles,neighbors}),
+     h('figcaption',{class:'pl-caption'},tiles?'北が上・円と線は直線距離（経路ではありません）・地図の出典は末尾に記載':'座標から作図・北が上・直線距離のみ（道路・経路は示しません）')),
+    // one legend for every number on the map: LOCATION 01-03, then the neighbourhood
+    h('ol',{class:'pl-posmap-legend'+(neighbors?' pl-legend-dense':'')},
+     data.locations.map(loc=>
+      h('li',{class:'pl-pm-item'+(loc.rank===1?' pl-pm-item-chief':'')},
+       h('span',{class:'pl-pm-badge'},pad2(loc.rank)),
+       h('span',{class:'pl-pm-text'},
+        h('span',{class:'pl-pm-genre'},loc.genreLabel),
+        h('span',{class:'pl-pm-name'},loc.name),
+        h('span',{class:'pl-pm-dist'},PD.formatDistance(loc))))),
+     neighbors&&data.neighborhood.map(n=>{
+      const [num,kind,name,dist]=PD.formatNeighbor(n);
+      return h('li',{class:'pl-pm-item pl-pm-item-nb'},
+       h('span',{class:'pl-pm-badge'},num),
+       h('span',{class:'pl-pm-text'},
+        h('span',{class:'pl-pm-genre'},kind),
+        h('span',{class:'pl-pm-name'},name),
+        h('span',{class:'pl-pm-dist'},dist)));
+     }))))};
 }
 function artSchematic(data,tiles){
  const geo=PD.positionGeometry(data);
@@ -265,7 +291,7 @@ RC.register({id:'location',label:'LOCATION EDITION／ロケーション型',stat
    headlineLines(data.poem.headline,'pl-headline pl-lo-headline'));
   const top=data.locations.length?
    h('section',{class:'pl-lo-top','data-block':'diagram'},
-    h('figure',{class:'pl-lo-map'},artSchematic(data,ctx.mapTiles),h('figcaption',{class:'pl-caption'},PD.positionGeometry(data).ok?(ctx.mapTiles?'地図：国土地理院（淡色地図）・円と線は直線距離':'位置関係図（座標から作図・北が上・直線距離のみ）'):'位置関係の模式図（縮尺・方位なし）')),side):
+    h('figure',{class:'pl-lo-map'},artSchematic(data,ctx.mapTiles),h('figcaption',{class:'pl-caption'},PD.positionGeometry(data).ok?(ctx.mapTiles?'円と線は直線距離・地図の出典は末尾に記載':'位置関係図（座標から作図・北が上・直線距離のみ）'):'位置関係の模式図（縮尺・方位なし）')),side):
    h('section',{class:'pl-lo-top pl-lo-nomap','data-block':'diagram'},side);
   const blocks=[
    masthead(data,'LOCATION EDITION'),
