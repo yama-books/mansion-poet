@@ -292,17 +292,51 @@ test('sources: map and facility attributions are gathered at the end of the note
 
 const NB=require('../../src/print-layout/neighborhood.js');
 const SP=require('../../src/subject-policy.js');
-test('neighbourhood: attractive places with a few plain fixtures blended in',()=>{
+const JB_CARDS=['fixture/jb-1','fixture/jb-2','fixture/jb-3'];
+const drawFor=seed=>NB.curate(byId('F01_jimbocho_3').rawPois,{subjectPolicy:SP,seed,exclude:JB_CARDS,firstRank:4});
+test('neighbourhood: a full list of 7 numbered after LOCATION 01-03, 2 per attractive kind',()=>{
  const nb=byId('F01_jimbocho_3').data.neighborhood;
  assert.equal(nb.length,7);
- const tiers=nb.map(n=>n.tier);
- assert.equal(tiers.filter(t=>t==='plain').length,2);
- // blended in, not appended: the first plain item is not at the end
- assert.ok(tiers.indexOf('plain')<nb.length-2,tiers.join());
- assert.deepEqual(nb.map(n=>n.rank),[4,5,6,7,8,9,10]);  // continues after LOCATION 01-03
- // at most 2 per kind; the three bookstores never all appear
+ assert.deepEqual(nb.map(n=>n.rank),[4,5,6,7,8,9,10]);
  const kinds=new Map();for(const n of nb)kinds.set(n.kindLabel,(kinds.get(n.kindLabel)||0)+1);
  for(const [k,c] of kinds)assert.ok(c<=2,k);
+});
+
+test('neighbourhood: plain fixtures are a seeded random element (0-2, varied, never first)',()=>{
+ // same generation -> same list (re-printing is stable)
+ assert.deepEqual(drawFor('gen-a'),drawFor('gen-a'));
+ const counts=[0,0,0],genres=new Set(),lists=new Set();
+ for(let i=0;i<300;i++){
+  const l=drawFor('gen-'+i);
+  const p=l.filter(n=>n.tier==='plain');
+  assert.ok(p.length<=2);
+  counts[p.length]++;
+  p.forEach(n=>genres.add(n.kindLabel));
+  assert.notEqual(l[0].tier,'plain');
+  assert.equal(new Set(p.map(n=>n.kindLabel)).size,p.length);  // never two of one genre
+  lists.add(l.map(n=>n.name).join('|'));
+ }
+ // "sometimes": none in roughly half, one often, two rarely
+ assert.ok(counts[0]>90&&counts[0]<180,String(counts));
+ assert.ok(counts[1]>80,String(counts));
+ assert.ok(counts[2]>10&&counts[2]<counts[1],String(counts));
+ assert.ok(genres.size>=7,[...genres].join());  // varies across generations
+ assert.ok(lists.size>20);
+});
+
+test('neighbourhood: catalogue of ~30 low-priority genres with explicit OSM selectors',()=>{
+ assert.ok(NB.PLAIN_GENRES.length>=30);
+ assert.equal(new Set(NB.PLAIN_GENRES.map(g=>g.id)).size,NB.PLAIN_GENRES.length);
+ assert.equal(new Set(NB.PLAIN_GENRES.map(g=>g.label)).size,NB.PLAIN_GENRES.length);
+ for(const g of NB.PLAIN_GENRES)assert.match(g.osm,/^(\["[a-z_:]+"="[a-z_]+"\])+$/,g.id);
+ // nothing about people, care, surveillance, graves or police
+ assert.doesNotMatch(NB.PLAIN_GENRES.map(g=>g.id+g.label+g.osm).join(),/surveil|camera|grave|cemetery|police|交番|墓|カメラ|social|care/);
+ const q=NB.overpassPlainQuery(35.6959,139.7577,400,3);
+ assert.match(q,/^\[out:json\]/);
+ assert.equal((q.match(/around:400,35\.69590,139\.75770/g)||[]).length,NB.PLAIN_GENRES.length);
+ assert.throws(()=>NB.overpassPlainQuery(NaN,1));
+ assert.throws(()=>NB.overpassPlainQuery(91,1));
+ assert.ok(!NB.overpassPlainQuery(35,139,99999).includes('around:99999'));  // radius clamped
 });
 
 test('neighbourhood: one ordinary medical facility, never care / mental-health / worship',()=>{
@@ -314,15 +348,23 @@ test('neighbourhood: one ordinary medical facility, never care / mental-health /
   assert.ok(!names.includes(banned),banned);
  // medical never becomes the plain (joke) tier
  assert.ok(!nb.some(n=>n.tier==='plain'&&/病院|診療所/.test(n.kindLabel)));
- // note printed only when a medical facility is listed
+ // note printed only when a medical facility is listed; a drugstore is an ordinary shop
  const r=RC.render('type_poem',byId('F01_jimbocho_3').data,{sheet:'duplex'});
  assert.ok(r.sides.required.includes(PD.MEDICAL_NOTE));
+ const nk=byId('F02_nakano_1').data.neighborhood;
+ assert.equal(nk.find(n=>n.kindLabel==='ドラッグストア')?.tier,'ordinary');
  assert.ok(!RC.render('type_poem',byId('F02_nakano_1').data,{sheet:'duplex'}).sides.required.includes(PD.MEDICAL_NOTE));
 });
 
-test('neighbourhood: plain items stay a minority when attractive places are scarce',()=>{
+test('neighbourhood: few attractive places -> the list is filled with everyday places',()=>{
  const nb=byId('F02_nakano_1').data.neighborhood;
- assert.ok(nb.filter(n=>n.tier==='plain').length<=nb.filter(n=>n.tier!=='plain').length);
+ const others=nb.filter(n=>n.tier!=='plain');
+ // the cards occupy 01; the list still reaches 7 (02-08)
+ assert.equal(nb.length,7);
+ assert.ok(others.filter(n=>n.tier==='ordinary').length>=4);
+ // variety first: no ordinary kind repeats while other kinds are available
+ const ord=others.filter(n=>n.tier==='ordinary').map(n=>n.kindLabel);
+ assert.equal(new Set(ord).size,ord.length,ord.join());
  assert.deepEqual(NB.curate([],{subjectPolicy:SP}),[]);
  assert.throws(()=>NB.curate([],{}),/subjectPolicy is required/);
 });

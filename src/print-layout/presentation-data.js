@@ -92,7 +92,7 @@ function normalizeNeighborhood(input,locations,place){
    kindLabel:clean(n?.kindLabel)||'周辺施設',distanceMeters:typeof n?.distanceMeters==='number'?Math.round(n.distanceMeters):NaN,
    lat:coord(n?.lat,90),lon:coord(n?.lon,180),source:clean(n?.source),retrievedAt:clean(n?.retrievedAt).slice(0,10)||null,
    // selection tier is kept for notes/QA only; it is never printed
-   tier:['allure','plain','medical'].includes(n?.tier)?n.tier:null};
+   tier:['allure','ordinary','plain','medical'].includes(n?.tier)?n.tier:null};
   const why=!item.name?'name':!SOURCES[item.source]?'source':!Number.isFinite(item.distanceMeters)||item.distanceMeters<0?'distance':
    item.lat==null||item.lon==null||place.lat==null||place.lon==null?'coordinates':
    item.sourceId&&used.has(item.sourceId)?'duplicate':
