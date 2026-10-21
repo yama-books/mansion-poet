@@ -1,0 +1,213 @@
+{
+ "browser": "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+ "generatedAt": "2026-10-21T12:43:57.547Z",
+ "total": 5,
+ "passed": 5,
+ "rows": [
+  {
+   "case": "type_poem__F09_jimbocho_mono",
+   "template": "type_poem",
+   "fixture": "F09_jimbocho_mono",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F09_jimbocho_mono-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "editorial__F09_jimbocho_mono",
+   "template": "editorial",
+   "fixture": "F09_jimbocho_mono",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 3,
+    "backLevel": null,
+    "minFontPt": 7,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "editorial__F09_jimbocho_mono-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F09_jimbocho_mono",
+   "template": "location",
+   "fixture": "F09_jimbocho_mono",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 21,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 3,
+    "backLevel": null,
+    "minFontPt": 7,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold",
+     "DAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F09_jimbocho_mono-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F09_jimbocho_mono__duplex",
+   "template": "type_poem",
+   "fixture": "F09_jimbocho_mono",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 2,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "type_poem__F09_jimbocho_mono__duplex-p1.png",
+     "type_poem__F09_jimbocho_mono__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F09_jimbocho_mono__duplex",
+   "template": "location",
+   "fixture": "F09_jimbocho_mono",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 21,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 0,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "EAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F09_jimbocho_mono__duplex-p1.png",
+     "location__F09_jimbocho_mono__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  }
+ ]
+}

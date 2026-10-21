@@ -20,7 +20,7 @@
 | 実装 | 済（§3） |
 | Nodeテスト | 195件成功（新規65、既存130）、ローカル Node 24.19（2026-10-21 再監査後、1c1d255） |
 | CI | PR #31 の `test` 成功：1c1d255（run 39561802831、195件 pass / 0 fail）。前回 868c254 も成功（192件） |
-| ローカル実PDF | 1c1d255 で **53/53合格**（2026-10-21 21:30–21:45、Edge 155.0.4283.62 headless、Windows 11、ネットワーク接続下、§8-3）。868c254 の 53/53 と全件一致。合格条件：DOMプリフライト合格、PDFページ数＝DOMページ数、全ページA4、必須文字列（ポエム全行・カード全項目・注記・出典）のPDFテキスト層欠落0 |
+| ローカル実PDF | 1c1d255 のコードで **53/53合格**（1回の全体実行、単独再実行なし。2026-10-21 23:10–23:25、Edge 155.0.4283.62 headless、Windows 11、ネットワーク接続下、§8-3）。868c254 の 53/53 と全件一致。合格条件：DOMプリフライト合格、PDFページ数＝DOMページ数、全ページA4、必須文字列（ポエム全行・カード全項目・注記・出典）のPDFテキスト層欠落0 |
 | index.html への接続 | 未実施 |
 | Pages配信・Safari/iPhone実機印刷 | 未確認 |
 | PDF/X・CMYK | 未対応（Consumer PDFのみ） |
@@ -61,12 +61,13 @@
 ```text
 node --test tests/*.test.mjs tests/print-layout/*.test.mjs
 node tests/print-layout/run-browser-qa.mjs     # Edge/Chrome と PyMuPDF が必要、出力は tests/print-layout/output/（gitignore）
+node tests/print-layout/qa-tools/run-browser-qa-pwsh.mjs   # 上が全件 "no report in DOM" / PDF未生成になる Windows 環境用（§8-3）
 tests/print-layout/preview.html                # ローカルプレビュー（fixture・版型・表裏・地図の切替）
 ```
 
 ## 7. 次の1操作
 
-監査元が PR #31（1c1d255）と PR #32 の差分・本書§8を確認し、それぞれのDraft解除・マージ可否を判断する。
+両PRはレビュー可能状態（Draft解除済み、2026-10-21）。次は §8-7 の結合回帰テストを実施し、その結果を添えて監査元がコードレビューとマージ可否を判断する。
 
 ## 8. 再監査（2026-10-21 第2セッション）
 
@@ -97,20 +98,44 @@ tests/print-layout/preview.html                # ローカルプレビュー（f
 
 ### 8-3. 実ブラウザPDFの再検証
 
-**結果：1c1d255 で 53/53 合格、868c254 の結果と全件一致。**
+**結果：1c1d255 のコードで 53/53 合格（1回の全体実行）、868c254 の結果と全件一致。**
 
 | 項目 | 内容 |
 |---|---|
-| 実行環境 | Edge 155.0.4283.62 headless（ユーザー承認のうえ常駐の旧Edgeプロセスを終了し、更新を適用）、Windows 11、地理院タイル取得のためネットワーク接続下 |
+| 実行環境 | Edge 155.0.4283.62 headless（ユーザー承認のうえ常駐の旧Edgeプロセスを終了し、更新を適用）、Windows 11、PowerShell 7、Node 24.19、Python 3.13 + PyMuPDF、地理院タイル取得のためネットワーク接続下 |
 | 比較 | 全53ケースで、合否・DOM/PDFページ数・構成（単面／表裏／複数）・fit段階・最小文字サイズ・創作注記の文字サイズ・地図タイル（使用・枚数・失敗数）・必須文字列の欠落数・位置関係図の有無が前回と同一 |
 | 重点ケース | 神保町3施設 表裏：2p L0/2、地図9枚。京都長名 表裏：2p L0/2。施設0件：1p L0（地図なし・空欄なし）。長文：3p 複数ページ L2、「前頁より続く」表示。白黒 表裏：2p L0/2、地図はグレーで判読可。地図取得失敗：2p、地図なしの図に戻り、地図出典なし（9枚中9枚失敗の模擬） |
 | 文字サイズ | 最小7.0pt（editorial・location のL3）。6.5pt（L4）に達したケースはなし。創作注記は全件8pt |
+| 証跡 | `tests/print-layout/qa-records/`：`qa-report-868c254.json`（前回）、`qa-report-1c1d255-run2.json`（今回の正式結果）、`qa-report-1c1d255-run1.json` と `qa-report-1c1d255-F09-rerun.json`（下記の不具合を含む1回目と、その単独再実行。経緯の記録） |
 
-実行方法の注記（再現時の参考）：
-- この作業環境では、Node から直接起動した Edge が何も出力せずに終了し、`--dump-dom` の標準出力も空になった。PowerShell の `Start-Process` 経由なら正常に動作する。
-- そのため `run-browser-qa.mjs` 本体は変更せず、作業用フォルダのラッパー（リポジトリ外・未コミット）から実行した。ラッパーの変更点は2つ：ブラウザを `Start-Process` 経由で起動する。DOMレポートは同じ Edge の DevTools プロトコルで `#pl-report` を読む。
-- PDF は従来どおりブラウザ自身の `--print-to-pdf` で出力し、検査（`check_pdf.py`）も同じ。
-- 1回目の全体実行では「白黒・表裏」の1件のみ DOMレポート取得がタイムアウトした（PDFは2p・A4・欠落0）。この fixture を単独で再実行し、5/5 合格した。この差は取得方法に起因するもので、紙面の結果ではない。上記の比較は再実行分で差し替えたもの。
+#### 再現手順（Edge 155 / この Windows 環境）
+
+1. 事前確認
+   - Edge が更新待ちでないこと：`C:\Program Files (x86)\Microsoft\Edge\Application\` に `new_msedge.exe` があれば更新待ち。この状態では headless 起動が何も出力せずに終了する。常駐の `msedge.exe` をすべて終了すると更新が適用される（ユーザーのブラウザ作業が閉じるため、必ず本人の了承を得る）。
+   - `pwsh`（PowerShell 7）・Node 22以上・`python -c "import pymupdf"` が通ること。
+2. まず標準の手順を試す：`node tests/print-layout/run-browser-qa.mjs`
+   - 全件が `dom=-p ... ERR ... no such file ...pdf` になる場合は、この環境の制約に該当する。症状：Node から直接起動した Edge が何も出力せずに終了する（`spawnSync`・`cmd /c start` 経由でも同じ）。`--dump-dom` の標準出力も、リダイレクト先では空になる。PowerShell の `Start-Process` から起動した場合だけ PDF が出る。
+3. その場合は代替ランチャーを使う（リポジトリ内、`run-browser-qa.mjs` 本体は無変更）：
+   ```text
+   node tests/print-layout/qa-tools/run-browser-qa-pwsh.mjs
+   node tests/print-layout/qa-tools/run-browser-qa-pwsh.mjs --only F09_jimbocho_mono --out <一時フォルダ>   # 試験データ単位
+   ```
+   - `--print-to-pdf` の呼出しは `pwsh` の `Start-Process -Wait` 経由で起動する。PDF と検査（`check_pdf.py`）は標準手順と同一。
+   - `--dump-dom` の呼出しは、`--remote-debugging-port=9333`（環境変数 `PRINT03_CDP_PORT` で変更可）で一度だけ起動した headless Edge から、`qa-tools/cdp-dom.mjs` が DevTools プロトコルで取得する。`preview.html` の `#pl-report` が初期値 `null` から実際のレポートに置き換わるまで最大60秒待ち、`outerHTML` を返す。
+   - Edge は一時プロファイルで起動し、終了時にそのプロファイルの Edge だけを停止する。ユーザーの Edge には触れない。
+   - 失敗の調査には `PRINT03_QA_DEBUG=1` を付けて実行する。DOM取得の失敗理由が標準エラーに出る。
+   - 所要時間：53ケースで約15分。
+4. 前回結果との比較：
+   ```text
+   node tests/print-layout/qa-tools/compare-qa-reports.cjs tests/print-layout/qa-records/qa-report-868c254.json tests/print-layout/output/qa-report.json
+   ```
+   - 全ケースが合格かつ一致なら終了コード0。単独再実行の結果で差し替える場合は `--replace <再実行のqa-report.json>` を付ける。
+
+#### 1回目の実行で起きた不具合（記録）
+
+- 最初の代替ランチャー（作業用フォルダ版）での全体実行は 52/53 だった。「白黒・表裏」の1件で DOM レポートが取れなかった（PDF は2p・A4・欠落0）。この試験データを単独で再実行すると 5/5 合格した。
+- 原因：DOM 取得側の待機条件の誤り。`#pl-report` が空でなければ完了と判断していたが、初期値は `null` のため、描画完了前に読むことがあった。紙面や印刷エンジンの不具合ではない。
+- 待機条件を「`null` 以外になるまで」に修正した版を `qa-tools/` に保存した。修正後、F04 の5ケースを4回繰り返して 20/20 合格し、全53ケースを1回の実行で合格した（run2）。
 
 目視（今回生成のPNG）：
 - 文字階層（見出し→物件名→ポエム→主役カード→補助カード→注記）と読順は良好。
@@ -135,13 +160,33 @@ tests/print-layout/preview.html                # ローカルプレビュー（f
 | 参照 | HEAD |
 |---|---|
 | origin/main | 39ce37f |
-| PR #31 `work/app003-print03-core-20261020` | 本書更新commit（02bc765 の次。コードは 1c1d255 から不変） |
+| PR #31 `work/app003-print03-core-20261020` | 本書更新commit（057467a の次。`src/` と既存テストは 1c1d255 から不変、追加は `tests/print-layout/qa-tools/`・`qa-records/` と文書のみ） |
 | PR #32 `work/app003-poem-wording-20261021` | 0a58838 |
 | PR #30 `work/app003-img-pipe-01-20261020` | d0a7dc2 |
 
 ### 8-6. 未完了・未確認
 
-1. （済）1c1d255 での実ブラウザPDF再実行：53/53（§8-3）。
-2. Safari / iPhone 実機印刷、6.5pt細字と地図内ラベルの実紙での可読性。
-3. Jev完了監査：`jev-audit-pack.ps1` が send_allowed=false（not_in_standing_approval）のため未送信、skipped として記録。
-4. index.html への印刷エンジン接続、POI取得条件の拡充（§5-2・5-3、今回対象外）。
+1. （済）1c1d255 のコードでの実ブラウザPDF再実行：53/53（§8-3）。
+2. Safari / iPhone 実機印刷、6.5pt細字と地図内ラベルの実紙での可読性：未確認。
+3. **未解決のデザイン受入事項**（いずれも未修正、デザイン受入で判断。§8-3 目視）：
+   - 裏面地図内の周辺施設番号（04〜）と距離目盛りが約5pt相当（プリフライトの6.5pt下限はSVG外の文字のみが対象）。
+   - 1枚版の下部余白（神保町で紙面下部の約1/5が空白）。
+   - 長文（F06）3ページ目の下半分の余白。
+4. 両PR（#31・#32）を結合した状態での Node 回帰テスト：未実施（計画は §8-7）。
+5. Jev完了監査：`jev-audit-pack.ps1` が send_allowed=false（not_in_standing_approval）のため未送信、skipped として記録。
+6. index.html への印刷エンジン接続、POI取得条件の拡充（§5-2・5-3、今回対象外）。
+
+### 8-7. 両PRを結合した状態の回帰テスト計画（未実施）
+
+事前の確認（読み取りのみ、2026-10-21 実施）：
+- 変更ファイルの重なり：なし。PR #31 は `src/print-layout/`・`tests/print-layout/`・`docs/PRINT03_*`・`.github/workflows/quality.yml`。PR #32 は `index.html`・`src/poem-catalog.js`・`tests/poem-catalog.test.mjs`・`tests/location-races.test.mjs`。
+- `git merge-tree --write-tree origin/work/app003-print03-core-20261020 origin/work/app003-poem-wording-20261021`：衝突なし（終了コード0）。
+
+手順（mainへの統合前に実施。ブランチや作業ツリーを書き換えない方法）：
+1. `git fetch origin`。両PRと origin/main の HEAD を記録する。`git status` と `git stash list` で、既存の作業フォルダに未保存変更がないことを確認する（ある場合は触らない）。
+2. 結合ツリーを作る：`git merge-tree --write-tree <PR31 HEAD> <PR32 HEAD>`。出力1行目が結合ツリーのIDで、終了コード0なら衝突なし。両PRとも origin/main 39ce37f から分岐しているため、この1回で main＋両PRの状態になる。main が進んでいた場合は、先に各PRを最新mainへ追従させてから行う。
+3. 結合ツリーを一時フォルダへ展開する（`git archive <tree> | tar -x -C <一時フォルダ>`）。ブランチ・worktree・push は作らない。
+4. 一時フォルダで `node --test tests/*.test.mjs tests/print-layout/*.test.mjs` を実行する。期待値は197件成功（main 130、PR #31 +65、PR #32 +2）。件数と失敗を記録する。
+5. `.github/workflows/quality.yml`（PR #31 が print-layout テストを追加）が結合後も両方のテストを拾うことを、同じコマンドで確認する。
+6. 印刷エンジンは `poem-catalog.js`・`index.html` を読み込まないため、ブラウザPDF検証は結合で変わらない見込み。確認する場合は一時フォルダで `qa-tools/run-browser-qa-pwsh.mjs` を実行し、`compare-qa-reports.cjs` で `qa-report-1c1d255-run2.json` と比較する。
+7. 結果を本書に記録し、一時フォルダを削除する。いずれかが失敗した場合は統合しない。原因のPRで修正する。

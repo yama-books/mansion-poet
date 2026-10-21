@@ -1,0 +1,2190 @@
+{
+ "browser": "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+ "generatedAt": "2026-10-21T14:24:42.988Z",
+ "total": 53,
+ "passed": 53,
+ "rows": [
+  {
+   "case": "type_poem__F01_jimbocho_3",
+   "template": "type_poem",
+   "fixture": "F01_jimbocho_3",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F01_jimbocho_3-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "editorial__F01_jimbocho_3",
+   "template": "editorial",
+   "fixture": "F01_jimbocho_3",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 3,
+    "backLevel": null,
+    "minFontPt": 7,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "editorial__F01_jimbocho_3-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F01_jimbocho_3",
+   "template": "location",
+   "fixture": "F01_jimbocho_3",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 21,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 3,
+    "backLevel": null,
+    "minFontPt": 7,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold",
+     "DAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F01_jimbocho_3-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F02_nakano_1",
+   "template": "type_poem",
+   "fixture": "F02_nakano_1",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 0,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F02_nakano_1-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "editorial__F02_nakano_1",
+   "template": "editorial",
+   "fixture": "F02_nakano_1",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "editorial__F02_nakano_1-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F02_nakano_1",
+   "template": "location",
+   "fixture": "F02_nakano_1",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 18,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 0,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold",
+     "DAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F02_nakano_1-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F03_kyoto_3_longnames",
+   "template": "type_poem",
+   "fixture": "F03_kyoto_3_longnames",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 3,
+    "backLevel": null,
+    "minFontPt": 7,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F03_kyoto_3_longnames-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "editorial__F03_kyoto_3_longnames",
+   "template": "editorial",
+   "fixture": "F03_kyoto_3_longnames",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 2,
+    "backLevel": 2,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "editorial__F03_kyoto_3_longnames-p1.png",
+     "editorial__F03_kyoto_3_longnames-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F03_kyoto_3_longnames",
+   "template": "location",
+   "fixture": "F03_kyoto_3_longnames",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 1,
+    "backLevel": 1,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "EAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F03_kyoto_3_longnames-p1.png",
+     "location__F03_kyoto_3_longnames-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F04_residential_0",
+   "template": "type_poem",
+   "fixture": "F04_residential_0",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": false,
+     "used": false,
+     "tiles": 0,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 0,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F04_residential_0-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "editorial__F04_residential_0",
+   "template": "editorial",
+   "fixture": "F04_residential_0",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": false,
+     "used": false,
+     "tiles": 0,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 0,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "editorial__F04_residential_0-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F04_residential_0",
+   "template": "location",
+   "fixture": "F04_residential_0",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": false,
+     "used": false,
+     "tiles": 0,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 0,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "location__F04_residential_0-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F05_address_100",
+   "template": "type_poem",
+   "fixture": "F05_address_100",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 12,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 0,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F05_address_100-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "editorial__F05_address_100",
+   "template": "editorial",
+   "fixture": "F05_address_100",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 12,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 3,
+    "backLevel": null,
+    "minFontPt": 7,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "editorial__F05_address_100-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F05_address_100",
+   "template": "location",
+   "fixture": "F05_address_100",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 16,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold",
+     "DAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F05_address_100-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F06_long_poem",
+   "template": "type_poem",
+   "fixture": "F06_long_poem",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 3,
+    "mode": "multi",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 3,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F06_long_poem-p1.png",
+     "type_poem__F06_long_poem-p2.png",
+     "type_poem__F06_long_poem-p3.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "editorial__F06_long_poem",
+   "template": "editorial",
+   "fixture": "F06_long_poem",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 3,
+    "mode": "multi",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 3,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "editorial__F06_long_poem-p1.png",
+     "editorial__F06_long_poem-p2.png",
+     "editorial__F06_long_poem-p3.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F06_long_poem",
+   "template": "location",
+   "fixture": "F06_long_poem",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 21,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 3,
+    "mode": "multi",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 3,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold",
+     "DAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F06_long_poem-p1.png",
+     "location__F06_long_poem-p2.png",
+     "location__F06_long_poem-p3.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F10_dense_cards",
+   "template": "type_poem",
+   "fixture": "F10_dense_cards",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 4,
+    "minFontPt": 6.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "type_poem__F10_dense_cards-p1.png",
+     "type_poem__F10_dense_cards-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "editorial__F10_dense_cards",
+   "template": "editorial",
+   "fixture": "F10_dense_cards",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 3,
+    "backLevel": 4,
+    "minFontPt": 6.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "editorial__F10_dense_cards-p1.png",
+     "editorial__F10_dense_cards-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F10_dense_cards",
+   "template": "location",
+   "fixture": "F10_dense_cards",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 21,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 1,
+    "backLevel": 3,
+    "minFontPt": 7,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "EAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F10_dense_cards-p1.png",
+     "location__F10_dense_cards-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F07_xss",
+   "template": "type_poem",
+   "fixture": "F07_xss",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": false,
+     "used": false,
+     "tiles": 0,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 0,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F07_xss-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "editorial__F07_xss",
+   "template": "editorial",
+   "fixture": "F07_xss",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": false,
+     "used": false,
+     "tiles": 0,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 1,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "editorial__F07_xss-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F07_xss",
+   "template": "location",
+   "fixture": "F07_xss",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": false,
+     "used": false,
+     "tiles": 0,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 0,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "location__F07_xss-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F08_walk_verified",
+   "template": "type_poem",
+   "fixture": "F08_walk_verified",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 0,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F08_walk_verified-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "editorial__F08_walk_verified",
+   "template": "editorial",
+   "fixture": "F08_walk_verified",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "editorial__F08_walk_verified-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F08_walk_verified",
+   "template": "location",
+   "fixture": "F08_walk_verified",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold",
+     "DAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F08_walk_verified-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F09_jimbocho_mono",
+   "template": "type_poem",
+   "fixture": "F09_jimbocho_mono",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F09_jimbocho_mono-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "editorial__F09_jimbocho_mono",
+   "template": "editorial",
+   "fixture": "F09_jimbocho_mono",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 3,
+    "backLevel": null,
+    "minFontPt": 7,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "editorial__F09_jimbocho_mono-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F09_jimbocho_mono",
+   "template": "location",
+   "fixture": "F09_jimbocho_mono",
+   "fonts": "local",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 21,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 3,
+    "backLevel": null,
+    "minFontPt": 7,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold",
+     "DAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F09_jimbocho_mono-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F01_jimbocho_3__duplex",
+   "template": "type_poem",
+   "fixture": "F01_jimbocho_3",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 2,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "type_poem__F01_jimbocho_3__duplex-p1.png",
+     "type_poem__F01_jimbocho_3__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F01_jimbocho_3__duplex",
+   "template": "location",
+   "fixture": "F01_jimbocho_3",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 21,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 0,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "EAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F01_jimbocho_3__duplex-p1.png",
+     "location__F01_jimbocho_3__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F02_nakano_1__duplex",
+   "template": "type_poem",
+   "fixture": "F02_nakano_1",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 0,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "type_poem__F02_nakano_1__duplex-p1.png",
+     "type_poem__F02_nakano_1__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F02_nakano_1__duplex",
+   "template": "location",
+   "fixture": "F02_nakano_1",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 18,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 0,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "EAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F02_nakano_1__duplex-p1.png",
+     "location__F02_nakano_1__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F03_kyoto_3_longnames__duplex",
+   "template": "type_poem",
+   "fixture": "F03_kyoto_3_longnames",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 2,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "type_poem__F03_kyoto_3_longnames__duplex-p1.png",
+     "type_poem__F03_kyoto_3_longnames__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F03_kyoto_3_longnames__duplex",
+   "template": "location",
+   "fixture": "F03_kyoto_3_longnames",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 1,
+    "backLevel": 1,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "EAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F03_kyoto_3_longnames__duplex-p1.png",
+     "location__F03_kyoto_3_longnames__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F04_residential_0__duplex",
+   "template": "type_poem",
+   "fixture": "F04_residential_0",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": false,
+     "used": false,
+     "tiles": 0,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 0,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F04_residential_0__duplex-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F04_residential_0__duplex",
+   "template": "location",
+   "fixture": "F04_residential_0",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": false,
+     "used": false,
+     "tiles": 0,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 0,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "location__F04_residential_0__duplex-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F05_address_100__duplex",
+   "template": "type_poem",
+   "fixture": "F05_address_100",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 12,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 0,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "type_poem__F05_address_100__duplex-p1.png",
+     "type_poem__F05_address_100__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F05_address_100__duplex",
+   "template": "location",
+   "fixture": "F05_address_100",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 16,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 0,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "EAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F05_address_100__duplex-p1.png",
+     "location__F05_address_100__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F06_long_poem__duplex",
+   "template": "type_poem",
+   "fixture": "F06_long_poem",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 3,
+    "mode": "multi",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 3,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F06_long_poem__duplex-p1.png",
+     "type_poem__F06_long_poem__duplex-p2.png",
+     "type_poem__F06_long_poem__duplex-p3.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F06_long_poem__duplex",
+   "template": "location",
+   "fixture": "F06_long_poem",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 21,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 3,
+    "mode": "multi",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 3,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "BAAAAA+Garamond",
+     "CAAAAA+Garamond-Bold",
+     "DAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F06_long_poem__duplex-p1.png",
+     "location__F06_long_poem__duplex-p2.png",
+     "location__F06_long_poem__duplex-p3.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F10_dense_cards__duplex",
+   "template": "type_poem",
+   "fixture": "F10_dense_cards",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 4,
+    "minFontPt": 6.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "type_poem__F10_dense_cards__duplex-p1.png",
+     "type_poem__F10_dense_cards__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F10_dense_cards__duplex",
+   "template": "location",
+   "fixture": "F10_dense_cards",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 21,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 1,
+    "backLevel": 3,
+    "minFontPt": 7,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "EAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F10_dense_cards__duplex-p1.png",
+     "location__F10_dense_cards__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F07_xss__duplex",
+   "template": "type_poem",
+   "fixture": "F07_xss",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": false,
+     "used": false,
+     "tiles": 0,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 0,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": false,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "type_poem__F07_xss__duplex-p1.png",
+     "type_poem__F07_xss__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F07_xss__duplex",
+   "template": "location",
+   "fixture": "F07_xss",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": false,
+     "used": false,
+     "tiles": 0,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 0,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": false,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold"
+    ],
+    "pngs": [
+     "location__F07_xss__duplex-p1.png",
+     "location__F07_xss__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F08_walk_verified__duplex",
+   "template": "type_poem",
+   "fixture": "F08_walk_verified",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 0,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "type_poem__F08_walk_verified__duplex-p1.png",
+     "type_poem__F08_walk_verified__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F08_walk_verified__duplex",
+   "template": "location",
+   "fixture": "F08_walk_verified",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 0,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "EAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F08_walk_verified__duplex-p1.png",
+     "location__F08_walk_verified__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F09_jimbocho_mono__duplex",
+   "template": "type_poem",
+   "fixture": "F09_jimbocho_mono",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 2,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "type_poem__F09_jimbocho_mono__duplex-p1.png",
+     "type_poem__F09_jimbocho_mono__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "location__F09_jimbocho_mono__duplex",
+   "template": "location",
+   "fixture": "F09_jimbocho_mono",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 21,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 0,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "EAAAAA+Garamond"
+    ],
+    "pngs": [
+     "location__F09_jimbocho_mono__duplex-p1.png",
+     "location__F09_jimbocho_mono__duplex-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F01_jimbocho_3__fontfail",
+   "template": "type_poem",
+   "fixture": "F01_jimbocho_3",
+   "fonts": "broken",
+   "sheet": "auto",
+   "map": "gsi",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": true,
+     "tiles": 9,
+     "failed": 0
+    },
+    "ok": true,
+    "pageCount": 1,
+    "mode": "single",
+    "level": 2,
+    "backLevel": null,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": null,
+   "pdf": {
+    "pageCount": 1,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "AAAAAA+YuGothic-Medium",
+     "BAAAAA+TimesNewRomanPSMT",
+     "CAAAAA+TimesNewRomanPS-BoldMT",
+     "DAAAAA+YuMincho-Demibold",
+     "EAAAAA+YuGothic-Regular",
+     "FAAAAA+YuMincho-Regular",
+     "GAAAAA+YuMincho-Demibold",
+     "HAAAAA+YuMincho-Demibold"
+    ],
+    "pngs": [
+     "type_poem__F01_jimbocho_3__fontfail-p1.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F01_jimbocho_3__duplex__mapfail",
+   "template": "type_poem",
+   "fixture": "F01_jimbocho_3",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "fail",
+   "dom": {
+    "mapTiles": {
+     "requested": true,
+     "used": false,
+     "tiles": 9,
+     "failed": 9
+    },
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 2,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "type_poem__F01_jimbocho_3__duplex__mapfail-p1.png",
+     "type_poem__F01_jimbocho_3__duplex__mapfail-p2.png"
+    ]
+   },
+   "ok": true
+  },
+  {
+   "case": "type_poem__F01_jimbocho_3__duplex__mapoff",
+   "template": "type_poem",
+   "fixture": "F01_jimbocho_3",
+   "fonts": "local",
+   "sheet": "duplex",
+   "map": "off",
+   "dom": {
+    "mapTiles": null,
+    "ok": true,
+    "pageCount": 2,
+    "mode": "duplex",
+    "level": 0,
+    "backLevel": 2,
+    "minFontPt": 7.5,
+    "minCreativePt": 8,
+    "failures": []
+   },
+   "positionMap": true,
+   "pdf": {
+    "pageCount": 2,
+    "a4": true,
+    "missing": [],
+    "outside": [],
+    "fonts": [
+     "",
+     "CAAAAA+Garamond",
+     "DAAAAA+Garamond-Bold",
+     "IAAAAA+Garamond"
+    ],
+    "pngs": [
+     "type_poem__F01_jimbocho_3__duplex__mapoff-p1.png",
+     "type_poem__F01_jimbocho_3__duplex__mapoff-p2.png"
+    ]
+   },
+   "ok": true
+  }
+ ]
+}
