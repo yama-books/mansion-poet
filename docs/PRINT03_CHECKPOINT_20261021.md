@@ -67,7 +67,7 @@ tests/print-layout/preview.html                # ローカルプレビュー（f
 
 ## 7. 次の1操作
 
-両PRはレビュー可能状態（Draft解除済み、2026-10-21）。次は §8-7 の結合回帰テストを実施し、その結果を添えて監査元がコードレビューとマージ可否を判断する。
+両PRはレビュー可能状態（Draft解除済み、2026-10-21）。両PRを結合した状態の Node 回帰テストは 197/197 成功（§8-8）。次は監査元がコードレビューとマージ可否を判断する。
 
 ## 8. 再監査（2026-10-21 第2セッション）
 
@@ -172,11 +172,11 @@ tests/print-layout/preview.html                # ローカルプレビュー（f
    - 裏面地図内の周辺施設番号（04〜）と距離目盛りが約5pt相当（プリフライトの6.5pt下限はSVG外の文字のみが対象）。
    - 1枚版の下部余白（神保町で紙面下部の約1/5が空白）。
    - 長文（F06）3ページ目の下半分の余白。
-4. 両PR（#31・#32）を結合した状態での Node 回帰テスト：未実施（計画は §8-7）。
+4. （済）両PR（#31・#32）を結合した状態での Node 回帰テスト：197/197 成功（§8-8）。結合状態でのブラウザPDF検証は未実施（印刷エンジンは #32 の変更ファイルを読み込まないため、影響なしの見込み）。
 5. Jev完了監査：`jev-audit-pack.ps1` が send_allowed=false（not_in_standing_approval）のため未送信、skipped として記録。
 6. index.html への印刷エンジン接続、POI取得条件の拡充（§5-2・5-3、今回対象外）。
 
-### 8-7. 両PRを結合した状態の回帰テスト計画（未実施）
+### 8-7. 両PRを結合した状態の回帰テスト計画（2026-10-21 実施、結果は §8-8）
 
 事前の確認（読み取りのみ、2026-10-21 実施）：
 - 変更ファイルの重なり：なし。PR #31 は `src/print-layout/`・`tests/print-layout/`・`docs/PRINT03_*`・`.github/workflows/quality.yml`。PR #32 は `index.html`・`src/poem-catalog.js`・`tests/poem-catalog.test.mjs`・`tests/location-races.test.mjs`。
@@ -190,3 +190,20 @@ tests/print-layout/preview.html                # ローカルプレビュー（f
 5. `.github/workflows/quality.yml`（PR #31 が print-layout テストを追加）が結合後も両方のテストを拾うことを、同じコマンドで確認する。
 6. 印刷エンジンは `poem-catalog.js`・`index.html` を読み込まないため、ブラウザPDF検証は結合で変わらない見込み。確認する場合は一時フォルダで `qa-tools/run-browser-qa-pwsh.mjs` を実行し、`compare-qa-reports.cjs` で `qa-report-1c1d255-run2.json` と比較する。
 7. 結果を本書に記録し、一時フォルダを削除する。いずれかが失敗した場合は統合しない。原因のPRで修正する。
+
+### 8-8. 結合回帰テストの結果（2026-10-21）
+
+**結果：197/197 成功（失敗0）。期待値（main 130＋#31 65＋#32 2）と一致。**
+
+| 項目 | 内容 |
+|---|---|
+| 対象 | origin/main 39ce37f、PR #31 HEAD 205170a（CI成功、195件）、PR #32 HEAD 0a58838（CI成功、132件）。両PRの分岐元はどちらも 39ce37f |
+| 事前確認 | 作業フォルダ：未保存変更なし、stash なし |
+| 結合 | `git merge-tree --write-tree 205170a 0a58838` → 終了コード0（衝突なし）、ツリー `252abca2fc228c35e677c0fbc3537274c102ae65`。PR #31 からの差分は PR #32 の4ファイルのみ（`index.html`、`src/poem-catalog.js`、`tests/location-races.test.mjs`、`tests/poem-catalog.test.mjs`、+35/−4。PR #32 単体の差分と同一） |
+| 展開 | `git archive 252abca | tar -x` で一時フォルダへ（123ファイル）。ブランチ・worktree・push は作っていない |
+| 実行 | 結合ツリーの `.github/workflows/quality.yml` と同じコマンド `node --test tests/*.test.mjs tests/print-layout/*.test.mjs`、Node 24.19.0、Windows 11 |
+| 内訳 | location-highlights 13、location-races 69、poem-catalog 15、subject-policy 35、print-layout 65（いずれも失敗0） |
+| 追加テストの実行確認 | #32：「generic poem keeps the chief facility name…」「POEM-01 the facility name opens the poem as ad copy…」。#31（再監査）：医療例外の限定、POI並び順に依存しない抽選、古い地図描画の中止。いずれも成功 |
+| 後始末 | 一時フォルダは削除済み。結合ツリーはどの参照からも指されていない（`git gc` で消える一時オブジェクト） |
+
+未実施：結合状態での実ブラウザPDF検証（§8-7 手順6）。印刷エンジンと試験データは `poem-catalog.js`・`index.html` を読み込まないため、PDF結果は変わらない見込みだが、実測はしていない。
