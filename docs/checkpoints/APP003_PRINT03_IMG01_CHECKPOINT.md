@@ -25,7 +25,7 @@ Draft PRのCIとartifactを確認し、画像あり/なし/失敗時のスクリ
 - SVG・写真・写真不達の3つのPDFは **A4縦 209.9×297.0mm、各1ページ**。PDF文字層に見出し「知の深奥」、LOCATION名、創作注記が残り、PyMuPDFによるページ外スパンは0（3PDF）。
 - 画面の日本語字体を確認。初回Chrome環境で日本語□が生じたため、CIでNoto CJKを導入し再撮影した。
 - 写真掲載枠の実測：幅 **182mm**、表示高さ **76mm**、native 484×295px、`object-fit:cover`時の実効 **約67.5ppi**。今回の試作では合格閾値とせず、本番A4印刷素材には**明らかに解像度不足**として記録。
-- この5条件のブラウザ結果は保存済みだが、GitHub Actionsのワークフロー終了ステータスは照会時点で`queued`表示が続き**最終success判定は未確認**。ブラウザartifactとCI最終conclusionは別の証拠として扱う。
+- この5条件のブラウザ結果は保存済みだが、GitHub Actions #39796965216は後続照合で**completed/success**。ブラウザ5ケースのartifactを固定して確認。ブラウザartifactとCI最終conclusionは別の証拠として扱う。
 - 追加検査：F01の写真あり・duplex（裏面位置関係図）を[後続CI](https://github.com/yama-books/mansion-poet/actions/runs/39797772688)へ追加。結果はartifactを取得してから判定し、先行5件のPASSに含めない。
 - 現行の独立元データ・IMG-00権限判定に変更なし。端末実機Safari・Pages公開・mainマージは未実施。
 
