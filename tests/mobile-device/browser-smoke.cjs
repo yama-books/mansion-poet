@@ -32,6 +32,8 @@ async function assertUsable(page,label,isMobile){
   }
   const size=await page.locator('#placeInput').evaluate(el=>Number.parseFloat(getComputedStyle(el).fontSize));
   assert.ok(size>=16,'iPhone keyboard zoom regression '+label+': '+size);
+  assert.equal(await page.locator('#placeInput').getAttribute('enterkeyhint'),'search','iPhone search keyboard action '+label);
+  assert.equal(await page.locator('#searchStatus').getAttribute('role'),'status','Search feedback must be announced '+label);
   await quick.click();
   assert.equal(new URL(page.url()).hash,'#discover','Shortcut should navigate to studio');
   const position=await page.locator('#discover').evaluate(el=>el.getBoundingClientRect().top);
