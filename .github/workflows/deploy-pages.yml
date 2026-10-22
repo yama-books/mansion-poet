@@ -7,6 +7,9 @@ on:
       - index.html
       - tests/**
       - src/**
+      - tools/reference-gallery/**
+      - research/visual-reference-manifest.json
+      - assets/reference-images/**
       - .github/workflows/deploy-pages.yml
   workflow_dispatch:
 
@@ -38,6 +41,11 @@ jobs:
       - name: Verify location and generation behavior before deployment
         run: node --test tests/*.test.mjs
 
+      - name: Verify reference-gallery image manifest before publishing
+        run: |
+          python3 -m unittest discover -s tests/reference-gallery -p 'test_*.py' -v
+          python3 scripts/reference-gallery/build_preview.py --output "$RUNNER_TEMP/gallery-preview"
+
       - name: Create minimal site artifact
         run: |
           mkdir -p public
@@ -51,6 +59,16 @@ jobs:
           test -s public/src/location-highlights.js
           touch public/.nojekyll
           test -s public/index.html
+          mkdir -p public/tools public/research public/assets
+          cp -a "$RUNNER_TEMP/gallery-preview/tools/reference-gallery" public/tools/
+          cp -a "$RUNNER_TEMP/gallery-preview/src/reference-gallery" public/src/
+          cp -a "$RUNNER_TEMP/gallery-preview/research/visual-reference-manifest.json" public/research/
+          cp -a "$RUNNER_TEMP/gallery-preview/assets/reference-images" public/assets/
+          test -s public/tools/reference-gallery/index.html
+          test -s public/src/reference-gallery/gallery-model.js
+          test -s public/research/visual-reference-manifest.json
+          test "$(find public/assets/reference-images -maxdepth 1 -type f -name '*.png' | wc -l)" -eq 19
+          grep -q 'noindex,nofollow,noarchive' public/tools/reference-gallery/index.html
 
       - name: Set up GitHub Pages
         uses: actions/configure-pages@v5
