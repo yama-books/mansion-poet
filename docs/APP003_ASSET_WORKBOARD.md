@@ -21,6 +21,7 @@
 | **公開中の参考デザイン検索画面** | https://yama-books.github.io/mansion-poet/tools/reference-gallery/index.html |
 | **REF-0003〜0008の説明・評価・候補manifest** | [Draft PR #37](https://github.com/yama-books/mansion-poet/pull/37)／[共有インデックス](https://github.com/yama-books/mansion-poet/blob/docs/app003-asset-ref-02-share-20261022/docs/APP003_ASSET_REF_02_GITHUB_SHARE.md) |
 | REF-0003〜0008の原画像7点を確認・登録する手順 | [PR #37内の画像登録Runbook](https://github.com/yama-books/mansion-poet/blob/docs/app003-asset-ref-02-share-20261022/docs/APP003_ASSET_REF_02_UPLOAD_RUNBOOK.md) |
+| **新たにGitHubで確認された写真切り出し3PNG** | [PR #37の写真ファイル](https://github.com/yama-books/mansion-poet/tree/672fdd878108071491eb6de95d96e07b4583935a/assets/reference-images)／[3点manifest](https://github.com/yama-books/mansion-poet/blob/672fdd878108071491eb6de95d96e07b4583935a/research/ref-three-photo-crops-manifest.json) |
 | **今後の画像生成・素材分離の規則** | [Draft PR #38](https://github.com/yama-books/mansion-poet/pull/38)／[制作契約MD](https://github.com/yama-books/mansion-poet/blob/docs/app003-art-separation-policy-20261022/docs/APP003_IMAGE_ASSET_SEPARATION_POLICY_20261022.md) |
 | 3版型×2構図の再現レシピ | [PR #34](https://github.com/yama-books/mansion-poet/pull/34)／[設計MD](https://github.com/yama-books/mansion-poet/blob/docs/app003-visual-composition-recipes-20261022/docs/APP003_VISUAL_COMPOSITION_RECIPES_20261022.md) |
 | IMGパイプライン／使用権とSVG fallback | [PR #30 IMG-PIPE](https://github.com/yama-books/mansion-poet/pull/30)／[PR #33 IMG-00](https://github.com/yama-books/mansion-poet/pull/33) |
@@ -33,7 +34,7 @@
 | Work-ID／領域 | 検証済み成果 | いまの状態・担当／次の一操作 |
 |---|---|---|
 | REF-LIB-01/02/03 | REF-0001/0002の19PNGをmainへ登録し、ギャラリーをWeb公開・HTTP GET確認済み | REF参照用。広告に直接採用するARTではない。iPhone Safariの人手操作は未記録 |
-| ASSET-REF-02 | **PR #37**の11テキストファイルをGitHub読戻し確認。REF-0003〜0008の詳細MD6件、横断評価、候補manifest、共有インデックス、登録手順・検証スクリプト | PR #37 Draft、HEAD 6f2e9567c6。7PNGの原画像はPR #37のtree内では未確認。ユーザーの「GitHubへ素材保存」報告があるため、**別ブランチ／コミット／保存パス特定待ち**。同じ画像を重複アップロードしない |
+| ASSET-REF-02 | **PR #37**でREF-0003〜0008の説明MD6件、評価・候補manifest等に加え、**既存参考画像からの写真切り出し3PNG**を確認（commit 44e154a、確認HEAD 672fdd8）。3PNGのGitHub tree上の実体とバイト数はmanifest一致 | PR #37 Draft。**元の6コンセプト原画＋一覧1PNG（計7PNG）は依然PR #37に未登録**。今回の3点は高解像度の独立生成ARTではない。3点SHA-256はPRのmanifestに記録あり、今回の監査ではGitHubから原バイト再取得によるSHA-256独立計算は未実施 |
 | ASSET-CONTRACT-01 | REF/RECIPE/ART/RENDER分離と文字ゼロARTの制作契約を**PR #38**に保存・読戻し確認 | PR #38 Draft、HEAD 3ef245fe20。新規画像制作セッションへ指示済み。制作中の成果物は未確認 |
 | ASSET-ART-01 | 文教・緑地・小設備等の代表的な文字なし独立ART3点の試作を画像制作セッションへ依頼済み | **作業中（ユーザー報告）**。新ARTの実ファイル、ART-ID、SHA256、保存PR、採用結果はまだ未照合。次は担当からCHECKPOINTを受領 |
 | IMG-PIPE／IMG-00 | 画像変換PR #30と認可済みARTスロットPR #33 | どちらもDraft、main未統合。実画像を入れる前に契約・権利・ppiを照合 |
@@ -54,6 +55,20 @@
 | 0008 | ポスト・路地・都市小設備 | [REF-0008.md](https://github.com/yama-books/mansion-poet/blob/docs/app003-asset-ref-02-share-20261022/docs/APP003_REFERENCE_IMAGE_ENTRIES/REF-0008.md) | REF-0008_concept_sheet.png |
 
 あわせて[横断自己評価](https://github.com/yama-books/mansion-poet/blob/docs/app003-asset-ref-02-share-20261022/docs/APP003_ASSET_REF_02_ASSESSMENT.md)と[候補manifest](https://github.com/yama-books/mansion-poet/blob/docs/app003-asset-ref-02-share-20261022/research/asset-ref-02-manifest-candidate.json)を参照。元画像7点のZIPの記録名は APP003_ASSET_REF_02_six_sheets.zip。GitHubでの画像の**実保存先は固定SHA読戻しが済むまで未確定**。アプリ内で参照画像を実店舗写真や価格・徒歩分・地図の証拠として利用してはいけない。
+
+### 2026-10-22追加確認：PR #37の写真切り出し3点（参照由来、独立ARTではない）
+
+GitHub [commit `44e154abf79b`](https://github.com/yama-books/mansion-poet/commit/44e154abf79b4bec871740d92ba55da2261925b5) で3画像をpushし、[HEAD `672fdd878108`](https://github.com/yama-books/mansion-poet/commit/672fdd878108071491eb6de95d96e07b4583935a)でメタデータを照合した記録がある。GitHub treeの実体3点とバイト数を確認した。
+
+| ID・リンク（固定commit） | 寸法 | 容量（GitHub tree） | メタデータ上の分類 |
+|---|---:|---:|---|
+| [ART-REF0003-library-refcrop.png](https://github.com/yama-books/mansion-poet/blob/672fdd878108071491eb6de95d96e07b4583935a/assets/reference-images/ART-REF0003-library-refcrop.png) | 484×295 | 301,504 B | 参考画像からの切り出し |
+| [ART-REF0004-park-refcrop.png](https://github.com/yama-books/mansion-poet/blob/672fdd878108071491eb6de95d96e07b4583935a/assets/reference-images/ART-REF0004-park-refcrop.png) | 492×295 | 359,556 B | 参考画像からの切り出し |
+| [ART-REF0008-post-refcrop.png](https://github.com/yama-books/mansion-poet/blob/672fdd878108071491eb6de95d96e07b4583935a/assets/reference-images/ART-REF0008-post-refcrop.png) | 493×295 | 297,032 B | 参考画像からの切り出し |
+
+**採用区分**：命名が `ART-` でもmanifestの `sourceKind=cropped_from_user_supplied_reference_image`、`status=reference_derived_crop_no_production_approval`、`publishedAllowed=false`、`rightsStatus=review_required` を優先する。Web用の小さな参考画として候補であり、PRINT03の印刷用独立ART・本番使用権は承認されていない。記録された3件SHA-256は、今回GitHubのPNGバイト列を直接再取得できていないため**独立再計算は未実施**。固定SHAのGit blob実体・容量・manifestは照合済み。
+
+**混同防止**：この3切り出しと、旧REF-0003〜0008の元コンセプトシート6枚＋一覧1枚のアップロードは**別件**。後者7点のGitHub tree上の実体はまだ見つかっていない。新規に文字ゼロ・印刷用高解像度ARTを制作するJOB Bも別工程。
 
 ## 4. セッション間の編集分担
 
@@ -82,5 +97,6 @@
 ## 6. 更新履歴
 
 - 2026-10-22 18:29 JST頃：GitHub mainおよびPR #30/#31/#32/#33/#34/#37/#38の状態を確認して初版設置。新ARTは別セッションで制作中、実体未照合。REF-0003〜0008のPNG7点のGitHub固定保存場所を特定待ち。
+- 2026-10-22 19:13 JST頃：PR #37に参考画像由来の写真切り出し3PNGがpushされたことをGitHubのtree/commit/manifestで確認。独立ARTと7枚の元参考画像は別ステータスに分離。
 
 > 表のPR HEADや状態は最終確認時点のスナップショット。最新状態はGitHubで必ず再照合する。
