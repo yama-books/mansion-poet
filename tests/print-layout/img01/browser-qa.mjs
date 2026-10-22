@@ -1,6 +1,6 @@
 // Browser evidence script. Requires a real local Chromium; no hosted preview.
 import {execFileSync} from 'node:child_process';
-import {mkdirSync,writeFileSync} from 'node:fs';
+import {mkdirSync,writeFileSync,statSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 const browser=['google-chrome','chromium','google-chrome-stable'].find(name=>{
@@ -24,13 +24,18 @@ for(const [fixture,media] of cases){
  try{
   const html=run(['--dump-dom']);
   const marker=html.match(/<html[^>]*data-img01="([^"]+)"/)?.[1]||'absent';
-  const ok=marker==='pass';
+  const mode=html.match(/<html[^>]*data-img01-mode="([^"]+)"/)?.[1]||'absent';
+  const wanted=media==='photo'?'reference_photo':'existing_svg';
+  const ok=marker==='pass'&&mode===wanted;
   if(ok){
    run(['--window-size=1250,1900','--screenshot='+folder+'/'+name+'.png']);
    if(fixture==='F01_jimbocho_3')
     run(['--no-pdf-header-footer','--print-to-pdf='+folder+'/'+name+'.pdf']);
+   if(statSync(folder+'/'+name+'.png').size<1000)throw new Error('empty screenshot');
+   if(fixture==='F01_jimbocho_3'&&statSync(folder+'/'+name+'.pdf').size<1000)
+     throw new Error('empty A4 PDF');
   }
-  const row={fixture,media,ok,marker,screenshot:ok?name+'.png':null,
+  const row={fixture,media,ok,marker,mode,screenshot:ok?name+'.png':null,
    pdf:ok&&fixture==='F01_jimbocho_3'?name+'.pdf':null};
   reports.push(row);console.log(JSON.stringify(row));
  }catch(e){const row={fixture,media,ok:false,error:String(e).slice(0,400)};
