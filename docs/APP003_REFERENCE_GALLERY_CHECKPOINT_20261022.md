@@ -83,3 +83,16 @@ APP-ID：APP-003 / Work-ID：REF-LIB-03
 - 実際のiPhone Safariで、URL到達、19画像の読込、タグ検索、拡大・前後移動、縦横回転、下端見切れ、文字サイズ拡大をユーザーが確認することが次の1操作。
 
 公開範囲は参考画像ギャラリーと従来の本体サイトのみ。PRINT03との本番ART統合はまだ行っていない。
+
+
+### 公開HTTP検証の後追い確認（2026-10-22）
+
+2026-10-22の初回配信直後は、この実行環境から github.io の名前解決ができないため直接HTTP未確認と記録した。その後、GitHub Pagesワークフローに公開URLのHTTPチェックを追加し、[Actions #39750917571](https://github.com/yama-books/mansion-poet/actions/runs/39750917571) の**deploy＋live HTTPチェックがともに成功**。
+
+- `https://yama-books.github.io/mansion-poet/`：トップのHTMLのGET成功。
+- `https://yama-books.github.io/mansion-poet/tools/reference-gallery/index.html`：HTML GET成功、検索エンジンへnoindex/nofollow/noarchive指定確認。
+- CSS・画面JS・検索モデルJS：公開URL GET成功。
+- `research/visual-reference-manifest.json`：公開GETと参照画像19件を確認。
+- `REF-0001-overview.png`：公開GETで画像を取得し、manifestと容量・SHA-256一致を確認。
+
+**公開HTTP到達性は確認済み**へ更新する。ただし、この検証で全19枚を公開URLから再取得したわけではない。残り18画像はデプロイ前のmanifest・SHA一致、Pages配信アーティファクト内の実ファイル存在を検証済み。iPhone実機のタップ／表示操作については未確認のまま。
