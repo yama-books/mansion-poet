@@ -81,3 +81,34 @@ jobs:
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify public site and reference gallery are reachable
+        run: |
+          set -euo pipefail
+          base="https://yama-books.github.io/mansion-poet"
+          get() {
+            curl --fail --silent --show-error --location --retry 10 --retry-delay 6 --retry-all-errors --max-time 15 "$1" -o "$2"
+          }
+          get "$base/" /tmp/app003-live-root.html
+          grep -iq '<!doctype html' /tmp/app003-live-root.html
+          get "$base/tools/reference-gallery/index.html" /tmp/app003-live-gallery.html
+          grep -q 'noindex,nofollow,noarchive' /tmp/app003-live-gallery.html
+          grep -q 'gallery.js' /tmp/app003-live-gallery.html
+          get "$base/tools/reference-gallery/gallery.js" /tmp/app003-live-gallery.js
+          get "$base/tools/reference-gallery/gallery.css" /tmp/app003-live-gallery.css
+          get "$base/src/reference-gallery/gallery-model.js" /tmp/app003-live-gallery-model.js
+          get "$base/research/visual-reference-manifest.json" /tmp/app003-live-gallery-manifest.json
+          get "$base/assets/reference-images/REF-0001-overview.png" /tmp/app003-live-sample.png
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          m=json.loads(pathlib.Path('/tmp/app003-live-gallery-manifest.json').read_text())
+          assert m['schemaVersion']=='app003.reference-library.v1'
+          files=m['files']
+          assert len(files)==19
+          record=next(x for x in files if x['id']=='REF-0001-overview')
+          img=pathlib.Path('/tmp/app003-live-sample.png').read_bytes()
+          assert img[:8]==b'\x89PNG\r\n\x1a\n'
+          assert len(img)==record['bytes']
+          assert hashlib.sha256(img).hexdigest()==record['sha256']
+          print('LIVE HTTP VERIFIED: app root, gallery, CSS/JS, reference manifest (19 images), sample PNG SHA256')
+          PY
