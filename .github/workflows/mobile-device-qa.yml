@@ -1,0 +1,57 @@
+name: APP-003 mobile device viewport QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - index.html
+      - tests/mobile-device/**
+      - .github/workflows/mobile-device-qa.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mobile-viewport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Existing app and location-race tests
+        run: node --test tests/*.test.mjs
+      - name: Install small browser automation driver
+        run: npm install --no-save --ignore-scripts --package-lock=false playwright-core@1.56.1
+      - name: Ensure Japanese text renders in screenshot review
+        run: |
+          if ! fc-list :lang=ja family | grep -q .; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq fonts-noto-cjk
+          fi
+          fc-cache -f
+          echo "Japanese font: $(fc-match -f '%{family}' ':lang=ja')"
+      - name: Real Chrome 320, 375, 390, 430px and desktop smoke
+        env:
+          SCREENSHOT_DIR: ${{ runner.temp }}/app003-ui01-mobile-screens
+        run: |
+          set -euo pipefail
+          CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME_BIN" ]; then echo "::error::Chromium unavailable"; exit 1; fi
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory . >/tmp/ui01-http.log 2>&1 &
+          sleep 2
+          curl --fail --silent http://127.0.0.1:8765/index.html >/dev/null
+          CHROME_PATH="$CHROME_BIN" APP003_TEST_URL="http://127.0.0.1:8765/index.html" APP003_SCREENSHOTS="$SCREENSHOT_DIR" node tests/mobile-device/browser-smoke.cjs
+      - name: Upload viewport review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app003-ui01-mobile-viewports
+          path: ${{ runner.temp }}/app003-ui01-mobile-screens
+          retention-days: 7
+          if-no-files-found: ignore
