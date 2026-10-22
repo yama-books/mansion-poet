@@ -1,6 +1,6 @@
 # APP-003｜画像制作・共有ファイル案内板（正本）
 
-**このファイルが複数セッションの共通入口です。**
+**このファイルは画像制作・ファイル所在の共通入口です。APP-003全体の計画・進捗は[APP003_MASTER_PLAN_PROGRESS.md](APP003_MASTER_PLAN_PROGRESS.md)で管理します。**
 固定URL：https://github.com/yama-books/mansion-poet/blob/main/docs/APP003_ASSET_WORKBOARD.md
 
 - APP-ID：APP-003／POÈME / ESTATE
