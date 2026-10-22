@@ -3,6 +3,7 @@
 
 **[APP-003 全体開発計画・進捗管理](docs/APP003_MASTER_PLAN_PROGRESS.md)**：アプリ全工程の状態、GitHub/CI/公開/実機ゲート、最新のPRと次の1操作を共有。  
 **[画像制作・参考デザインの共有案内板](docs/APP003_ASSET_WORKBOARD.md)**：REF/ART、原画、説明MD、manifestのファイル所在と画像制作の進捗。  
+**[画像量産フェーズ移行計画](docs/APP003_ART_BATCH_PRODUCTION_PLAN_20261023.md)**：独立ARTの納品・Web/A4比較の後、6テーマの小バッチから大量制作へ移る条件と保存先を定義。  
 REF／ART／構図レシピの所在、担当別の作業状態、Draft PR、GitHub保存・確認済みの成果と次の作業をこの1ファイルで管理します。
 
 > 地名を、壮大な邸宅思想へ。
