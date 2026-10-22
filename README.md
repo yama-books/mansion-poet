@@ -1,7 +1,8 @@
 # POÈME / ESTATE
 ### マンションポエムメーカー
 
-**画像制作・参考デザインの共有入口： [APP-003 画像制作・共有ファイル案内板](docs/APP003_ASSET_WORKBOARD.md)**  
+**[APP-003 全体開発計画・進捗管理](docs/APP003_MASTER_PLAN_PROGRESS.md)**：アプリ全工程の状態、GitHub/CI/公開/実機ゲート、最新のPRと次の1操作を共有。  
+**[画像制作・参考デザインの共有案内板](docs/APP003_ASSET_WORKBOARD.md)**：REF/ART、原画、説明MD、manifestのファイル所在と画像制作の進捗。  
 REF／ART／構図レシピの所在、担当別の作業状態、Draft PR、GitHub保存・確認済みの成果と次の作業をこの1ファイルで管理します。
 
 > 地名を、壮大な邸宅思想へ。
