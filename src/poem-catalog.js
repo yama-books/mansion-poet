@@ -57,10 +57,13 @@
   const second=genre.variants[(position+3)%10]+'。';
   const last=endings[style]||endings.heritage;
   const phrase=last[position%last.length];
-  const sourceIntro=`周辺の公開データに記された「${p.name}」。`;
+  // The facility name opens the poem as a motif; where the data came from is
+  // told by THE EVIDENCE / LOCATION notes, not by the poem itself.
+  const intros=[`「${p.name}」——その名から、物語をはじめよう。`,`「${p.name}」の名が、この街の一頁をひらく。`,`「${p.name}」。その響きに、暮らしの輪郭を重ねて。`];
+  const sourceIntro=intros[position%intros.length];
   let body;
   if(intensity<=30)body=`${location}という場所を考える。\n${sourceIntro}\n${second}\n日常を丁寧に見つめる、架空の住まいの物語。`;
-  else if(intensity>=90)body=`${sourceIntro}\n${second}\n${phrase}\nこの街のささやかな事実を、壮大なる広告の言葉へ。`;
+  else if(intensity>=90)body=`${sourceIntro}\n${second}\n${phrase}\nこの街のささやかな日常を、壮大なる広告の言葉へ。`;
   else body=`${sourceIntro}\n${second}\n${phrase}`;
   return {genreId:genre.id,label:genre.label,variant:position+1,headline,body,evidenceId:p.sourceId||null};
  }

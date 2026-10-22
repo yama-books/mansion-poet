@@ -256,6 +256,22 @@ test('switching style aborts a pending Overpass fallback without misleading plac
  assert.equal(ui.el('#generatedStatus').textContent,'周辺の公開データを確認中…');
 });
 
+test('generic poem keeps the chief facility name without data-report wording',async()=>{
+ const ui=makeUI(url=>{
+  const value=String(url);
+  if(value.includes('openpoiapi.com'))return Promise.reject(new Error('OpenPOI unavailable'));
+  return Promise.resolve(response({elements:[{type:'node',id:1,lat:35.7074,lon:139.6659,tags:{name:'テスト公園',leisure:'park'}}]}));
+ });
+ await ui.presets[1].fire();
+ await ui.el('#generateBtn').fire();
+ assert.match(ui.el('#poemBody').textContent,/「テスト公園」の名に導かれて。/);
+ assert.doesNotMatch(ui.el('#poemBody').textContent,/公開データ|確認された|近隣にある|事実/);
+ await ui.el('#density').fire('input',{target:{value:'20'}});
+ await ui.el('#generateBtn').fire();
+ assert.match(ui.el('#poemBody').textContent,/「テスト公園」も、この街を語る一節。/);
+ assert.doesNotMatch(ui.el('#poemBody').textContent,/公開データ|確認された|近隣にある|事実/);
+});
+
 test('ordinary OpenPOI failure still falls back to OSM and yields a poem',async()=>{
  const ui=makeUI(url=>{
   const value=String(url);

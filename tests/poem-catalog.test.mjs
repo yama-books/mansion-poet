@@ -127,6 +127,18 @@ test('POEM-01 style/intensity vary output without changing evidence or genre',()
  assert.ok(a.body.includes('架空ポスト'));
 });
 
+test('POEM-01 the facility name opens the poem as ad copy, not as a data report',()=>{
+ const p=poi({tags:{waterway:'ditch'},name:'架空の側溝'});
+ const firsts=new Set();
+ for(const style of ['heritage','urban','nature'])for(const intensity of [20,85,95])for(let serial=1;serial<=10;serial++){
+  const {body}=lib.compose(p,{style,intensity,serial});
+  assert.ok(body.includes('「架空の側溝」'),body);
+  assert.doesNotMatch(body,/公開データ|確認された|近隣にある|事実/,body);
+  firsts.add(body.split('\n').find(l=>l.includes('架空の側溝')));
+ }
+ assert.equal(firsts.size,3);
+});
+
 test('POEM-01 no facility evidence or low trust never implies a facility exists',()=>{
  assert.equal(lib.compose(null,{serial:1}),null);
  assert.equal(lib.compose(poi({classificationConfidence:'low',tags:{amenity:'school'}})),null);

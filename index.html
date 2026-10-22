@@ -925,9 +925,9 @@ const high=intensity>=70,veryHigh=intensity>=90,low=intensity<=30;let title;
 if(low)title=`${short}に、\n心地よい暮らしを。`;
 else if(motif&&extraHead[chief.theme]&&intensity>=65&&style==='heritage')title=pick(extraHead[chief.theme],generation);
 else title=pick(head[style],generation);
-let detail=verified&&chief?`${chief.name}など、近隣で確認された風景や施設。`:`${short}という名を持つ、この場所。`;
+let detail=verified&&chief?`「${chief.name}」の名に導かれて。`:`${short}という名を持つ、この場所。`;
 let text;
-if(low){text=`${site}を、新しい暮らしの舞台に。\n${verified&&chief?`${chief.name}が近隣にあることも、この土地の一面です。`:'その土地固有の名前を、大切に。'}\n日常を自分らしく描く、架空のレジデンス。`}
+if(low){text=`${site}を、新しい暮らしの舞台に。\n${verified&&chief?`「${chief.name}」も、この街を語る一節。`:'その土地固有の名前を、大切に。'}\n日常を自分らしく描く、架空のレジデンス。`}
 else if(style==='heritage'){text=`${detail}\n${motif?motif.phrase+'。':'その名が重ねてきた、かけがえのない時間。'}\n${veryHigh?'悠久の記憶を継承する、邸宅の最終到達点。':'街の輪郭を、住まいの美学へ。'}\n選ばれた座標に、人生の新たな頁がひらかれる。`}
 else if(style==='urban'){text=`${short}。都市は、この名を覚えている。\n${motif?motif.phrase+'。':'日常の交差点から、次の物語が始まる。'}\n${veryHigh?'進化の最前線に、未来の定義を書き換える。':'この街から、これからの暮らしを。'}\nここに生まれる、存在しないランドマーク。`}
 else{text=`${short}の空気に、暮らしの輪郭を重ねる。\n${motif?motif.phrase+'。':'何気ない風景のなかに、余白を見出す。'}\n${veryHigh?'沈黙さえも意匠となる、静謐の最深域。':'心に残る、ひとつの場所。'}\n大切な時間のための、架空の私邸。`}
