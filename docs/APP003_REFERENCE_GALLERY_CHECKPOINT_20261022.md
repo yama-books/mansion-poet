@@ -65,3 +65,21 @@ APP-ID：APP-003 / Work-ID：REF-LIB-03
 ## 次の1操作
 
 ユーザーのiPhone Safariでプレビューartifactを表示し、390px相当での一覧・検索・全画像拡大・縦横画面・文字倍率を確認。必要なUI修正をPR #36へ積む。実機受入と公開可否の承認は別に取得する。
+
+
+## 2026-10-22｜Web実機検証向けPages公開追補（PUBLISH-01）
+
+ユーザーから「誰にも告知していないURLなので、WEB上で実機確認できるよう公開する」との明示指示を受け、既存のGitHub Pages配信先を維持したまま、参考画像専用のページを追加。
+
+- [PR #35](https://github.com/yama-books/mansion-poet/pull/35) を mainへ merge、commit `c40795de52179ca152b77f53ba0ddea25c02b9cc`。
+- [PR #36](https://github.com/yama-books/mansion-poet/pull/36) をPR #35統合後にmainへリターゲットして merge、commit `ea9491d8e1c089781b162b7c3e5b2b64142be827`。
+- [Pages deployment #39750370522](https://github.com/yama-books/mansion-poet/actions/runs/39750370522) 成功。Actionsのenvironment URLは `https://yama-books.github.io/mansion-poet/`。
+- ギャラリー用URL：**https://yama-books.github.io/mansion-poet/tools/reference-gallery/index.html**。本体のindex.htmlのURLは変更していない。
+- deploy-pages.yml の最小配信パッケージに、`tools/reference-gallery/`、`src/reference-gallery/`、`research/visual-reference-manifest.json`、`assets/reference-images/`を追加。画像19点のSHA256/PNG寸法は配信ジョブ前にPython検査、既存Node130件を検査。
+- Pages upload artifact `12413675472`を再取得し、tar内部に既存トップページ `index.html`、ギャラリーHTML/JS/CSS、検索モデル、manifest、実PNG19点が含まれることを検証。
+- ギャラリーHTMLには `meta robots=noindex,nofollow,noarchive` を追加。**noindexは検索エンジンへ控えるよう伝えるだけで、認証や秘密URL化を保証しない**。GitHub Pagesと公開リポジトリ画像は第三者も取得可能。
+- refsの`publishedAllowed=false`は維持。これは**広告・本番ARTへの転用不許可**を意味する一方、参考デザインの展示ページ自体は公開済みと区別する。
+- 外部HTTPでのGET検査は、この実行環境の`github.io` DNS解決／閲覧不可のため**実測未確認**。Actionsが成功した事実と区別する。
+- 実際のiPhone Safariで、URL到達、19画像の読込、タグ検索、拡大・前後移動、縦横回転、下端見切れ、文字サイズ拡大をユーザーが確認することが次の1操作。
+
+公開範囲は参考画像ギャラリーと従来の本体サイトのみ。PRINT03との本番ART統合はまだ行っていない。
