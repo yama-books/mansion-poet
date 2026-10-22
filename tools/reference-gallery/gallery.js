@@ -76,6 +76,11 @@ function reset(){
  render();$('search').focus();
 }
 function fillFacets(items){
+ const refs=[...new Set(items.map(i=>i.refId))].sort();
+ for(const refId of refs){
+  const option=document.createElement('option');option.value=refId;option.textContent=refId;
+  $('ref').append(option);
+ }
  for(const ns of namespaces){
   const select=$(ns),options=Model.optionsFor(items,ns);
   for(const opt of options){
