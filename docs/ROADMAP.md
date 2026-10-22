@@ -1,7 +1,9 @@
 # 開発ロードマップ（短縮版）
 
-更新日：2026-10-17  
+更新日：2026-10-17（履歴版。2026-10-22に現況への参照を追加）  
 対象：mansion-poet / POÈME / ESTATE
+
+**現在の実装状態・全体進捗：[APP003_MASTER_PLAN_PROGRESS.md](APP003_MASTER_PLAN_PROGRESS.md)**。このROADMAPは旧設計・履歴の参照用で、最新の完成状況を表すものではありません。
 
 > **現行機能の全体設計は [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md)、2026-10-17以降の次期実装順序は [NEXT_PHASE_MASTERPLAN_20261017.md](NEXT_PHASE_MASTERPLAN_20261017.md) を参照。** 以下は旧来のマイルストーンを含む履歴的ロードマップでもあり、部分的に当時の未実装記述が残る場合があります。最新の実装・公開状況は [LOCATION-01記録](LOCATION01_AD_HIGHLIGHTS.md) と [HANDOFF_READY](handoff/APP003_NEXT_SESSION_HANDOFF_20261017.md) を優先してください。
 
