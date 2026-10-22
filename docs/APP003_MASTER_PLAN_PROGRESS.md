@@ -45,7 +45,7 @@
 | LOCATION-01 | 29分類87組＋一般10テーマ30組＝117組。施設カード最大3件（同上） | POI網羅性、主役の一致、距離と徒歩の区別 |
 | PRINT03・文面 | [PR #31](https://github.com/yama-books/mansion-poet/pull/31) open、[PR #32](https://github.com/yama-books/mansion-poet/pull/32) open。**main未統合** | 既報の結合Node 197/197はローカル組合せ結果。合成広告・iPhone Safari印刷は別検証 |
 | 画像取り込み | [PR #30](https://github.com/yama-books/mansion-poet/pull/30) Draft（IMG-PIPE）、[PR #33](https://github.com/yama-books/mansion-poet/pull/33) Draft（IMG-00）。**main未統合** | 許諾、原画、印刷ppi、機能統合のゲート |
-| 画像REF | REF-0001/0002の19PNGとmanifestはmainに保存済。REF-0003〜0008の説明など11文書は[PR #37](https://github.com/yama-books/mansion-poet/pull/37) Draft。**PR #37内では7 PNG実体未確認** | 別のGitHubコミットへ保存した可能性は保留し、実パス・SHAを確認する |
+| 画像REF | REF-0001/0002の19PNGとmanifestはmainに保存済。[PR #37](https://github.com/yama-books/mansion-poet/pull/37) DraftにはREF-0003〜0008の説明資料と**参照由来の写真切り出し3PNG**を追加済（HEAD 672fdd8）。**元シート7PNGは未確認** | 新規3点は484〜493×295pxの参考用小画像。固定Git treeで実体・容量を確認、SHA-256独立再計算は未実施。独立ARTと混同せず、元シート7点の保存先を引き続き確認 |
 | 制作ルールと構図 | [PR #34](https://github.com/yama-books/mansion-poet/pull/34) open（6構図）、[PR #38](https://github.com/yama-books/mansion-poet/pull/38) Draft（REF/RECIPE/ART/RENDER分離） | 新しい文字なしARTは別セッションで制作中、保存PR・実画像・採否のGitHub読戻しは未確認 |
 
 **注**：PR #31、#32、#34はopenでDraftではない。#30、#33、#37、#38はDraft（GitHub照合時点）。openであってもmainに取り込まれているわけではない。
@@ -66,7 +66,7 @@
 | **UI-01／REF-LIB-03：表示** | 参考ライブラリは**Web公開済**。タグ検索・拡大機構、Chromeのモバイル幅QAと公開HTTP GETを確認 | iPhone Safariの実操作受入、長名・拡大・回転・視認性を記録 |
 | **PRINT03：A4広告** | [PR #31](https://github.com/yama-books/mansion-poet/pull/31)で独立印刷エンジン実装PRあり。既報Node回帰197/197（PR31/32結合）、Edge PDF QA53件（ローカル報告） | mainへの統合・写真ARTとの合成・Safari実機印刷・A4可読性を別ゲートで検証 |
 | **IMG-PIPE／IMG-00：画像処理** | [PR #30](https://github.com/yama-books/mansion-poet/pull/30)と[PR #33](https://github.com/yama-books/mansion-poet/pull/33)に独立PoC。**本体への接続・公開未実施** | 独立ART原画のメタデータ・許諾・ppi/トリミング・SVG fallbackを代表1点で統合 |
-| **ASSET-REF-02／ART：画像制作** | REF-0001/0002の19PNG公開済、REF-0003〜0008の11資料がPR #37に保存。文字なしARTは**別セッションで制作中というユーザー報告** | 新ART3点の原画・画素・プロンプト・SHA・制作PRを取得し、合成適性を審査 |
+| **ASSET-REF-02／ART：画像制作** | REF-0001/0002の19PNGをWeb公開済。PR #37には説明資料に加えて参照画像からの写真切り出し3PNGがGitHub登録済。新しい独立ARTの制作も別セッションへ依頼済 | 写真切り出し3点は低解像度・権利未承認の参考用。**独立生成高解像度ART・元コンセプトシート7PNGは別途確認待ち** |
 | **RECIPE／MAPFX-01：編集構図・地図演出** | 6構図はPR #34で設計記録あり。MAPFXは構想・実装計画あり | まずARTを組み込める構図1点の印刷試作。MAPFXは独立PoCとして後から判断 |
 | **RELEASE-01：CI／配信／実機** | 現行PagesとREFギャラリーを配信、公開HTTPチェック成功。**PRINT03等のPR機能はまだ公開なし** | 各PRの統合前後回帰→Pages反映→実機操作の受入を別個に記録 |
 
@@ -77,7 +77,7 @@
 ### 直近：新画像制作を保全しつつ、代表1点で広告への合成を試す
 
 1. **ASSET-ART-01（画像制作セッションが担当）**：既存の制作を中断せず、3点程度の文字なし単独ART（最初は\`print_hero\`用途）を生成。画像とプロンプトMDとSHA256・権利・参照REF-IDをセットで**専用PRへ保存し読戻し**。本番使用許可は別判断。
-2. **ASSET-REF-02（登録担当）**：[PR #37](https://github.com/yama-books/mansion-poet/pull/37)に7PNGを登録したとの実コミット／パスを確認する。別ブランチに存在すればそちらを先に使い、**重複登録しない**。無ければRunbookで登録。
+2. **ASSET-REF-02（登録担当）**：[PR #37](https://github.com/yama-books/mansion-poet/pull/37)に追加された3写真切り出しは実体・容量を確認済。**これは元シート7PNGとは別物**。元シート7点の保存先を引き続き確認し、未登録ならRunbookに従って登録、二重pushを避ける。
 3. **PRINT03-IMG-01（アプリ実装担当）**：PR #31・#32・#30・#33・#34の最新HEADと変更領域を照合し、独立ART1点・レイアウト1構図・SVG fallbackだけでA4 Web/PDF試作。画像が文字/地図と分離されていることを確認。
 4. **WEB-SAFARI-QA（実機受入）**：公開ギャラリーと現行アプリ、次の統合試作品をiPhone Safariで検証。画像欠け、検索・拡大、コピー、A4、回転を記録。
 
@@ -144,6 +144,7 @@
 | 2026-10-22 | REF-0001/0002の19PNGをGitHubに登録、検索ギャラリーをmain/Pages公開 | PR #35/#36、Pages Actions #39750917571 |
 | 2026-10-22 | REF-0003〜0008の説明11文書をPR #37へ、素材分離の制作契約をPR #38へ保存。独立ARTは別制作セッションで進行 | PR #37/#38、[画像案内板](APP003_ASSET_WORKBOARD.md) |
 | 2026-10-22 | 本書を設置し、アプリ全体の計画・進捗の固定入口を一本化 | このファイルのGitHubコミット |
+| 2026-10-22 19:13 JST頃 | PR #37に文字なしの**参考写真切り出し3PNG**を追加（GitHub tree上で実体・容量を確認）。**元6シート＋一覧7PNGのアップロード、および独立生成ARTとは別** | [PR #37](https://github.com/yama-books/mansion-poet/pull/37)、[画像共有案内板](APP003_ASSET_WORKBOARD.md)、コミット 44e154a／672fdd8 |
 
 ## 10. 開始時の最短手順
 
@@ -153,4 +154,4 @@
 4. 専用ブランチ/PRで作業・検証。コード完成・main保存・Web公開・実機受入のどこまで終えたかを分けて記録。
 5. 大きな節目のみ本書と画像案内板、APP_PORTFOLIOへ短いCHECKPOINTを追加。
 
-**次の1操作（2026-10-22）**：画像制作担当から独立ARTの保存コミット・実ファイル・SHA・採否を受け取り、[画像案内板](APP003_ASSET_WORKBOARD.md)に登録。並行してPR #37の7PNGがGitHub上のどこにあるかを照合する。
+**次の1操作（2026-10-22）**：新規制作セッションの独立ARTが保存されたブランチ・commit・原画像・プロンプト・権利判定を照合する。PR #37の3点写真切り出しはGitHubに保存済みだが本番利用不可、元コンセプトシート7点は別件として保存先を確認する。
