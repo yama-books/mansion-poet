@@ -18,3 +18,15 @@
 
 ## 次の1操作
 Draft PRのCIとartifactを確認し、画像あり/なし/失敗時のスクリーンショットとA4の注記・可読性をレビュー。重要な検証結果が確定した時点だけマスター計画・画像作業台帳へ反映する。
+
+## 実ブラウザ・A4での確認（2026-10-22 JST）
+
+- Chromium（GitHub Actions Linux + `fonts-noto-cjk`）による比較：**SVG / 写真 / 写真不達SVG、施設0件、京都の長名**の5条件を実行し、ブラウザ組版レポートは5/5 `ok=true`。保存成果は[Actions #39796965216](https://github.com/yama-books/mansion-poet/actions/runs/39796965216) の `print03-img01-review` artifact（ZIP）。
+- SVG・写真・写真不達の3つのPDFは **A4縦 209.9×297.0mm、各1ページ**。PDF文字層に見出し「知の深奥」、LOCATION名、創作注記が残り、PyMuPDFによるページ外スパンは0（3PDF）。
+- 画面の日本語字体を確認。初回Chrome環境で日本語□が生じたため、CIでNoto CJKを導入し再撮影した。
+- 写真掲載枠の実測：幅 **182mm**、表示高さ **76mm**、native 484×295px、`object-fit:cover`時の実効 **約67.5ppi**。今回の試作では合格閾値とせず、本番A4印刷素材には**明らかに解像度不足**として記録。
+- この5条件のブラウザ結果は保存済みだが、GitHub Actionsのワークフロー終了ステータスは照会時点で`queued`表示が続き**最終success判定は未確認**。ブラウザartifactとCI最終conclusionは別の証拠として扱う。
+- 追加検査：F01の写真あり・duplex（裏面位置関係図）を[後続CI](https://github.com/yama-books/mansion-poet/actions/runs/39797772688)へ追加。結果はartifactを取得してから判定し、先行5件のPASSに含めない。
+- 現行の独立元データ・IMG-00権限判定に変更なし。端末実機Safari・Pages公開・mainマージは未実施。
+
+**意匠面の次の提案**：この試作の横182mm表示でA4品質を得るには、横2000px級以上の独立写真を候補として比べる価値がある。ただし採用寸法・ppiの正式規格は、実際の高解像度ARTを同じ組版で試してから決める。
