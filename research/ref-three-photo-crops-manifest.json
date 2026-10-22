@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "app003.reference.crops.v1",
+  "workId": "APP-003/ASSET-REF-02",
+  "sourceImage": "7414C804-2177-4C35-945E-9A7F97735821.jpeg",
+  "sourceSize": [
+    1536,
+    1024
+  ],
+  "sourceSha256": "TO_BE_VERIFIED_FROM_LOCAL_PACKAGE",
+  "status": "reference_derived_crop_no_production_approval",
+  "storage": {
+    "status": "local_package_only",
+    "githubImagesUploaded": false,
+    "githubImageReadbackVerified": false,
+    "sourceArchive": "APP003_REF_3_PHOTO_CROPS_20261022.zip",
+    "archiveSha256": "fac2029a071035bdb5cfedd8289d4971eb7b4e893391b3869fcf2959ede6f217"
+  },
+  "images": [
+    {
+      "fileName": "ART-REF0003-library-refcrop.png",
+      "refId": "REF-0003",
+      "theme": "文教／書店・図書館",
+      "cropBox": [
+        18,
+        450,
+        502,
+        745
+      ],
+      "size": [
+        484,
+        295
+      ],
+      "bytes": 301504,
+      "sha256": "8662274f6157e542c3004f4a23286a26e7f291d01f531cea6ef7206ff4744b5e",
+      "sourceKind": "cropped_from_user_supplied_reference_image",
+      "containsPrintOrAdText": false,
+      "publishedAllowed": false,
+      "rightsStatus": "review_required"
+    },
+    {
+      "fileName": "ART-REF0004-park-refcrop.png",
+      "refId": "REF-0004",
+      "theme": "公園・緑地",
+      "cropBox": [
+        522,
+        450,
+        1014,
+        745
+      ],
+      "size": [
+        492,
+        295
+      ],
+      "bytes": 359556,
+      "sha256": "0d02e2f8b49e47f8786bdf941aadbd45a243ea9d306d868b8c878b6da92e0714",
+      "sourceKind": "cropped_from_user_supplied_reference_image",
+      "containsPrintOrAdText": false,
+      "publishedAllowed": false,
+      "rightsStatus": "review_required"
+    },
+    {
+      "fileName": "ART-REF0008-post-refcrop.png",
+      "refId": "REF-0008",
+      "theme": "ポスト・路地",
+      "cropBox": [
+        1033,
+        450,
+        1526,
+        745
+      ],
+      "size": [
+        493,
+        295
+      ],
+      "bytes": 297032,
+      "sha256": "7f885f2e8cb1a3d0abfe161fce7f70738d9cc5253019dbaf4c185d7604573819",
+      "sourceKind": "cropped_from_user_supplied_reference_image",
+      "containsPrintOrAdText": false,
+      "publishedAllowed": false,
+      "rightsStatus": "review_required"
+    }
+  ]
+}
