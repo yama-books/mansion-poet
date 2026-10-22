@@ -3,7 +3,9 @@
 策定：2026-10-22 JST  
 Work ID：APP-003 / REF-LIB-01  
 正本：`yama-books/mansion-poet`  
-状態：**参考画像2原画・17個の切り出しを会話内ZIPとして作成、GitHubには設計文書・登録メタデータのみ保存。GitHub上の画像実体のアップロードは未完了。**
+現在状態（2026-10-22）：**REF-0001/0002の原画2＋切り出し17、計19PNGはGitHub mainへアップロード・実バイナリ照合済み。参考デザインのWebギャラリーも公開済み。本番広告ARTとしては未承認。**
+
+**進捗・ファイルの共通入口： [APP-003画像制作・共有ファイル案内板](APP003_ASSET_WORKBOARD.md)**（mainで管理）
 
 関連： [タグ語彙](APP003_REFERENCE_IMAGE_TAGS_V1.md) ／ [REF-0001](APP003_REFERENCE_IMAGE_ENTRIES/REF-0001.md) ／ [REF-0002](APP003_REFERENCE_IMAGE_ENTRIES/REF-0002.md) ／ [参考画像manifest](../research/visual-reference-manifest.json) ／ [6構図の作図レシピ（PR #34）](https://github.com/yama-books/mansion-poet/pull/34) ／ [画像スロットPoC（PR #33）](https://github.com/yama-books/mansion-poet/pull/33)
 
@@ -27,9 +29,9 @@ Work ID：APP-003 / REF-LIB-01
 
 命名は `REF-0001-overview.png`、上段 `REF-0001-A_type_poem.png`／`B_editorial.png`／`C_location.png`、下段まとめ `D_lower_overview.png`、下段個別 `E1_front.png`等。REF-0002も同様。
 
-**媒体数**：原画像2点、切り出し17点、合計19PNG。個別の切り出しは新規生成原画として数えない。切り出しは元画像のピクセルをそのまま切ったもので、補筆・内容訂正なし。SHA-256、画像寸法、切り出し元のピクセル座標は会話内配布ZIPの `image-inventory.json` を正本として記録。GitHubのメタデータJSONは **binaryStatus=local_package_only** の間は参照台帳であり、GitHub上に当該PNGが存在するとの表明ではない。
+**媒体数**：原画像2点、切り出し17点、合計19PNG。個別の切り出しは新規生成原画として数えない。切り出しは元画像のピクセルをそのまま切ったもので、補筆・内容訂正なし。SHA-256、画像寸法、切り出し元のピクセル座標は会話内配布ZIPの `image-inventory.json` を正本として記録。初期登録時はbinaryStatus=local_package_onlyだったが、19件の画像をpushしてGitHub固定SHAからの照合に成功したため、mainのmanifestではuploaded_verifiedとなっている。
 
-`assets/reference-images/`は将来GitHubへ承認済みのバイナリを入れるための予定パスである。未登録ファイルに対して公開raw URLを発行したり、未検証のパスをリンク表示しない。
+`assets/reference-images/`は現行REF-0001/0002の19画像をGitHub mainに格納した正本パス。新しい候補については、個別のGitHub実体・SHA256を確認するまで公開済みとみなさない。
 
 ## 3. ディレクトリ構成
 
