@@ -4,7 +4,7 @@
 - Repo: yama-books/mansion-poet
 - Branch: feature/app003-ui01-safari-mobile-20261022
 - 対象：公開WebアプリのiPhoneでの基本操作・タップ領域・表示安定性
-- 状態：**専用Draft PR上の小規模UI改善。公開Pagesへの反映・iPhone実機受入は未実施。**
+- 状態：**専用Draft PR #40上の小規模UI改善、GitHub Actionsの既存130件とChrome5画面幅が成功。公開Pagesへの反映・iPhone実機受入は未実施。**
 - 全体正本：[APP003_MASTER_PLAN_PROGRESS.md](APP003_MASTER_PLAN_PROGRESS.md)
 - 関連：[UI01コピー範囲](UI01_COPY_SCOPE_20261017.md)、[品質検証計画](QUALITY_TEST_PLAN.md)
 
@@ -38,6 +38,15 @@
 
 **Chromiumの幅エミュレーションはSafari実機確認ではない。** Safariのタップ・キーボード・共有／印刷メニューは人手の実機検収を必要とする。
 
+## CI実行結果（2026-10-23 JST確認）
+
+- [PR #40](https://github.com/yama-books/mansion-poet/pull/40)の追加改善：検索欄に iPhone Safari の検索キーボードを誘導する `enterkeyhint=search`、自動大文字化を抑える `autocapitalize=off`、検索状態の `role=status` と `aria-live=polite` を追加。場所検索／生成JSロジックは変更していない。
+- 追加テストがこれらの属性をChromeの実ブラウザから検証する。
+- [Mobile viewport QA Actions #39863730582](https://github.com/yama-books/mansion-poet/actions/runs/39863730582)：**completed/success**、Node回帰 **130/130**、Chrome **320/375/390/430/1440pxすべて成功**。比較画像artifact #12461914027（[GitHub Actionsから取得](https://github.com/yama-books/mansion-poet/actions/runs/39863730582/artifacts/12461914027)）。
+- [従来回帰 Actions #39863730596](https://github.com/yama-books/mansion-poet/actions/runs/39863730596)：**completed/success**。
+- **iPhone Safari実機のタップ操作／コピー／印刷、Pages公開は引き続き未確認・未実施**。Chrome画面幅テストやCI完了を端末実機での受入と報告しない。
+- GitHub PR本体はDraftのままとし、プレビューも既存の本番Pagesへは公開していない。公開判断は別段階とする。
+
 ## iPhone実機受入チェック
 
 1. 初期画面で右上「つくる」を1回タップ、場所選択へ移動。
@@ -56,4 +65,4 @@
 
 ## 次の1操作
 
-CIとChromeスクリーンショットを確認し、iPhone Safariの人手検収へ進む。実機確認後に本番Pages反映を別途判断する。
+自動CIは合格。GitHub ActionsのChromeスクリーンショットをレビューし、公開可能なiPhone Safari実機確認用のプレビュー方法を選定する。ユーザー検収前にmainマージやPages公開を行わない。PRINT03画像合成のPR #39と編集範囲を分ける。
