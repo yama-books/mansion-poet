@@ -75,6 +75,7 @@ GitHub Pagesの公開先です。PC・iPhone・Androidのブラウザで開け�
 | [docs/APP003_VISUAL_IMPLEMENTATION_PLAN_20261019.md](docs/APP003_VISUAL_IMPLEMENTATION_PLAN_20261019.md) | **MAPFX-01／IMG-00／PRINT-03 統合実装計画**：地図光柱、画像スロット、実広告型A4印刷への小PR分割とテスト条件（設計のみ） |
 | [docs/APP003_REFERENCE_IMAGE_LIBRARY_SPEC.md](docs/APP003_REFERENCE_IMAGE_LIBRARY_SPEC.md) | **参考画像バンクの管理仕様**：REF／RECIPE／ART／RENDER、選定・保存・安全な本番採用の境界。PNGは会話内ZIP、GitHubバイナリ未登録 |
 | [docs/APP003_REFERENCE_BINARY_UPLOAD_RUNBOOK_20261022.md](docs/APP003_REFERENCE_BINARY_UPLOAD_RUNBOOK_20261022.md) | **REF-LIB-02 画像登録手順**：Windows worktree・19PNGの安全なZIP展開・GitHub SHA読戻し・manifestステータス更新（本番公開は別ゲート） |
+| [docs/APP003_REFERENCE_GALLERY_DEVICE_QA_20261022.md](docs/APP003_REFERENCE_GALLERY_DEVICE_QA_20261022.md) | **REF-LIB-03 実機向け画像ギャラリー**：タグ検索・拡大・iPhone相当画面でのブラウザQA。独立PRからプレビューZIPを配布し、Pagesは変更しない |
 | [docs/APP003_REFERENCE_IMAGE_TAGS_V1.md](docs/APP003_REFERENCE_IMAGE_TAGS_V1.md) | **施設・構図ごとの統制タグ**：template/composition/art/fit/case、ジャンル対応と候補検索 |
 | [docs/APP003_REFERENCE_IMAGE_ENTRIES/REF-0001.md](docs/APP003_REFERENCE_IMAGE_ENTRIES/REF-0001.md) | **墨線・水彩・夕景**の上段3構図＋下段5ケース。構図・素材・文字組・禁則・crop情報 |
 | [docs/APP003_REFERENCE_IMAGE_ENTRIES/REF-0002.md](docs/APP003_REFERENCE_IMAGE_ENTRIES/REF-0002.md) | **建築写真・編集誌面**の上段3構図＋下段4ケース。写真・地図・文字の分割設計 |
