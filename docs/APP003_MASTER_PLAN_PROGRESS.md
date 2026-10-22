@@ -158,7 +158,7 @@
 | 2026-10-22 | REF-0003〜0008の説明11文書をPR #37へ、素材分離の制作契約をPR #38へ保存。独立ARTは別制作セッションで進行 | PR #37/#38、[画像案内板](APP003_ASSET_WORKBOARD.md) |
 | 2026-10-22 | 本書を設置し、アプリ全体の計画・進捗の固定入口を一本化 | このファイルのGitHubコミット |
 | 2026-10-22 19:13 JST頃 | PR #37に文字なしの**参考写真切り出し3PNG**を追加（GitHub tree上で実体・容量を確認）。**元6シート＋一覧7PNGのアップロード、および独立生成ARTとは別** | [PR #37](https://github.com/yama-books/mansion-poet/pull/37)、[画像共有案内板](APP003_ASSET_WORKBOARD.md)、コミット 44e154a／672fdd8 |
-| 2026-10-22 夜 | **PRINT03-IMG-01**：参考写真1点をPR #31のEDITORIALに差し替える独立[Draft PR #39](https://github.com/yama-books/mansion-poet/pull/39)を作成。Chrome/Noto CJKでSVG・写真・不達、施設0件・長名の5ケースをartifact確認。単面A4 PDF 3種は209.9×297.0mm、必要文字残存、写真は実効約67.5ppiで印刷本採用不可。CI最終conclusion・duplex追加ケース・iPhoneは別確認 | [CHECKPOINT](https://github.com/yama-books/mansion-poet/blob/feature/app003-print03-img01-poc-20261022/docs/checkpoints/APP003_PRINT03_IMG01_CHECKPOINT.md)、[Actions](https://github.com/yama-books/mansion-poet/actions/runs/39796965216) |
+| 2026-10-22 夜 | **PRINT03-IMG-01**：参考写真1点をPR #31のEDITORIALに差し替える独立[Draft PR #39](https://github.com/yama-books/mansion-poet/pull/39)を作成。Chrome/Noto CJKでSVG・写真・不達、施設0件・長名の5ケースをartifact確認。単面A4 PDF 3種は209.9×297.0mm、必要文字残存、写真は実効約67.5ppiで印刷本採用不可。ブラウザ検査の[CI #39796965216](https://github.com/yama-books/mansion-poet/actions/runs/39796965216)はsuccess、duplex追加ケース・iPhoneは別確認 | [CHECKPOINT](https://github.com/yama-books/mansion-poet/blob/feature/app003-print03-img01-poc-20261022/docs/checkpoints/APP003_PRINT03_IMG01_CHECKPOINT.md)、[Actions](https://github.com/yama-books/mansion-poet/actions/runs/39796965216) |
 
 ## 10. 開始時の最短手順
 
