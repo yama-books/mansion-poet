@@ -57,6 +57,8 @@ async function update(){
     mediaUsed:r.mediaUsed,fallback:r.fallback,report:r.report,photoMetrics:r.photoMetrics};
   $('report').textContent=JSON.stringify(output,null,2);
   document.documentElement.dataset.img01=r.report.ok?'pass':'fail';
+  document.documentElement.dataset.img01Mode=r.mediaUsed;
+  document.documentElement.dataset.img01Ppi=String(r.photoMetrics?.effectivePpiCover??'n/a');
   window.__IMG01_RESULT=output;
  }catch(e){
   if(cur!==ticket)return;
