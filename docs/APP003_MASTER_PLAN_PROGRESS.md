@@ -89,6 +89,13 @@
 - **見た目と印刷**：少数のARTと構図を合成し、画質・重複・取得費を検証してから30点→100点規模への拡充を審査。
 
 **大量生成、PR一括マージ、大幅なUI全面改造を初手で行わない**。小さく動かし、実機で確かめてから拡張する。
+### UI01-MOBILE-01｜実機向けWebアプリの小改善（2026-10-22）
+
+- **[Draft PR #40](https://github.com/yama-books/mansion-poet/pull/40)**（branch feature/app003-ui01-safari-mobile-20261022）：現行index.htmlのモバイルヘッダーに「つくる」ショートカットを追加し、320〜430pxのタップ領域・iPhone検索入力文字サイズ・safe-area・長い名称の折返しを改善。印刷ロジック/PR #39のPRINT03-IMG-01に触れない。
+- Chromeによる320/375/390/430/1440pxの実ブラウザQA、スクリーンショット、既存Node回帰を実行する独立CIをPRに追加。
+- **状態：Draft PRで保存・コード未統合／GitHub Actionsは確認時にqueuedで結果未確定。iPhone Safari実機未確認。Pages公開も変更なし。** 画面幅QAが成功してもSafari実機操作と区別する。
+- [受入チェックポイント（PR #40）](https://github.com/yama-books/mansion-poet/blob/feature/app003-ui01-safari-mobile-20261022/docs/APP003_UI01_MOBILE_DEVICE_CHECKPOINT_20261022.md)。次の1操作：CIの結果を確認し、失敗時はこのPRだけ修正。成功後、iPhone Safariで操作を受入。
+
 
 ### 2026-10-22 運用決定：画像は再現性より再利用性を優先
 
