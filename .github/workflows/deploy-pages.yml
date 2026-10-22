@@ -70,6 +70,44 @@ jobs:
           test "$(find public/assets/reference-images -maxdepth 1 -type f -name '*.png' | wc -l)" -eq 19
           grep -q 'noindex,nofollow,noarchive' public/tools/reference-gallery/index.html
 
+      - name: Build isolated PRINT03-IMG-01 review preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Preview only: pin immutable commits from draft PR #39 and base PR #31.
+          # Never copy this sample photo into the approved production ART folder.
+          PRINT_COMMIT="037ee9a45738544e54ce6584439e22e9d4b3c826"
+          IMG_COMMIT="2182adbbd6619f4f6411c56b1f29fed2346794cf"
+          git fetch --no-tags --depth=1 origin "$PRINT_COMMIT" "$IMG_COMMIT"
+          dest="public/tools/print03-img01"
+          mkdir -p "$dest"
+          for name in presentation-data.js render-core.js templates.js paginate.js neighborhood.js print-layout.css; do
+            git show "$PRINT_COMMIT:src/print-layout/$name" > "$dest/$name"
+          done
+          git show "$PRINT_COMMIT:src/subject-policy.js" > "$dest/subject-policy.js"
+          git show "$PRINT_COMMIT:tests/print-layout/fixtures.js" > "$dest/fixtures.js"
+          git show "$IMG_COMMIT:src/print-layout/img01-preview.js" > "$dest/img01-preview.js"
+          git show "$IMG_COMMIT:tests/print-layout/img01/img01-preview.css" > "$dest/img01-preview.css"
+          git show "$IMG_COMMIT:tests/print-layout/img01/ART-REF0003-library-refcrop.png" > "$dest/ART-REF0003-library-refcrop.png"
+          git show "$IMG_COMMIT:tests/print-layout/img01/preview.html" > "$dest/index.html"
+          python3 - <<'PY'
+          from pathlib import Path
+          html_path = Path('public/tools/print03-img01/index.html')
+          html = html_path.read_text(encoding='utf-8')
+          html = html.replace('../../../src/print-layout/', './').replace('../../../src/', './')
+          html = html.replace('../fixtures.js', './fixtures.js')
+          html = html.replace('<title>', '<meta name="robots" content="noindex,nofollow,noarchive">\n<title>', 1)
+          html_path.write_text(html, encoding='utf-8')
+          PY
+          # Assert 1) every browser dependency exists, 2) preview is clearly
+          # labelled as fictional, 3) exact PNG bytes are preserved.
+          for f in index.html print-layout.css img01-preview.css presentation-data.js render-core.js templates.js paginate.js neighborhood.js subject-policy.js fixtures.js img01-preview.js ART-REF0003-library-refcrop.png; do
+            test -s "$dest/$f"
+          done
+          grep -q '本番ART未承認' "$dest/index.html"
+          grep -q 'noindex,nofollow,noarchive' "$dest/index.html"
+          echo "8662274f6157e542c3004f4a23286a26e7f291d01f531cea6ef7206ff4744b5e  $dest/ART-REF0003-library-refcrop.png" | sha256sum --check
+
       - name: Set up GitHub Pages
         uses: actions/configure-pages@v5
 
