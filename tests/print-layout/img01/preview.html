@@ -47,6 +47,8 @@ $('print').onclick=()=>window.print();
 let ticket=0;
 async function update(){
  const cur=++ticket,fixture=PrintFixtures.byId($('fx').value),media=$('media').value;
+ PrintImage01Preview.abort();
+ $('out').textContent='';  // never leave a previous location visible while the photo is loading
  $('report').textContent='組版中…';
  try{
   const r=await PrintImage01Preview.mount($('out'),fixture.data,{
