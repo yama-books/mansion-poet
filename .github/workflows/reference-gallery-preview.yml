@@ -34,6 +34,14 @@ jobs:
         run: python scripts/reference-gallery/build_preview.py --output "${{ runner.temp }}/ref-gallery-preview"
       - name: Install browser test driver without changing project dependencies
         run: npm install --no-save --ignore-scripts --package-lock=false playwright-core@1.56.1
+      - name: Ensure Japanese glyphs render in screenshot QA
+        run: |
+          if ! fc-list :lang=ja family | grep -q .; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq fonts-noto-cjk
+          fi
+          fc-cache -f
+          echo "Japanese font: $(fc-match -f '%{family}' ':lang=ja')"
       - name: Smoke test desktop and simulated mobile Chrome
         env:
           SITE_ROOT: ${{ runner.temp }}/ref-gallery-preview
