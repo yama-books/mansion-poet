@@ -1,0 +1,29 @@
+name: Verify APP-003 reference image registry
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/visual-reference-manifest.json'
+      - 'assets/reference-images/**'
+      - 'scripts/reference-library/**'
+      - 'tests/reference-library/**'
+      - '.github/workflows/reference-image-intake.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reference-library:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test reference PNG intake and metadata constraints
+        run: python -m unittest discover -s tests/reference-library -p 'test_*.py' -v
+      - name: Verify reference image manifest schema
+        run: python scripts/reference-library/register_reference_images.py

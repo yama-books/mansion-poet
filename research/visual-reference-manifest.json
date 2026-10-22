@@ -1,0 +1,556 @@
+{
+  "schemaVersion": "app003.reference-library.v1",
+  "lastReviewed": "2026-10-22",
+  "source": "two concept sheets generated in the APP-003 ChatGPT conversation",
+  "warning": "The artwork depicts fictional advertising content. All embedded property prices, distances, place names, maps and claims are illustrative and must not be copied into production. This manifest is a reference index, NOT the approved asset manifest.",
+  "storage": {
+    "status": "uploaded_verified",
+    "binaryRepoUploadVerified": true,
+    "localArchiveName": "APP003_reference_images_20261022.zip",
+    "note": "All 19 GitHub PNG binaries verified at immutable commit. Still REF only, NOT approved production ART.",
+    "verifiedCommitSha": "30d35bc22b9c68ded12e034c851ad7e6254698ff"
+  },
+  "counts": {
+    "sourceImages": 2,
+    "derivedCrops": 17,
+    "imagesTotal": 19
+  },
+  "references": [
+    {
+      "refId": "REF-0001",
+      "title": "Ink / watercolor / dusk compositional sheet",
+      "detailMdPath": "docs/APP003_REFERENCE_IMAGE_ENTRIES/REF-0001.md",
+      "sourceKind": "chatgpt_generated_concept_sheet",
+      "createdAt": "2026-10-22",
+      "refStatus": "approved_reference",
+      "rightsStatus": "review_required",
+      "publishedAllowed": false,
+      "mapEvidence": false,
+      "compositionIds": [
+        "type_poem.ink_right",
+        "editorial.dusk_overlay",
+        "location.river_sketch"
+      ],
+      "tags": [
+        "template:mixed",
+        "composition:concept_overview",
+        "art:mixed",
+        "mood:refined",
+        "mood:nostalgic",
+        "use:concept",
+        "density:high",
+        "fit:bookstore",
+        "fit:water",
+        "fit:urban",
+        "case:duplex",
+        "case:long_name",
+        "case:0_locations"
+      ],
+      "fileIds": [
+        "REF-0001-overview",
+        "REF-0001-A_type_poem",
+        "REF-0001-B_editorial",
+        "REF-0001-C_location",
+        "REF-0001-D_lower_overview",
+        "REF-0001-E1_front",
+        "REF-0001-E2_back",
+        "REF-0001-E3_zero",
+        "REF-0001-E4_kyoto",
+        "REF-0001-E5_dense"
+      ]
+    },
+    {
+      "refId": "REF-0002",
+      "title": "Editorial photographic / line-work / map sheet",
+      "detailMdPath": "docs/APP003_REFERENCE_IMAGE_ENTRIES/REF-0002.md",
+      "sourceKind": "chatgpt_generated_concept_sheet",
+      "createdAt": "2026-10-22",
+      "refStatus": "approved_reference",
+      "rightsStatus": "review_required",
+      "publishedAllowed": false,
+      "mapEvidence": false,
+      "compositionIds": [
+        "type_poem.ink_lower_left",
+        "editorial.facade_split",
+        "location.photo_strip"
+      ],
+      "tags": [
+        "template:mixed",
+        "composition:concept_overview",
+        "art:mixed",
+        "mood:editorial",
+        "mood:refined",
+        "use:concept",
+        "density:medium",
+        "fit:residential",
+        "fit:knowledge",
+        "fit:culture",
+        "case:duplex",
+        "case:long_name",
+        "case:0_locations"
+      ],
+      "fileIds": [
+        "REF-0002-overview",
+        "REF-0002-A_type_poem",
+        "REF-0002-B_editorial",
+        "REF-0002-C_location",
+        "REF-0002-D_lower_overview",
+        "REF-0002-E1_front",
+        "REF-0002-E2_back",
+        "REF-0002-E3_zero",
+        "REF-0002-E4_kyoto"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "id": "REF-0001-overview",
+      "parentRefId": null,
+      "role": "overview",
+      "plannedRepoPath": "assets/reference-images/REF-0001-overview.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "cfc3b07e2dafdb3f5aa10c8245d3fcc0c3d93bffec3bfde77440fce0d57d6564",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2102141,
+      "cropBox": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "tags": [
+        "use:concept",
+        "template:mixed"
+      ]
+    },
+    {
+      "id": "REF-0001-A_type_poem",
+      "parentRefId": "REF-0001",
+      "role": "A_type_poem",
+      "plannedRepoPath": "assets/reference-images/REF-0001-A_type_poem.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "460a7c1ec3fadea24fac15dd18c9c6d8d1c0dcfca9a56e8192f36e1e043a7d94",
+      "width": 484,
+      "height": 481,
+      "bytes": 289845,
+      "cropBox": [
+        30,
+        64,
+        514,
+        545
+      ],
+      "tags": [
+        "template:type_poem",
+        "composition:ink_right",
+        "art:ink_line",
+        "fit:knowledge",
+        "fit:bookstore",
+        "use:layout_reference"
+      ]
+    },
+    {
+      "id": "REF-0001-B_editorial",
+      "parentRefId": "REF-0001",
+      "role": "B_editorial",
+      "plannedRepoPath": "assets/reference-images/REF-0001-B_editorial.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "725ae37cb3c39876ec237528d027d9cf51d73337324a5c29fe25076fbc5ee4d7",
+      "width": 486,
+      "height": 481,
+      "bytes": 443691,
+      "cropBox": [
+        523,
+        64,
+        1009,
+        545
+      ],
+      "tags": [
+        "template:editorial",
+        "composition:dusk_overlay",
+        "art:photographic",
+        "fit:urban",
+        "fit:city_night",
+        "use:layout_reference"
+      ]
+    },
+    {
+      "id": "REF-0001-C_location",
+      "parentRefId": "REF-0001",
+      "role": "C_location",
+      "plannedRepoPath": "assets/reference-images/REF-0001-C_location.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "c0ab8a647da3041e995aa2b5987bd8cd419ec0b2fe08778eb4f001cf5f3a3590",
+      "width": 500,
+      "height": 481,
+      "bytes": 354983,
+      "cropBox": [
+        1018,
+        64,
+        1518,
+        545
+      ],
+      "tags": [
+        "template:location",
+        "composition:river_sketch",
+        "art:watercolor",
+        "fit:water",
+        "fit:park",
+        "case:map_present"
+      ]
+    },
+    {
+      "id": "REF-0001-D_lower_overview",
+      "parentRefId": "REF-0001",
+      "role": "D_lower_overview",
+      "plannedRepoPath": "assets/reference-images/REF-0001-D_lower_overview.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "3b25a083d2ef07a87f9853d4692bc5c0b3b89262d07eedf564e42b5d60cef08a",
+      "width": 1513,
+      "height": 426,
+      "bytes": 851911,
+      "cropBox": [
+        12,
+        570,
+        1525,
+        996
+      ],
+      "tags": [
+        "use:concept",
+        "template:mixed"
+      ]
+    },
+    {
+      "id": "REF-0001-E1_front",
+      "parentRefId": "REF-0001",
+      "role": "E1_front",
+      "plannedRepoPath": "assets/reference-images/REF-0001-E1_front.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "1599dfd3b931c714657fdcfe4c3de35b7d34babb97f4562c9ec52c7068f0f8ea",
+      "width": 293,
+      "height": 382,
+      "bytes": 149177,
+      "cropBox": [
+        12,
+        610,
+        305,
+        992
+      ],
+      "tags": [
+        "case:3_locations",
+        "sheet:duplex",
+        "use:print_front"
+      ]
+    },
+    {
+      "id": "REF-0001-E2_back",
+      "parentRefId": "REF-0001",
+      "role": "E2_back",
+      "plannedRepoPath": "assets/reference-images/REF-0001-E2_back.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "a622d2644a94a31ea36b2bef2530ae4a3fcc82a5c492ae9261b502e929d90c02",
+      "width": 287,
+      "height": 382,
+      "bytes": 156781,
+      "cropBox": [
+        310,
+        610,
+        597,
+        992
+      ],
+      "tags": [
+        "case:3_locations",
+        "sheet:duplex",
+        "use:print_back",
+        "art:map_based"
+      ]
+    },
+    {
+      "id": "REF-0001-E3_zero",
+      "parentRefId": "REF-0001",
+      "role": "E3_zero",
+      "plannedRepoPath": "assets/reference-images/REF-0001-E3_zero.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "946bb05084e6e0927007f8f95eb10c227c9ade766215e4730a3726bad79e5ce0",
+      "width": 298,
+      "height": 382,
+      "bytes": 142468,
+      "cropBox": [
+        601,
+        610,
+        899,
+        992
+      ],
+      "tags": [
+        "case:0_locations",
+        "sheet:single",
+        "density:low"
+      ]
+    },
+    {
+      "id": "REF-0001-E4_kyoto",
+      "parentRefId": "REF-0001",
+      "role": "E4_kyoto",
+      "plannedRepoPath": "assets/reference-images/REF-0001-E4_kyoto.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "450030458e9e2682a5582ad27aa89958407851c56693531e9f393a3586a42bd2",
+      "width": 297,
+      "height": 382,
+      "bytes": 144714,
+      "cropBox": [
+        902,
+        610,
+        1199,
+        992
+      ],
+      "tags": [
+        "case:long_name",
+        "fit:history",
+        "fit:culture"
+      ]
+    },
+    {
+      "id": "REF-0001-E5_dense",
+      "parentRefId": "REF-0001",
+      "role": "E5_dense",
+      "plannedRepoPath": "assets/reference-images/REF-0001-E5_dense.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "3838efa4fa80e3acd7e6452bcc0e2c741b9c92d03ccd14366d2054446a1f1c1b",
+      "width": 323,
+      "height": 382,
+      "bytes": 164048,
+      "cropBox": [
+        1200,
+        610,
+        1523,
+        992
+      ],
+      "tags": [
+        "case:high_density",
+        "density:high"
+      ]
+    },
+    {
+      "id": "REF-0002-overview",
+      "parentRefId": null,
+      "role": "overview",
+      "plannedRepoPath": "assets/reference-images/REF-0002-overview.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "ea4eedb0e9ba090b916833ac7741ed141fda2d4acd9ef17482d5e995d7b39cb1",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2050553,
+      "cropBox": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "tags": [
+        "use:concept",
+        "template:mixed"
+      ]
+    },
+    {
+      "id": "REF-0002-A_type_poem",
+      "parentRefId": "REF-0002",
+      "role": "A_type_poem",
+      "plannedRepoPath": "assets/reference-images/REF-0002-A_type_poem.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "7d9fd7551496b0691f447fd4e888435b7553d0b61059dd0bba3e0172525b09dc",
+      "width": 455,
+      "height": 494,
+      "bytes": 281389,
+      "cropBox": [
+        25,
+        76,
+        480,
+        570
+      ],
+      "tags": [
+        "template:type_poem",
+        "composition:ink_lower_left",
+        "art:ink_line",
+        "fit:knowledge",
+        "fit:residential"
+      ]
+    },
+    {
+      "id": "REF-0002-B_editorial",
+      "parentRefId": "REF-0002",
+      "role": "B_editorial",
+      "plannedRepoPath": "assets/reference-images/REF-0002-B_editorial.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "378cef02fbb74e768ef4b4b24d5388a182ec61d248f9f90755112fbf0aace776",
+      "width": 431,
+      "height": 494,
+      "bytes": 315382,
+      "cropBox": [
+        498,
+        76,
+        929,
+        570
+      ],
+      "tags": [
+        "template:editorial",
+        "composition:facade_split",
+        "art:photographic",
+        "fit:residential",
+        "fit:urban"
+      ]
+    },
+    {
+      "id": "REF-0002-C_location",
+      "parentRefId": "REF-0002",
+      "role": "C_location",
+      "plannedRepoPath": "assets/reference-images/REF-0002-C_location.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "55202caa777c1723f391ec5b05930ef9802e64e84e41974d5c7900803aecab8b",
+      "width": 571,
+      "height": 494,
+      "bytes": 396290,
+      "cropBox": [
+        943,
+        76,
+        1514,
+        570
+      ],
+      "tags": [
+        "template:location",
+        "composition:photo_strip",
+        "art:photographic",
+        "art:map_based",
+        "case:map_present"
+      ]
+    },
+    {
+      "id": "REF-0002-D_lower_overview",
+      "parentRefId": "REF-0002",
+      "role": "D_lower_overview",
+      "plannedRepoPath": "assets/reference-images/REF-0002-D_lower_overview.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "04586d360203f034c936b44d3e7481e0f55076bbca605b66ef965460d9d68894",
+      "width": 1493,
+      "height": 430,
+      "bytes": 885956,
+      "cropBox": [
+        27,
+        588,
+        1520,
+        1018
+      ],
+      "tags": [
+        "use:concept",
+        "template:mixed"
+      ]
+    },
+    {
+      "id": "REF-0002-E1_front",
+      "parentRefId": "REF-0002",
+      "role": "E1_front",
+      "plannedRepoPath": "assets/reference-images/REF-0002-E1_front.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "510dacecda813eab3b5d90779adfa789feef962c3e647be01a43d082923f9536",
+      "width": 330,
+      "height": 392,
+      "bytes": 167260,
+      "cropBox": [
+        27,
+        616,
+        357,
+        1008
+      ],
+      "tags": [
+        "sheet:duplex",
+        "case:3_locations",
+        "use:print_front"
+      ]
+    },
+    {
+      "id": "REF-0002-E2_back",
+      "parentRefId": "REF-0002",
+      "role": "E2_back",
+      "plannedRepoPath": "assets/reference-images/REF-0002-E2_back.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "d72a03a5eab41bc1314b9125511714b04602444401d111b9e4cd8fecea23a6ab",
+      "width": 344,
+      "height": 392,
+      "bytes": 212860,
+      "cropBox": [
+        367,
+        616,
+        711,
+        1008
+      ],
+      "tags": [
+        "sheet:duplex",
+        "case:3_locations",
+        "use:print_back",
+        "art:map_based"
+      ]
+    },
+    {
+      "id": "REF-0002-E3_zero",
+      "parentRefId": "REF-0002",
+      "role": "E3_zero",
+      "plannedRepoPath": "assets/reference-images/REF-0002-E3_zero.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "f56ee05cfd28893636ea4939df4bc8e38b0249f5c8473aced583298dcfa71cdd",
+      "width": 333,
+      "height": 392,
+      "bytes": 190943,
+      "cropBox": [
+        720,
+        616,
+        1053,
+        1008
+      ],
+      "tags": [
+        "case:0_locations",
+        "sheet:single",
+        "density:low"
+      ]
+    },
+    {
+      "id": "REF-0002-E4_kyoto",
+      "parentRefId": "REF-0002",
+      "role": "E4_kyoto",
+      "plannedRepoPath": "assets/reference-images/REF-0002-E4_kyoto.png",
+      "binaryStatus": "uploaded_verified",
+      "repoImageExists": true,
+      "sha256": "7cacfe759cbe746b785dfd381d2d84d85afa4af815721370ac7e02a86e80f4e1",
+      "width": 454,
+      "height": 392,
+      "bytes": 235860,
+      "cropBox": [
+        1065,
+        616,
+        1519,
+        1008
+      ],
+      "tags": [
+        "case:long_name",
+        "fit:history",
+        "fit:culture"
+      ]
+    }
+  ]
+}
