@@ -9,11 +9,16 @@
   "sourceSha256": "f98ef28a8ec5f6bfa67b578def02dc8be8ebde0dc8f11cbe786356f04d0a44c0",
   "status": "reference_derived_crop_no_production_approval",
   "storage": {
-    "status": "local_package_only",
-    "githubImagesUploaded": false,
-    "githubImageReadbackVerified": false,
+    "status": "uploaded_verified",
+    "githubImagesUploaded": true,
+    "githubImageReadbackVerified": true,
     "sourceArchive": "APP003_REF_3_PHOTO_CROPS_20261022.zip",
-    "archiveSha256": "fac2029a071035bdb5cfedd8289d4971eb7b4e893391b3869fcf2959ede6f217"
+    "archiveSha256": "fac2029a071035bdb5cfedd8289d4971eb7b4e893391b3869fcf2959ede6f217",
+    "verificationKind": "immutable_git_tree_blob_sha1_and_byte_length_match_local_original",
+    "sha256LocalVerified": true,
+    "verifiedCommitSha": "44e154abf79b4bec871740d92ba55da2261925b5",
+    "verifiedOnDateJst": "2026-10-22",
+    "warning": "Verified only as reference-derived crops. ART publish approval is false. A4 full-size suitability not validated."
   },
   "images": [
     {
@@ -35,7 +40,11 @@
       "sourceKind": "cropped_from_user_supplied_reference_image",
       "containsPrintOrAdText": false,
       "publishedAllowed": false,
-      "rightsStatus": "review_required"
+      "rightsStatus": "review_required",
+      "githubBlobSha": "41a06cf428c12c15e4096f4664b8e12cdcd147e7",
+      "githubFilePath": "assets/reference-images/ART-REF0003-library-refcrop.png",
+      "binaryStatus": "uploaded_verified",
+      "productionApproved": false
     },
     {
       "fileName": "ART-REF0004-park-refcrop.png",
@@ -56,7 +65,11 @@
       "sourceKind": "cropped_from_user_supplied_reference_image",
       "containsPrintOrAdText": false,
       "publishedAllowed": false,
-      "rightsStatus": "review_required"
+      "rightsStatus": "review_required",
+      "githubBlobSha": "0ae7308144d8d218f3351102658f1d44df1df0ff",
+      "githubFilePath": "assets/reference-images/ART-REF0004-park-refcrop.png",
+      "binaryStatus": "uploaded_verified",
+      "productionApproved": false
     },
     {
       "fileName": "ART-REF0008-post-refcrop.png",
@@ -77,7 +90,11 @@
       "sourceKind": "cropped_from_user_supplied_reference_image",
       "containsPrintOrAdText": false,
       "publishedAllowed": false,
-      "rightsStatus": "review_required"
+      "rightsStatus": "review_required",
+      "githubBlobSha": "eba9abfc84204ec4931f1eadcca762a8cf267edb",
+      "githubFilePath": "assets/reference-images/ART-REF0008-post-refcrop.png",
+      "binaryStatus": "uploaded_verified",
+      "productionApproved": false
     }
   ]
 }
