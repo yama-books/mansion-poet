@@ -105,7 +105,8 @@ function viewerItem(item){
  media.append(img);
  const chips=$('viewer-tags');clear(chips);
  for(const t of item.tags)chips.append(el('span','chip',Model.labelTag(t)));
- $('viewer-doc').href=item.detailUrl;
+ $('viewer-doc').hidden=!item.detailUrl;
+ if(item.detailUrl)$('viewer-doc').href=item.detailUrl;
  $('viewer-previous').disabled=state.index<=0;
  $('viewer-next').disabled=state.index>=state.visible.length-1;
  const scroll=dialog.querySelector('.viewer-scroll');
