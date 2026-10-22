@@ -7,7 +7,7 @@ const RC=root.PrintRenderCore;
 if(!RC)throw new Error('IMG01: load render-core and templates first');
 const original=RC.templateInfo('editorial');
 if(!original)throw new Error('IMG01: editorial unavailable');
-const REF_URL='./img01/ART-REF0003-library-refcrop.png';
+const REF_URL='./ART-REF0003-library-refcrop.png';
 const ATTRIBUTION='参考画像から切り出した架空の情景イメージ（実在施設・物件の証拠ではありません）。本番ART未承認。';
 let serial=0;
 function annotate(block){
@@ -41,7 +41,7 @@ async function mount(container,data,opts={}){
  if(!['svg','photo','missing'].includes(media)||![72,84].includes(height)||
   !Number.isFinite(focus)||focus<0||focus>100)throw new Error('IMG01: invalid preview option');
  const view=opts.view||root;
- const available=media!=='svg'&&await checkImage(media==='missing'?'./img01/__missing__.png':REF_URL,view);
+ const available=media!=='svg'&&await checkImage(media==='missing'?'./__missing__.png':REF_URL,view);
  if(ticket!==serial)throw new Error('H-07: superseded preview');
  const photo=media==='photo'&&available;
  template(photo);
