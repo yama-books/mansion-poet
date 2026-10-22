@@ -196,10 +196,38 @@
  body[data-print-layout="onepage"] .location-cards:has(> .location-card:only-child) .location-card{
   max-width:100%!important}
 }
+
+/* UI01-MOBILE: keep the production page usable on iPhone Safari without changing print layouts. */
+.header-quick-link{display:none}
+@media screen and (max-width:720px){
+  .header{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+  .header .edition{display:none}
+  .header-quick-link{display:inline-flex;min-height:44px;min-width:72px;justify-content:center;align-items:center;gap:9px;padding:8px 10px;border:1px solid #988869;color:#f6efe0;font-size:12px;font-weight:500;letter-spacing:.04em;white-space:nowrap;flex-shrink:0}
+  .header-quick-link:focus-visible{outline:3px solid #e1bc81;outline-offset:3px}
+  #discover{scroll-margin-top:12px}
+  .searchbar button{min-width:64px;min-height:44px;padding:10px 10px 10px 14px}
+  #placeInput{min-width:0;min-height:46px;font-size:16px}
+  .examples .chip{min-height:44px;padding:9px 11px}
+  .results .result-item{min-height:44px;padding:11px 12px}
+  .range{height:44px;margin:8px 0 6px;touch-action:pan-x}
+  .poi-detail-optin{min-height:44px;align-items:center}
+  .poi-detail-optin input{width:20px;height:20px;margin:0}
+  .output-actions .line-button{min-height:44px;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+  .output-english strong{min-width:0;overflow-wrap:anywhere}
+  .footer{padding-bottom:max(28px,env(safe-area-inset-bottom,0px))}
+}
+@media screen and (max-width:360px){
+  .header{padding-left:max(13px,env(safe-area-inset-left,0px));padding-right:max(13px,env(safe-area-inset-right,0px));gap:8px}
+  .header .brand strong{font-size:15px;letter-spacing:.04em}
+  .header .brand small{font-size:8px;letter-spacing:.04em}
+  .header .logo{gap:7px;min-width:0}
+  .header-quick-link{min-width:62px;padding:8px 7px}
+}
+
 </style>
 </head>
 <body>
-<header class="header"><a class="logo" href="#top"><span class="mark">P</span><span class="brand"><strong>POÈME / ESTATE</strong><small>マンションポエムメーカー</small></span></a><nav class="nav"><a href="#discover">DISCOVER</a><a href="#poem">THE POEM</a><a href="#about">CONCEPT</a></nav><span class="edition">VOL. 001 / JAPAN</span></header>
+<header class="header"><a class="logo" href="#top"><span class="mark">P</span><span class="brand"><strong>POÈME / ESTATE</strong><small>マンションポエムメーカー</small></span></a><nav class="nav"><a href="#discover">DISCOVER</a><a href="#poem">THE POEM</a><a href="#about">CONCEPT</a></nav><a class="header-quick-link" href="#discover" aria-label="場所を選んでポエムを作る">つくる <span aria-hidden="true">↗</span></a><span class="edition">VOL. 001 / JAPAN</span></header>
 <main id="top">
 <section class="hero" aria-label="メインビジュアル">
 <div class="hero-left"><div><div class="eyebrow hero-overline">THE ART OF PLACE MAKING</div><h1>THE<br>POETRY<br><em>OF</em> PLACE.</h1><p class="hero-jp">その街に、<br>まだない物語を。</p><p class="hero-copy">ひとつの地名から、ひとつの邸宅思想へ。<br>地形、文化、日常の気配を、<br>過剰なまでに格調高い言葉へと昇華する。</p></div><div class="hero-bottom"><a class="down-link" href="#discover">EXPLORE YOUR LOCATION</a><span class="hero-number">01 / ∞</span></div></div>
