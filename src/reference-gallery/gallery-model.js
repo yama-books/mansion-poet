@@ -37,6 +37,7 @@ function buildLibrary(manifest){
     !Array.isArray(manifest.references)||!Array.isArray(manifest.files)){
   throw new Error('REF-GALLERY: manifest format unsupported');
  }
+ const docSha=/^[a-f0-9]{40}$/.test(str(manifest.storage?.verifiedCommitSha)) ? manifest.storage.verifiedCommitSha : null;
  const refs=new Map();
  for(const r of manifest.references){
   if(!/^REF-\d{4}$/.test(str(r.refId))||refs.has(r.refId)||!DOC.test(str(r.detailMdPath)))continue;
@@ -62,8 +63,8 @@ function buildLibrary(manifest){
   items.push(Object.freeze({id,refId:parent,role,category:ROLE_CATEGORY(role),
    title,refTitle:str(ref.title),tags,src:'../../'+path,
    width:f.width,height:f.height,bytes:f.bytes,sourceSha:f.sha256,
-   detailUrl:'https://github.com/yama-books/mansion-poet/blob/'+
-    'b82098607a86a2039430a4b819f464e3265c0597/'+ref.detailMdPath,
+   detailUrl:docSha?'https://github.com/yama-books/mansion-poet/blob/'+
+    docSha+'/'+ref.detailMdPath:null,
    searchText:searchable}));
  }
  return Object.freeze({items,skipped,referenceCount:refs.size});
