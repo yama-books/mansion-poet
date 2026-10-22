@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "synthetic-000",
+      "sceneId": "scene-000",
+      "variantId": "original",
+      "parentAssetId": null,
+      "group": "synthetic_geometry",
+      "themes": [
+        "architecture"
+      ],
+      "slots": [
+        "hero",
+        "residence",
+        "print_hero"
+      ],
+      "orientation": "landscape",
+      "focalPoint": {
+        "x": 0.75,
+        "y": 0.5
+      },
+      "kind": "generated_illustration",
+      "caption": "架空建築イメージ・人工テスト図形",
+      "rightsStatus": "review_required",
+      "reviewStatus": "candidate",
+      "reviewer": "",
+      "owner": "test fixture author",
+      "license": "synthetic test only",
+      "sourceURL": "urn:app003:synthetic-fixture",
+      "createdAt": "2026-10-20",
+      "sourceRetrievedAt": "2026-10-20",
+      "assetScope": "synthetic_test_only",
+      "permissionToRedistribute": false,
+      "imageShowsRealPOI": false,
+      "generationTool": "Pillow geometric fixture generator",
+      "generatedAt": "2026-10-20",
+      "sourcePromptId": "SYNTHETIC-01",
+      "promptRecipeId": "SYNTHETIC-01",
+      "promptText": "Artificial rectangles, no real property",
+      "provenance": "assistant_generated",
+      "noticeType": [
+        "fictional_architecture",
+        "test_only"
+      ],
+      "reviewNotes": "Pending crop/rights review",
+      "rejectionReasons": [],
+      "prohibitedTags": [],
+      "originalPath": "synthetic-000.png",
+      "original": {
+        "width": 320,
+        "height": 240,
+        "bytes": 2615,
+        "sha256": "5fcf609b8dfab84d86d81497b06a989063ff27e1a5a89fcb16568d93cacaf3c2"
+      }
+    }
+  ]
+}
