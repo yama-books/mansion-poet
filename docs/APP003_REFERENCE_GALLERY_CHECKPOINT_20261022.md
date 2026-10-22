@@ -35,9 +35,9 @@ APP-ID：APP-003 / Work-ID：REF-LIB-03
 
 ### GitHub Actions
 
-[Verify reference gallery preview #39747742526](https://github.com/yama-books/mansion-poet/actions/runs/39747742526) で、以下を**成功**と確認：
+[Verify reference gallery preview #39748356426](https://github.com/yama-books/mansion-poet/actions/runs/39748356426) で、以下を**成功**と確認：
 
-- Node gallery-model 14/14
+- Node gallery-model 15/15
 - Python preview packaging 4/4
 - バイナリ19点のSHA256／PNG寸法照合→最小preview ZIP構築
 - GitHub runnerの日本語フォント不足を発見し、Noto Sans CJK JPをインストールして再撮影
