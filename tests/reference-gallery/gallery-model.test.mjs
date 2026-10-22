@@ -96,3 +96,12 @@ test('static HTML uses external same-origin assets and disclaimer',()=>{
  assert.match(html,/name="viewport"/);
  assert.ok(!/<script[^>]*src=["']https?:\/\//i.test(html));
 });
+
+test('reference documentation links use manifest immutable verified commit, not an old hardcoded SHA',()=>{
+ const one=library.items[0];
+ assert.match(one.detailUrl,new RegExp('/blob/'+manifest.storage.verifiedCommitSha+'/'));
+ const clone=structuredClone(manifest);
+ clone.storage.verifiedCommitSha='invalid';
+ const item=buildLibrary(clone).items[0];
+ assert.equal(item.detailUrl,null);
+});
