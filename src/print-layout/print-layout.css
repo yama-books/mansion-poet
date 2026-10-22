@@ -1,0 +1,210 @@
+/* PRINT03-CORE print layer. Scoped to .pl-* so it can sit beside index.html later
+ * without touching the existing PRINT-02 @media print rules.
+ * Sizes are in pt/mm for A4. Density follows real flyers: addresses, sources and
+ * notes are fine print (7.5pt, down to 6.5pt at fit level 4). The creative-work
+ * note (.pl-creative) and the running footer never go below 8pt (H-01). */
+:root{
+ --pl-serif:"Noto Serif JP","Yu Mincho","YuMincho","Hiragino Mincho ProN","BIZ UDPMincho","MS PMincho",serif;
+ --pl-sans:"Noto Sans JP","Yu Gothic","YuGothic","Hiragino Sans","Meiryo",sans-serif;
+ --pl-latin:"Cormorant Garamond","Garamond","Times New Roman",var(--pl-serif);
+ --pl-paper:#fbf9f3;--pl-ink:#1d221e;--pl-sub:#4f564f;--pl-accent:#7a6440;--pl-deep:#203a30;--pl-rule:#b9ad94;--pl-tint:#f1ece0;
+}
+@page{size:A4 portrait;margin:0}
+.pl-page{
+ --gap:6mm;--headline:32pt;--poem:11pt;--poem-lh:2.05;--card-body:9pt;--fine:7.5pt;--fine-lh:1.55;
+ width:210mm;height:297mm;padding:13mm 14mm 9mm;box-sizing:border-box;display:flex;flex-direction:column;
+ background:var(--pl-paper);color:var(--pl-ink);font-family:var(--pl-sans);font-weight:400;font-size:9pt;
+ line-height:1.7;overflow:hidden;position:relative;
+ -webkit-print-color-adjust:exact;print-color-adjust:exact;
+ line-break:strict;word-break:normal;overflow-wrap:anywhere;font-kerning:normal;
+}
+.pl-page *,.pl-page *::before,.pl-page *::after{box-sizing:border-box}
+.pl-page-body{flex:1 1 auto;min-height:0;position:relative}
+.pl-flow{display:flex;flex-direction:column;gap:var(--gap)}
+.pl-flow>*{margin:0;flex:none}
+.pl-running{flex:none;display:flex;justify-content:space-between;gap:6mm;align-items:baseline;border-top:.3pt solid var(--pl-rule);padding-top:2mm;margin-top:2.6mm;font-size:8pt;color:var(--pl-sub);letter-spacing:.02em}
+.pl-running-num{font-family:var(--pl-latin);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:8.5pt}
+.pl-creative{font-size:8pt!important;font-weight:500;color:var(--pl-ink)}
+
+/* shared parts */
+.pl-masthead{display:flex;justify-content:space-between;align-items:baseline;gap:6mm;border-bottom:.4pt solid var(--pl-ink);padding-bottom:2.4mm}
+.pl-brand{font-family:var(--pl-latin);font-size:11pt;letter-spacing:.32em;font-weight:600;white-space:nowrap}
+.pl-mast-right,.pl-eyebrow{font-family:var(--pl-latin);font-size:7.5pt;letter-spacing:.24em;color:var(--pl-accent);text-transform:uppercase}
+.pl-mast-right{text-align:right}
+.pl-headline{font-family:var(--pl-serif);font-weight:500;font-size:var(--headline);line-height:1.55;letter-spacing:.08em;margin:0}
+.pl-line{display:block}
+.pl-property{font-family:var(--pl-latin);font-size:12pt;letter-spacing:.22em;font-weight:600;color:var(--pl-deep)}
+.pl-caption{font-size:var(--fine);color:var(--pl-sub);letter-spacing:.06em;margin-top:1.5mm;line-height:1.5}
+.pl-poem{font-family:var(--pl-serif);font-size:var(--poem);line-height:var(--poem-lh);letter-spacing:.06em}
+.pl-poem-line{margin:0}
+.pl-poem-gap{margin:0;height:.9em}
+.pl-section-head{display:flex;gap:4mm;align-items:baseline;border-bottom:.3pt solid var(--pl-rule);padding-bottom:1.4mm;margin-bottom:3mm}
+.pl-section-sub{font-size:8pt;color:var(--pl-sub);letter-spacing:.06em}
+.pl-cont>.pl-section-head::after,.pl-cont>.pl-notes-head::after{content:"（前頁より続く）";font-size:7.5pt;color:var(--pl-sub);letter-spacing:0}
+.pl-locs{display:flex;flex-direction:column;gap:3mm}
+.pl-locs>.pl-section-head{margin-bottom:0}
+.pl-loc{break-inside:avoid}
+.pl-loc-over{font-family:var(--pl-latin);font-size:7.5pt;letter-spacing:.18em;color:var(--pl-accent)}
+.pl-loc-genre{font-family:var(--pl-sans);letter-spacing:.04em}
+.pl-loc-label{white-space:nowrap}
+.pl-loc-name{font-family:var(--pl-serif);font-weight:600;font-size:12.5pt;line-height:1.45;margin:.5mm 0 .8mm}
+.pl-loc-meta{display:flex;flex-wrap:wrap;gap:.4mm 4mm;align-items:baseline;font-size:var(--fine);line-height:var(--fine-lh);color:var(--pl-sub)}
+.pl-loc-addr{flex:1 1 60mm;min-width:0}
+.pl-loc-dist{font-family:var(--pl-serif);font-size:10pt;color:var(--pl-deep);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pl-loc-walk,.pl-loc-more{white-space:nowrap}
+.pl-loc-tag{font-family:var(--pl-serif);font-weight:600;font-size:10pt;line-height:1.55;margin:1.2mm 0 .5mm;color:var(--pl-deep)}
+.pl-loc-body{font-size:var(--card-body);line-height:1.7;margin:0}
+.pl-loc-src{font-size:var(--fine);color:var(--pl-sub);margin-top:.6mm;line-height:var(--fine-lh)}
+/* notes set like a flyer's 物件概要 block: dense, two columns, creative note first */
+.pl-notes{border-top:.4pt solid var(--pl-ink);padding-top:1.8mm;column-count:2;column-gap:6mm;column-rule:.3pt solid var(--pl-rule)}
+.pl-notes-head{column-span:all;font-family:var(--pl-latin);font-size:7.5pt;letter-spacing:.2em;color:var(--pl-accent);margin-bottom:1mm}
+.pl-note{font-size:var(--fine);line-height:var(--fine-lh);margin:0 0 .5mm;color:var(--pl-ink);break-inside:avoid}
+.pl-note.pl-creative{column-span:all;margin-bottom:1mm}
+.pl-sources{column-span:all;border-top:.3pt solid var(--pl-rule);margin-top:1.2mm;padding-top:1.2mm;display:flex;flex-wrap:wrap;align-items:baseline;gap:.4mm 5mm;break-inside:avoid}
+.pl-sources-head{font-family:var(--pl-latin);font-size:7.5pt;letter-spacing:.2em;color:var(--pl-accent);flex:0 0 100%}
+.pl-note.pl-source{margin:0}
+.pl-front-note{border-top:.4pt solid var(--pl-ink);padding-top:1.8mm;display:flex;flex-wrap:wrap;gap:.5mm 6mm}
+.pl-front-note p{margin:0;line-height:1.5}
+.pl-art{display:block;width:100%;height:auto}
+.pl-art-line,.pl-art-thin,.pl-art-rule{fill:none;stroke:var(--pl-ink);vector-effect:non-scaling-stroke}
+.pl-art-line{stroke-width:1.1}.pl-art-thin{stroke-width:.5;stroke:var(--pl-sub)}.pl-art-rule{stroke-width:.8}
+.pl-art-sun{fill:var(--pl-tint);stroke:var(--pl-accent);stroke-width:.8;vector-effect:non-scaling-stroke}
+
+/* back side: LOCATION DATA sheet */
+.pl-back-head .pl-mast-right{letter-spacing:.14em}
+.pl-locs-back .pl-loc-name{font-size:11.5pt}
+
+/* position diagram (coordinates only: north up, true scale, straight lines) */
+.pl-page{--map-w:104mm}
+.pl-posmap-grid{display:grid;grid-template-columns:var(--map-w) minmax(0,1fr);gap:7mm;align-items:center}
+.pl-posmap-fig{margin:0}
+.pl-posmap-fig .pl-caption{text-align:left}
+.pl-pm-ground{fill:var(--pl-tint)}
+/* map tiles: warm, quiet base so rings, lines and markers stay the subject */
+.pl-pm-tiles{filter:grayscale(.9) sepia(.15) contrast(.88) brightness(1.06)}
+.pl-pm-wash{fill:var(--pl-paper);opacity:.36}
+.pl-posmap-tiled .pl-pm-ring{opacity:1;stroke-width:.9;stroke:var(--pl-deep);stroke-dasharray:1.6 1.6}
+.pl-posmap-tiled .pl-pm-ray{stroke-width:.9}
+.pl-posmap-tiled .pl-pm-ray-chief{stroke-width:1.6}
+.pl-posmap-tiled .pl-pm-axis{opacity:0}
+.pl-posmap-tiled .pl-pm-sub{stroke-width:1.3}
+.pl-posmap-tiled .pl-pm-sitelabel{paint-order:stroke;stroke:var(--pl-paper);stroke-width:2.2px;stroke-linejoin:round}
+.pl-posmap-tiled .pl-pm-ringlabel{paint-order:stroke;stroke:var(--pl-paper);stroke-width:2px;stroke-linejoin:round}
+.pl-mono .pl-pm-tiles{filter:grayscale(1) contrast(.9) brightness(1.06)}
+.pl-pm-axis{stroke:var(--pl-rule);stroke-width:.35;fill:none;vector-effect:non-scaling-stroke}
+.pl-pm-ring{fill:none;stroke:var(--pl-accent);stroke-width:.5;stroke-dasharray:1.2 1.6;vector-effect:non-scaling-stroke;opacity:.8}
+.pl-pm-ray{stroke:var(--pl-deep);stroke-width:.6;stroke-dasharray:3 2;fill:none;vector-effect:non-scaling-stroke}
+.pl-pm-ray-chief{stroke-width:1.1;stroke-dasharray:none}
+.pl-pm-site{fill:var(--pl-accent)}
+.pl-pm-site-halo{fill:none;stroke:var(--pl-accent);stroke-width:.7;vector-effect:non-scaling-stroke}
+.pl-pm-sitelabel{font:500 6.4px var(--pl-sans);fill:var(--pl-ink);letter-spacing:.08em}
+.pl-pm-ringlabel{font:500 6px var(--pl-latin);fill:var(--pl-accent);letter-spacing:.04em}
+.pl-pm-chief{fill:var(--pl-deep);stroke:var(--pl-paper);stroke-width:1.2;vector-effect:non-scaling-stroke}
+.pl-pm-sub{fill:var(--pl-paper);stroke:var(--pl-deep);stroke-width:.9;vector-effect:non-scaling-stroke}
+.pl-pm-num{font:600 6.2px var(--pl-latin);fill:var(--pl-deep)}
+.pl-pm-num-chief{fill:var(--pl-paper);font-size:7px}
+.pl-pm-north-arrow{fill:var(--pl-ink)}
+.pl-pm-scalebar{stroke:var(--pl-ink);stroke-width:.8;fill:none;vector-effect:non-scaling-stroke}
+.pl-posmap-legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3mm}
+.pl-pm-item{display:grid;grid-template-columns:9mm minmax(0,1fr);gap:3mm;align-items:start;border-top:.3pt solid var(--pl-rule);padding-top:2mm}
+.pl-pm-badge{font-family:var(--pl-latin);font-size:15pt;line-height:1;color:var(--pl-deep)}
+.pl-pm-item-chief .pl-pm-badge{color:var(--pl-paper);background:var(--pl-deep);border-radius:50%;width:8mm;height:8mm;display:flex;align-items:center;justify-content:center;font-size:11pt}
+.pl-pm-text{display:flex;flex-direction:column;gap:.4mm;min-width:0}
+.pl-pm-genre{font-size:var(--fine);color:var(--pl-accent);letter-spacing:.08em}
+.pl-pm-name{font-family:var(--pl-serif);font-weight:600;font-size:10.5pt;line-height:1.4}
+.pl-pm-dist{font-family:var(--pl-serif);font-size:9pt;color:var(--pl-deep);font-variant-numeric:tabular-nums}
+.pl-mono .pl-pm-ground{fill:#f2f2f2}
+.pl-pm-nb-dot{fill:var(--pl-paper);stroke:var(--pl-accent);stroke-width:.9;vector-effect:non-scaling-stroke}
+.pl-pm-nb-num{font:600 4.6px var(--pl-latin);fill:var(--pl-accent)}
+/* dense legend: LOCATION 01-03 + neighbourhood 04-, one compact column beside the map */
+.pl-legend-dense{gap:0}
+.pl-legend-dense .pl-pm-item{grid-template-columns:7mm minmax(0,1fr);gap:2mm;padding:1.1mm 0 1.2mm}
+.pl-legend-dense .pl-pm-badge{font-size:11pt}
+.pl-legend-dense .pl-pm-item-chief .pl-pm-badge{width:6mm;height:6mm;font-size:8.5pt}
+.pl-legend-dense .pl-pm-text{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:2mm;row-gap:0}
+.pl-legend-dense .pl-pm-genre{grid-column:1/-1;line-height:1.3}
+.pl-legend-dense .pl-pm-name{font-size:9pt;line-height:1.35}
+.pl-legend-dense .pl-pm-dist{font-size:8pt;white-space:nowrap;align-self:end}
+.pl-pm-item-nb .pl-pm-badge{color:var(--pl-accent)}
+:is(.pl-fit-2,.pl-fit-3).pl-side-back{--map-w:90mm}
+.pl-fit-4.pl-side-back{--map-w:76mm}
+
+/* (a) TYPE POEM */
+.pl-tpl-type_poem .pl-hero{display:grid;grid-template-columns:minmax(0,1fr) 46mm;gap:8mm;align-items:end;padding-top:3mm}
+.pl-tpl-type_poem .pl-hero-text{display:flex;flex-direction:column;gap:4mm;min-width:0}
+.pl-tpl-type_poem .pl-hero-art .pl-art{max-height:58mm}
+.pl-tpl-type_poem .pl-hero-art{margin:0}
+.pl-tpl-type_poem .pl-poem{padding-left:18mm;border-left:.4pt solid var(--pl-rule);margin-left:1mm}
+.pl-tpl-type_poem .pl-loc{display:grid;grid-template-columns:20mm minmax(0,1fr);column-gap:5mm;border-top:.3pt solid var(--pl-rule);padding-top:2.2mm}
+.pl-tpl-type_poem .pl-loc>.pl-loc-over{grid-row:1/span 6;display:flex;flex-direction:column;line-height:1.3;letter-spacing:.06em}
+.pl-tpl-type_poem .pl-loc>.pl-loc-over .pl-loc-rank{font-size:20pt;letter-spacing:.04em;color:var(--pl-deep);line-height:1.15;order:-1}
+.pl-tpl-type_poem .pl-loc>.pl-loc-over .pl-loc-sep{display:none}
+.pl-tpl-type_poem .pl-loc>.pl-loc-over .pl-loc-genre{font-family:var(--pl-sans);letter-spacing:.04em;margin-top:.8mm}
+.pl-tpl-type_poem .pl-loc>:not(.pl-loc-over){grid-column:2}
+.pl-tpl-type_poem .pl-loc-chief{background:var(--pl-tint);border-top:0;padding:3mm 4mm 3mm 3mm;grid-template-columns:17mm minmax(0,1fr)}
+.pl-tpl-type_poem .pl-loc-chief .pl-loc-name{font-size:14pt}
+.pl-tpl-type_poem .pl-loc-chief .pl-loc-tag{font-size:11pt}
+
+/* (b) EDITORIAL skeleton */
+.pl-tpl-editorial .pl-ed-figure{margin:0;height:84mm;display:flex;flex-direction:column;justify-content:flex-end}
+.pl-tpl-editorial .pl-ed-figure .pl-art{max-height:76mm}
+.pl-tpl-editorial .pl-ed-title{text-align:center;display:flex;flex-direction:column;gap:3mm}
+.pl-tpl-editorial .pl-ed-headline{--headline:26pt}
+.pl-tpl-editorial .pl-ed-poem{text-align:center}
+.pl-tpl-editorial .pl-locs{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:4mm}
+.pl-tpl-editorial .pl-locs>.pl-section-head{grid-column:1/-1}
+.pl-tpl-editorial .pl-loc{border-top:.6pt solid var(--pl-ink);padding-top:2mm}
+.pl-tpl-editorial .pl-locs-back{grid-template-columns:1fr 1fr}
+
+/* (c) LOCATION skeleton */
+.pl-tpl-location .pl-lo-top{display:grid;grid-template-columns:minmax(0,1fr) 52mm;gap:8mm;align-items:stretch}
+.pl-tpl-location .pl-lo-nomap{grid-template-columns:1fr}
+.pl-tpl-location .pl-lo-map{margin:0;width:78mm;justify-self:center}
+.pl-tpl-location .pl-lo-side{border-left:.4pt solid var(--pl-rule);padding-left:6mm;display:flex}
+.pl-tpl-location .pl-vertical .pl-headline{writing-mode:vertical-rl;text-orientation:mixed;max-height:92mm;--headline:26pt}
+.pl-tpl-location .pl-lo-side:not(.pl-vertical) .pl-headline{--headline:22pt}
+.pl-tpl-location .pl-locs{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+.pl-tpl-location .pl-locs>.pl-section-head,.pl-tpl-location .pl-loc-chief{grid-column:1/-1}
+.pl-tpl-location .pl-loc-chief{background:var(--pl-tint);padding:3mm 4mm}
+.pl-tpl-location .pl-loc-chief .pl-loc-name{font-size:15pt}
+.pl-tpl-location .pl-loc-col,.pl-tpl-location .pl-loc-brief,.pl-tpl-location .pl-loc-band{border-top:.4pt solid var(--pl-rule);padding-top:2mm}
+.pl-map-chief{fill:var(--pl-deep)}.pl-map-sub{fill:var(--pl-paper);stroke:var(--pl-deep);stroke-width:.8}
+.pl-map-center{fill:var(--pl-accent)}
+.pl-map-num{font:600 7px var(--pl-latin);fill:var(--pl-accent)}
+.pl-map-mark .pl-map-chief+.pl-map-num{fill:var(--pl-paper)}
+
+/* fit levels: one page first. Level 4 = flyer-dense fine print (6.5pt floor). */
+.pl-fit-1{--gap:5mm;--headline:29pt;--poem-lh:1.95}
+.pl-fit-1 .pl-locs{gap:2.4mm}
+.pl-fit-2{--gap:4mm;--headline:27pt;--poem-lh:1.85;--card-body:8.5pt}
+.pl-fit-3{--gap:3.2mm;--headline:26pt;--poem:10.5pt;--poem-lh:1.8;--card-body:8.5pt;--fine:7pt;--fine-lh:1.5}
+.pl-fit-4{--gap:2.6mm;--headline:24pt;--poem:10pt;--poem-lh:1.7;--card-body:8pt;--fine:6.5pt;--fine-lh:1.45}
+.pl-fit-4 .pl-loc-name{font-size:11.5pt}.pl-fit-4 .pl-loc-tag{font-size:9pt}
+.pl-fit-4.pl-tpl-type_poem .pl-loc-chief .pl-loc-name{font-size:13pt}
+:is(.pl-fit-2,.pl-fit-3,.pl-fit-4).pl-tpl-type_poem .pl-locs{display:grid;grid-template-columns:1fr 1fr;column-gap:5mm;row-gap:2.2mm}
+:is(.pl-fit-2,.pl-fit-3,.pl-fit-4).pl-tpl-type_poem .pl-locs>.pl-section-head,
+:is(.pl-fit-2,.pl-fit-3,.pl-fit-4).pl-tpl-type_poem .pl-loc-chief{grid-column:1/-1}
+:is(.pl-fit-2,.pl-fit-3,.pl-fit-4).pl-tpl-type_poem :is(.pl-loc-band,.pl-loc-brief){grid-template-columns:minmax(0,1fr)}
+:is(.pl-fit-2,.pl-fit-3,.pl-fit-4).pl-tpl-type_poem :is(.pl-loc-band,.pl-loc-brief)>.pl-loc-over{grid-row:auto;flex-direction:row;align-items:baseline;gap:2mm}
+:is(.pl-fit-2,.pl-fit-3,.pl-fit-4).pl-tpl-type_poem :is(.pl-loc-band,.pl-loc-brief)>.pl-loc-over .pl-loc-rank{font-size:13pt;order:0}
+:is(.pl-fit-2,.pl-fit-3,.pl-fit-4).pl-tpl-type_poem :is(.pl-loc-band,.pl-loc-brief)>:not(.pl-loc-over){grid-column:1}
+.pl-fit-2.pl-tpl-editorial .pl-ed-figure{height:72mm}
+:is(.pl-fit-3,.pl-fit-4).pl-tpl-editorial .pl-ed-figure{height:60mm}
+:is(.pl-fit-2,.pl-fit-3,.pl-fit-4).pl-tpl-location .pl-lo-map{width:62mm}
+:is(.pl-fit-3,.pl-fit-4).pl-tpl-location .pl-vertical .pl-headline{max-height:72mm;--headline:24pt}
+
+/* monochrome: same hierarchy, no tints; meaning never depends on colour */
+.pl-mono{--pl-paper:#fff;--pl-ink:#000;--pl-sub:#333;--pl-accent:#333;--pl-deep:#000;--pl-rule:#777;--pl-tint:#fff}
+.pl-mono .pl-loc-chief{outline:.6pt solid #000;outline-offset:-.3pt}
+
+@media screen{
+ .pl-stage{display:flex;flex-direction:column;align-items:center;gap:10mm;padding:10mm 0}
+ .pl-page{box-shadow:0 1px 3px #0003,0 8px 24px #0002}
+}
+@media print{
+ html,body{margin:0!important;padding:0!important;background:#fff!important}
+ .pl-noprint{display:none!important}
+ .pl-stage{display:block;padding:0;gap:0}
+ .pl-page{box-shadow:none;break-after:page;page-break-after:always}
+ .pl-page:last-child{break-after:auto;page-break-after:auto}
+}
