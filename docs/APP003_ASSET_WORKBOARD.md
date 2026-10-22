@@ -104,5 +104,6 @@ GitHub [commit `44e154abf79b`](https://github.com/yama-books/mansion-poet/commit
 
 - 2026-10-22 18:29 JST頃：GitHub mainおよびPR #30/#31/#32/#33/#34/#37/#38の状態を確認して初版設置。新ARTは別セッションで制作中、実体未照合。REF-0003〜0008のPNG7点のGitHub固定保存場所を特定待ち。
 - 2026-10-22 19:13 JST頃：PR #37に参考画像由来の写真切り出し3PNGがpushされたことをGitHubのtree/commit/manifestで確認。独立ARTと7枚の元参考画像は別ステータスに分離。
+- 2026-10-22 夜：[PRINT03-IMG-01 Draft PR #39](https://github.com/yama-books/mansion-poet/pull/39)でPR #37のREF切出し1点（484×295）を仮配置し、SVG/写真/不達・3件/0件/長名のChrome 5ケースとA4単面PDF3種のartifactを確認。画像の実効約67.5ppiは試作用で本番ART不承認。画像制作担当は**横182mmの実枠で読みやすい高解像度写真**を次の試験候補として用意し、正式規格は先に決めない。PR #39と[CHECKPOINT](https://github.com/yama-books/mansion-poet/blob/feature/app003-print03-img01-poc-20261022/docs/checkpoints/APP003_PRINT03_IMG01_CHECKPOINT.md)参照。main/Pages未反映。
 
 > 表のPR HEADや状態は最終確認時点のスナップショット。最新状態はGitHubで必ず再照合する。
