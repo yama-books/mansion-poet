@@ -1,0 +1,15 @@
+/* PRINT03-IMG-01 proof only. No production ART manifest or app stylesheet. */
+.pl-tpl-editorial .pl-ed-figure{height:var(--img01-height,84mm)!important}
+.pl-ed-figure.pl-img01-photo{position:relative;isolation:isolate;overflow:hidden}
+.pl-ed-figure.pl-img01-photo > img.pl-img01-preview-photo{
+ position:absolute;left:0;top:0;width:100%;height:calc(100% - 8mm);
+ object-fit:cover;object-position:var(--img01-focus,50%) center;
+ -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+.pl-ed-figure.pl-img01-photo>svg{visibility:hidden}
+.pl-ed-figure.pl-img01-photo .pl-img01-caption{
+ position:relative;z-index:1;margin:0;padding:1mm 2mm;
+ color:#27342f;background:#fbf9f3;min-height:8mm}
+@media print{
+ .img01-tools,.img01-banner,.img01-report{display:none!important}
+}
