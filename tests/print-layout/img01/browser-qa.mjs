@@ -12,13 +12,13 @@ mkdirSync(folder,{recursive:true});
 const base=pathToFileURL(resolve('tests/print-layout/img01/preview.html')).href;
 const flags=['--headless','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
  '--allow-file-access-from-files','--disable-background-networking','--virtual-time-budget=12000'];
-const cases=[['F01_jimbocho_3','svg'],['F01_jimbocho_3','photo'],
- ['F01_jimbocho_3','missing'],['F04_residential_0','photo'],
- ['F03_kyoto_3_longnames','photo']];
+const cases=[['F01_jimbocho_3','svg','auto'],['F01_jimbocho_3','photo','auto'],
+ ['F01_jimbocho_3','missing','auto'],['F01_jimbocho_3','photo','duplex'],
+ ['F04_residential_0','photo','auto'],['F03_kyoto_3_longnames','photo','auto']];
 const reports=[];
-for(const [fixture,media] of cases){
- const url=base+'?fixture='+fixture+'&media='+media+'&sheet=auto&height=84&focus=50';
- const name=fixture+'__'+media;
+for(const [fixture,media,sheet] of cases){
+ const url=base+'?fixture='+fixture+'&media='+media+'&sheet='+sheet+'&height=84&focus=50';
+ const name=fixture+'__'+media+(sheet==='duplex'?'__duplex':'');
  const run=opts=>execFileSync(browser,[...flags,...opts,url],{
    encoding:'utf8',timeout:65000,maxBuffer:12*1024*1024});
  try{
@@ -35,10 +35,10 @@ for(const [fixture,media] of cases){
    if(fixture==='F01_jimbocho_3'&&statSync(folder+'/'+name+'.pdf').size<1000)
      throw new Error('empty A4 PDF');
   }
-  const row={fixture,media,ok,marker,mode,screenshot:ok?name+'.png':null,
+  const row={fixture,media,sheet,ok,marker,mode,screenshot:ok?name+'.png':null,
    pdf:ok&&fixture==='F01_jimbocho_3'?name+'.pdf':null};
   reports.push(row);console.log(JSON.stringify(row));
- }catch(e){const row={fixture,media,ok:false,error:String(e).slice(0,400)};
+ }catch(e){const row={fixture,media,sheet,ok:false,error:String(e).slice(0,400)};
    reports.push(row);console.error(JSON.stringify(row))}
 }
 writeFileSync(folder+'/browser-results.json',JSON.stringify({browser,reports},null,2));
