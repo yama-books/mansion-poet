@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="POÈME / ESTATE 参考広告デザインの検索・比較用ギャラリー。実在の物件広告ではありません。">
+  <title>REFERENCE ATELIER | POÈME / ESTATE</title>
+  <link rel="stylesheet" href="./gallery.css">
+  <script defer src="../../src/reference-gallery/gallery-model.js"></script>
+  <script defer src="./gallery.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="masthead">
+      <a class="wordmark" href="#main" aria-label="参考画像一覧の先頭へ">POÈME <span>/</span> ESTATE</a>
+      <span class="masthead-meta">REFERENCE ATELIER <span aria-hidden="true">/</span> APP-003</span>
+    </header>
+    <main id="main" class="main-content">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">DESIGN REFERENCE ARCHIVE / VOL. 01</p>
+        <h1 id="page-title">広告の表情を、<br>探す。</h1>
+        <p class="intro-copy">マンション広告の構図と画風を、施設のテーマから探すためのデザイン資料室。</p>
+        <p class="notice"><strong>参考デザイン専用</strong>：表示される物件・価格・地図・徒歩時間は創作イメージです。実在する施設・物件の情報や、製品への画像採用を保証するものではありません。</p>
+      </section>
+      <section class="browser" aria-labelledby="filter-title">
+        <div class="browser-head">
+          <div>
+            <p class="eyebrow">01 / COLLECTION</p>
+            <h2 id="filter-title">参考画像を選ぶ</h2>
+          </div>
+          <p class="result-count" id="result-count" role="status" aria-live="polite">登録画像を読み込み中…</p>
+        </div>
+        <div class="filters" id="filters">
+          <div class="field field-search">
+            <label for="search">キーワード</label>
+            <input id="search" type="search" placeholder="例：文教、水辺、夕景、施設0件" autocomplete="off" spellcheck="false" enterkeyhint="search">
+          </div>
+          <div class="field">
+            <label for="ref">原画</label>
+            <select id="ref"><option value="">すべて</option></select>
+          </div>
+          <div class="field">
+            <label for="category">図の位置</label>
+            <select id="category"><option value="">すべて</option><option value="overview">全体図</option><option value="top">上段3版型</option><option value="lower">下段・派生</option></select>
+          </div>
+          <div class="field">
+            <label for="template">版型</label><select id="template"><option value="">すべて</option></select>
+          </div>
+          <div class="field">
+            <label for="art">画風</label><select id="art"><option value="">すべて</option></select>
+          </div>
+          <div class="field">
+            <label for="fit">施設との相性</label><select id="fit"><option value="">すべて</option></select>
+          </div>
+          <div class="field">
+            <label for="case">紙面条件</label><select id="case"><option value="">すべて</option></select>
+          </div>
+          <button class="reset-btn" type="button" id="reset">条件をクリア</button>
+        </div>
+        <div id="error" class="error" role="alert" hidden></div>
+        <div id="empty" class="empty" hidden><p>条件に一致する参考画像がありません。</p><button class="secondary-btn" type="button" id="empty-reset">絞り込みを解除</button></div>
+        <div class="gallery-grid" id="gallery" aria-label="参考デザイン画像の一覧" aria-busy="true"></div>
+      </section>
+      <section class="method" aria-labelledby="method-title">
+        <p class="eyebrow">02 / METHOD</p>
+        <h2 id="method-title">画像と、構図は別々に。</h2>
+        <p>このギャラリーは構図を選ぶための資料です。実際の広告は、確認済みの施設情報と構図レシピ、権利確認済みの独立画像素材を組み合わせて制作します。ここにある画像自体を販売物件の写真として使うことはありません。</p>
+      </section>
+    </main>
+    <footer class="footer"><span>POÈME / ESTATE</span><span>REFERENCE ONLY · © FICTIONAL CONCEPT</span></footer>
+  </div>
+  <dialog id="viewer" class="viewer" aria-labelledby="viewer-title">
+    <div class="viewer-frame">
+      <header class="viewer-head">
+        <p class="eyebrow">REFERENCE ONLY / DETAIL</p>
+        <button type="button" class="close-btn" id="close-viewer" aria-label="拡大表示を閉じる">閉じる <span aria-hidden="true">×</span></button>
+      </header>
+      <div class="viewer-scroll">
+        <div class="viewer-media" id="viewer-media"></div>
+        <div class="viewer-details">
+          <div>
+            <h2 id="viewer-title"></h2>
+            <p id="viewer-dimensions" class="meta"></p>
+            <div id="viewer-tags" class="chips" aria-label="この画像のタグ"></div>
+            <p class="viewer-warning">構図の参考画像です。画像内の数値・地図・説明は事実として使用できません。</p>
+          </div>
+          <div class="viewer-actions">
+            <a id="viewer-doc" class="secondary-link" href="#" target="_blank" rel="noopener noreferrer">作図解説をGitHubで読む <span aria-hidden="true">↗</span></a>
+            <button class="secondary-btn" id="viewer-previous" type="button">← 前の画像</button>
+            <button class="secondary-btn" id="viewer-next" type="button">次の画像 →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>

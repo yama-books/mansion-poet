@@ -1,0 +1,76 @@
+name: Verify reference gallery preview
+
+on:
+  pull_request:
+    branches: [main, docs/app003-reference-library-20261022]
+    paths:
+      - 'tools/reference-gallery/**'
+      - 'src/reference-gallery/**'
+      - 'scripts/reference-gallery/**'
+      - 'tests/reference-gallery/**'
+      - '.github/workflows/reference-gallery-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preview-and-browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check library filter model
+        run: node --test tests/reference-gallery/*.test.mjs
+      - name: Check preview packaging
+        run: python -m unittest discover -s tests/reference-gallery -p 'test_*.py' -v
+      - name: Build an isolated preview from registered files
+        run: python scripts/reference-gallery/build_preview.py --output "${{ runner.temp }}/ref-gallery-preview"
+      - name: Install browser test driver without changing project dependencies
+        run: npm install --no-save --ignore-scripts --package-lock=false playwright-core@1.56.1
+      - name: Ensure Japanese glyphs render in screenshot QA
+        run: |
+          if ! fc-list :lang=ja family | grep -q .; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq fonts-noto-cjk
+          fi
+          fc-cache -f
+          echo "Japanese font: $(fc-match -f '%{family}' ':lang=ja')"
+      - name: Smoke test desktop and simulated mobile Chrome
+        env:
+          SITE_ROOT: ${{ runner.temp }}/ref-gallery-preview
+          SCREENSHOT_DIR: ${{ runner.temp }}/ref-gallery-screenshots
+        run: |
+          set -euo pipefail
+          CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME_BIN" ]; then
+            echo "::error::Chrome/Chromium is not installed on this runner"
+            exit 1
+          fi
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory "$SITE_ROOT" >/tmp/app003-ref-gallery-http.log 2>&1 &
+          echo $! > /tmp/app003-ref-gallery-http.pid
+          sleep 2
+          curl --fail --silent "http://127.0.0.1:8765/tools/reference-gallery/index.html" >/dev/null
+          CHROME_PATH="$CHROME_BIN" GALLERY_TEST_URL="http://127.0.0.1:8765/tools/reference-gallery/index.html" GALLERY_SCREENSHOT_DIR="$SCREENSHOT_DIR" node tests/reference-gallery/browser-smoke.cjs
+      - name: Upload standalone preview bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app003-reference-gallery-preview
+          path: ${{ runner.temp }}/ref-gallery-preview
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Upload browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app003-reference-gallery-qa-screenshots
+          path: ${{ runner.temp }}/ref-gallery-screenshots
+          if-no-files-found: ignore
+          retention-days: 7
