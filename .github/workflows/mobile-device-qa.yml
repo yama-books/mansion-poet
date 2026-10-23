@@ -47,6 +47,28 @@ jobs:
           sleep 2
           curl --fail --silent http://127.0.0.1:8765/index.html >/dev/null
           CHROME_PATH="$CHROME_BIN" APP003_TEST_URL="http://127.0.0.1:8765/index.html" APP003_SCREENSHOTS="$SCREENSHOT_DIR" node tests/mobile-device/browser-smoke.cjs
+      - name: Package isolated Web UI preview (not deployed)
+        run: |
+          set -euo pipefail
+          dest="${RUNNER_TEMP}/app003-ui01-preview"
+          mkdir -p "$dest/src"
+          cp index.html "$dest/index.html"
+          cp src/subject-policy.js src/poem-catalog.js src/location-highlights.js "$dest/src/"
+          test -s "$dest/index.html"
+          for f in subject-policy.js poem-catalog.js location-highlights.js; do test -s "$dest/src/$f"; done
+          cat > "$dest/PREVIEW_README.txt" <<'EOF'
+          APP-003 UI01-MOBILE candidate, Draft PR #40.
+          Not a published GitHub Pages URL. Requires an HTTPS static host to test iPhone Safari.
+          The HTML makes external tile/geocoder/POI calls only on user interaction.
+          This artifact preserves the exact candidate files for a later reviewed staging deployment.
+          EOF
+      - name: Upload standalone Web UI preview files
+        uses: actions/upload-artifact@v4
+        with:
+          name: app003-ui01-preview-site
+          path: ${{ runner.temp }}/app003-ui01-preview
+          retention-days: 7
+          if-no-files-found: error
       - name: Upload viewport review screenshots
         if: always()
         uses: actions/upload-artifact@v4
