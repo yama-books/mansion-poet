@@ -83,3 +83,20 @@ jobs:
           path: ${{ runner.temp }}/app003-ui01-mobile-screens
           retention-days: 7
           if-no-files-found: ignore
+      - name: Check independent HTTPS preview URL (informational)
+        timeout-minutes: 2
+        continue-on-error: true
+        env:
+          PREVIEW_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          base="https://raw.githack.com/yama-books/mansion-poet/${PREVIEW_REF}"
+          mkdir -p /tmp/app003-ui01-remote-preview
+          for file in index.html src/subject-policy.js src/poem-catalog.js src/location-highlights.js; do
+            curl --fail --location --silent --show-error --connect-timeout 10 --max-time 25 --retry 1 \
+              "$base/$file" -o "/tmp/app003-ui01-remote-preview/$(basename "$file")"
+            test -s "/tmp/app003-ui01-remote-preview/$(basename "$file")"
+          done
+          grep -q "POÈME / ESTATE" /tmp/app003-ui01-remote-preview/index.html
+          echo "PREVIEW_HTTP_OK $base/index.html"
+          echo "Note: external proxy may require a browser confirmation; iPhone Safari acceptance is still pending."
