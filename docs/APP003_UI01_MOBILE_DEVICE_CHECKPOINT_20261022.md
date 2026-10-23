@@ -47,6 +47,15 @@
 - **iPhone Safari実機のタップ操作／コピー／印刷、Pages公開は引き続き未確認・未実施**。Chrome画面幅テストやCI完了を端末実機での受入と報告しない。
 - GitHub PR本体はDraftのままとし、プレビューも既存の本番Pagesへは公開していない。公開判断は別段階とする。
 
+## Previewファイルの隔離保全（2026-10-23追記）
+
+Draft PR #40のActionsに `app003-ui01-preview-site` artifact出力を追加した。候補版の `index.html` と現行の `src/subject-policy.js`・`src/poem-catalog.js`・`src/location-highlights.js` をセットにして保存する。**これはダウンロード可能なHTML/JSファイル群であり、そのままiPhoneでアクセス可能なHTTPS URLではない。** 本番GitHub Pagesの`index.html`やデプロイworkflowは書き換えない。
+
+- 作業コミット：`194e746`
+- [検証ワークフロー（PR #40）](https://github.com/yama-books/mansion-poet/blob/feature/app003-ui01-safari-mobile-20261022/.github/workflows/mobile-device-qa.yml)
+- [上記コミットのActions](https://github.com/yama-books/mansion-poet/actions?query=branch%3Afeature%2Fapp003-ui01-safari-mobile-20261022)
+- HTTPSの実機用公開はユーザー受入手段を決めてから別工程で行う。URL・公開完了を推定しない。
+
 ## iPhone実機受入チェック
 
 1. 初期画面で右上「つくる」を1回タップ、場所選択へ移動。
