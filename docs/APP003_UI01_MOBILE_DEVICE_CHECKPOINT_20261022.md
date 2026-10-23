@@ -79,7 +79,7 @@ Draft PR #40のActionsに `app003-ui01-preview-site` artifact出力を追加し�
 
 ## 引継ぎ再開後の検証（2026-10-24 JST / HEAD `8c60d2a`）
 
-- 引継ぎ正本：[`APP003_UI01_MOBILE_HANDOFF_READY_20261024.md`](checkpoints/APP003_UI01_MOBILE_HANDOFF_READY_20261024.md)（独立した引継ぎ用Draftブランチ上）。
+- 引継ぎ正本：[`APP003_UI01_MOBILE_HANDOFF_READY_20261024.md`](https://github.com/yama-books/mansion-poet/blob/docs/app003-ui01-handoff-20261024/docs/checkpoints/APP003_UI01_MOBILE_HANDOFF_READY_20261024.md)（独立した引継ぎ用Draftブランチ上）。
 - 停止時の[Mobile QA #39947614380](https://github.com/yama-books/mansion-poet/actions/runs/39947614380)をログから再調査。既存Node **130/130成功**後、フォント準備工程が約12分間進まずキャンセル。Chrome smoke / 新規`full-flow.cjs`へ未到達。フォント準備内のどのコマンドで停止したかは確証なし。
 - UI01の作業ブランチに限りCIファイルを修正（commit [`8c60d2a`](https://github.com/yama-books/mansion-poet/commit/8c60d2a3ac1cd57a8b3b7cb6b4d66823688689f4)）。フォント導入はベストエフォート・80秒制限、工程上限2分とし、`fc-cache -f`による強制再構築を撤去。主検証のブラウザQAを阻害しない。
 - [Mobile QA #40038418735](https://github.com/yama-books/mansion-poet/actions/runs/40038418735) **completed/success**。既存Node **130/130**、Chromeの **320 / 375 / 390 / 430 / 1440px：5/5 PASS**、決定的モックによる検索→施設→生成→コピー2種→印刷→通信障害時の旧地点コピー混入防止が **mobile-390 / desktop-1440の両方で PASS**。本処理のログ `E2E COMPLETE FLOW OK` と `E2E OUTAGE / NO STALE COPIES OK` を各2件確認。
