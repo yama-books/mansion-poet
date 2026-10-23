@@ -89,3 +89,20 @@ Draft PR #40のActionsに `app003-ui01-preview-site` artifact出力を追加し�
 - **未完了**：iPhone Safari実機操作（検索、文字入力、クリップボード、共有/印刷、画面回転）、HTTPSの候補版プレビュー実URL提供と到達確認。GitHub Pages既存本番とmain、他担当PRを変更していない。
 
 **次の1操作**：本番を上書きしないHTTPS候補版のホストとアクセス確認を決定。iPhone Safariで本人が操作・検収できるURLを確認してから実機受入へ進む。
+
+## UI01-MOBILE-01 再開後CHECKPOINT（2026-10-24 JST）
+
+**対象はDraft PR #40のみ**。main / 既存GitHub Pages / PR #31・#39・#41 / 写真制作には書き込まない。
+
+- 引継ぎ後にCI #39947614380のキャンセルを再調査。既存Node 130/130後の日本語フォント準備でタイムアウトし、ブラウザE2Eは未実行だった。
+- [CI修正 `8c60d2a`](https://github.com/yama-books/mansion-poet/commit/8c60d2a3ac1cd57a8b3b7cb6b4d66823688689f4)により、Node / Chrome幅5種 / モックE2E（検索→POI表示→コピー2種→印刷→通信障害と地点変更の旧コピー防止）が完走。[Actions #40038418735](https://github.com/yama-books/mansion-poet/actions/runs/40038418735) completed/success。
+- 320pxと430pxの画面画像で`POETRY INDEX / ポエム濃度`と項番03が密着していたため、`index.html`の見出しと番号を別spanに分離して間隔を調整。フォントと文字色はもとの`field-label`を維持。Chromeで両表示領域が5px以上離れていることを`tests/mobile-device/browser-smoke.cjs`に追加。**アプリ側の最終UI変更commitは`7e83c2d`**。
+- [Actions #40039631695](https://github.com/yama-books/mansion-poet/actions/runs/40039631695)は機能検証成功だが、フォントのapt取得が80秒で失敗。スクリーンショットの日本語が豆腐字になったことを目視で発見。**この画像を視覚検収合格の根拠にしない。**
+- 続くCI修正[`e00832f`](https://github.com/yama-books/mansion-poet/commit/e00832f7efdc94370e4f12ad928d68bbfd46b1b1)で、日本語グリフの有無を検査し、不在時にはOFLライセンスのNoto Sans JPをGoogle Fontsの公開ソースから**CIランナーのみ**に時間制限付きで配置。フォント取得に失敗すればスクリーンショットQAを成功扱いしない。
+- [最終モバイルQA #40039986067](https://github.com/yama-books/mansion-poet/actions/runs/40039986067)：**completed/success**、Node **130/130**、Chrome幅 **320/375/390/430/1440px 5/5成功**、モックE2E完走（mobile-390 / desktop-1440の検索・生成・コピー・印刷・通信障害時の旧コピー防止）。ログで`Noto Sans JP`の配置を確認。スクリーンショット16点をartifact [#12539290288](https://github.com/yama-books/mansion-poet/actions/runs/40039986067/artifacts/12539290288) に保存。320px画面を読戻して目視し、日本語グリフが表示され、項番03と見出し/値85の衝突がないことを確認。
+- [従来Verify #40039986143](https://github.com/yama-books/mansion-poet/actions/runs/40039986143)も completed/success。
+- 端末確認用の**独立HTTPS候補リンク（固定ソース）**：https://raw.githack.com/yama-books/mansion-poet/7e83c2dee385d8939f309ca68be99fb535454bbe/index.html 。原本はPublicリポジトリの固定commitにある。GitHub Actionsから当該ファイルと依存JS 3件のHTTP取得成功を確認（#40039631695）、最終workflowのHEAD `e00832f` のファイル取得も成功（#40039986067）。外部RawGitHackによるプレビューであって、GitHub Pages本番公開ではない。
+- RawGitHackのブラウザ確認画面が表示される場合がある。外部サービスを経由する一時プレビューのため、入力は公開サンプル地名のみとし、住所や秘密情報を入力しない。
+- **未確認**：iPhone Safariのタッチ/キーボード/クリップボード/共有/印刷、実機でのレイアウト・縦横回転・フォント拡大、最終的な本番反映可否。ChromeエミュレーションやGitHub Actions上のHTTP成功は、iPhone Safari実機受入を代替しない。
+
+**次の1操作**：iPhone Safariで固定プレビューを開き、「つくる」→中野→生成→コピー2種→京都へ地点変更→印刷の導線を実操作する。不具合があればPR #40へ最小修正し、問題なければ独立した公開/統合判断を行う。
