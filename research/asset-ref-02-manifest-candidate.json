@@ -1,0 +1,252 @@
+{
+  "workId": "APP-003/ASSET-REF-02",
+  "createdDate": "2026-10-22 JST",
+  "warning": "ASSET-REF-02 candidates; reference-only. Text documents shared via GitHub branch; 7 PNG binaries NOT YET UPLOADED. No approval for runtime ART or app implementation.",
+  "numberOfSourceSheets": 6,
+  "sheets": [
+    {
+      "refId": "REF-0003",
+      "fileName": "REF-0003_concept_sheet.png",
+      "width": 768,
+      "height": 1024,
+      "sha256": "2200d615484be2b4f860914c505b7aae6ce159a0a682651df5560063fa87ce54",
+      "sourceKind": "chatgpt_generated_concept_crop",
+      "template": "mixed",
+      "compositionIds": [
+        "type_poem.ink_lower_left",
+        "editorial.facade_split",
+        "location.photo_strip"
+      ],
+      "artMode": "art:mixed",
+      "fitTags": [
+        "fit:bookstore",
+        "fit:knowledge",
+        "fit:culture",
+        "fit:school"
+      ],
+      "moodTags": [
+        "mood:knowledge",
+        "mood:editorial",
+        "mood:warm"
+      ],
+      "useTags": [
+        "use:reference_only",
+        "use:art_direction"
+      ],
+      "sheetRole": "concept_overview",
+      "refStatus": "candidate",
+      "reviewStatus": "self_reviewed_not_approved",
+      "binaryStatus": "local_package_only",
+      "publishedAllowed": false,
+      "rightsStatus": "review_required",
+      "mapEvidence": false,
+      "mockOnly": true,
+      "detailMdPath": "REF-0003.md",
+      "strength": "知性・温かさ・紙の質感と街路の関係が伝わる。",
+      "weakness": "同種の建築写真が重複し、細字の読み取りと架空地図の誤解に注意。上段3本の独立A4レイアウトは未完成。"
+    },
+    {
+      "refId": "REF-0004",
+      "fileName": "REF-0004_concept_sheet.png",
+      "width": 768,
+      "height": 1024,
+      "sha256": "b373175aa95810e894525fb4902e8c60202f0f39a296bb19dea9f629f40f6970",
+      "sourceKind": "chatgpt_generated_concept_crop",
+      "template": "mixed",
+      "compositionIds": [
+        "type_poem.ink_right",
+        "editorial.dusk_overlay",
+        "location.river_sketch"
+      ],
+      "artMode": "art:mixed",
+      "fitTags": [
+        "fit:park",
+        "fit:greenery",
+        "fit:water"
+      ],
+      "moodTags": [
+        "mood:quiet",
+        "mood:refined"
+      ],
+      "useTags": [
+        "use:reference_only",
+        "use:art_direction"
+      ],
+      "sheetRole": "concept_overview",
+      "refStatus": "candidate",
+      "reviewStatus": "self_reviewed_not_approved",
+      "binaryStatus": "local_package_only",
+      "publishedAllowed": false,
+      "rightsStatus": "review_required",
+      "mapEvidence": false,
+      "mockOnly": true,
+      "detailMdPath": "REF-0004.md",
+      "strength": "緑の奥行き、透明な空気感、季節性が一目で伝わる。",
+      "weakness": "公園と河川が混ざると主役が曖昧になる。地図や徒歩表示は一切未検証。上段3本の独立A4レイアウトは未完成。"
+    },
+    {
+      "refId": "REF-0005",
+      "fileName": "REF-0005_concept_sheet.png",
+      "width": 1536,
+      "height": 2048,
+      "sha256": "0bbb145f3707e6a3d78a380e9e312c3122b719b96ea0061bbbb031f979075b90",
+      "sourceKind": "programmatic_editorial_mockup",
+      "template": "mixed",
+      "compositionIds": [
+        "type_poem.ink_lower_left",
+        "editorial.facade_split",
+        "location.river_sketch"
+      ],
+      "artMode": "art:watercolor",
+      "fitTags": [
+        "fit:river",
+        "fit:water",
+        "fit:urban"
+      ],
+      "moodTags": [
+        "mood:nostalgic",
+        "mood:quiet"
+      ],
+      "useTags": [
+        "use:reference_only",
+        "use:art_direction"
+      ],
+      "sheetRole": "concept_overview",
+      "refStatus": "candidate",
+      "reviewStatus": "self_reviewed_not_approved",
+      "binaryStatus": "local_package_only",
+      "publishedAllowed": false,
+      "rightsStatus": "review_required",
+      "mapEvidence": false,
+      "mockOnly": true,
+      "detailMdPath": "REF-0005.md",
+      "strength": "水の流れと地層の時間を編集構造に取り込める。",
+      "weakness": "青い河川が実在するように見える危険、線画の重複、模式図の地理的誤認。"
+    },
+    {
+      "refId": "REF-0006",
+      "fileName": "REF-0006_concept_sheet.png",
+      "width": 1536,
+      "height": 2048,
+      "sha256": "d82a3082d580a4d5bd4dd541e8d3bf0c91cb7cbe80d818e7446638c7b9e5bed5",
+      "sourceKind": "programmatic_editorial_mockup",
+      "template": "mixed",
+      "compositionIds": [
+        "type_poem.ink_lower_left",
+        "editorial.facade_split",
+        "location.river_sketch"
+      ],
+      "artMode": "art:watercolor",
+      "fitTags": [
+        "fit:history",
+        "fit:culture",
+        "fit:shrine_temple"
+      ],
+      "moodTags": [
+        "mood:nostalgic",
+        "mood:quiet",
+        "mood:refined"
+      ],
+      "useTags": [
+        "use:reference_only",
+        "use:art_direction"
+      ],
+      "sheetRole": "concept_overview",
+      "refStatus": "candidate",
+      "reviewStatus": "self_reviewed_not_approved",
+      "binaryStatus": "local_package_only",
+      "publishedAllowed": false,
+      "rightsStatus": "review_required",
+      "mapEvidence": false,
+      "mockOnly": true,
+      "detailMdPath": "REF-0006.md",
+      "strength": "豪華な金色に頼らず、木石と時間の感覚で品位が出る。",
+      "weakness": "宗教施設の実在外観を証拠として扱ってしまう危険、過度な和風記号化。"
+    },
+    {
+      "refId": "REF-0007",
+      "fileName": "REF-0007_concept_sheet.png",
+      "width": 1536,
+      "height": 2048,
+      "sha256": "7cc084a0c290772d5f1bfbdcd7704976d09d0533a2271c071ec86dcddb9525cf",
+      "sourceKind": "programmatic_editorial_mockup",
+      "template": "mixed",
+      "compositionIds": [
+        "type_poem.ink_lower_left",
+        "editorial.dusk_overlay",
+        "location.photo_strip"
+      ],
+      "artMode": "art:abstract_architecture",
+      "fitTags": [
+        "fit:city_night",
+        "fit:urban",
+        "fit:daily_service"
+      ],
+      "moodTags": [
+        "mood:cinematic",
+        "mood:urban"
+      ],
+      "useTags": [
+        "use:reference_only",
+        "use:art_direction"
+      ],
+      "sheetRole": "concept_overview",
+      "refStatus": "candidate",
+      "reviewStatus": "self_reviewed_not_approved",
+      "binaryStatus": "local_package_only",
+      "publishedAllowed": false,
+      "rightsStatus": "review_required",
+      "mapEvidence": false,
+      "mockOnly": true,
+      "detailMdPath": "REF-0007.md",
+      "strength": "夜景と帰路という時間感覚をタイポグラフィに翻訳。",
+      "weakness": "暗部のインク潰れ、夜景の雰囲気が過剰で利用情報が弱くなりうる。"
+    },
+    {
+      "refId": "REF-0008",
+      "fileName": "REF-0008_concept_sheet.png",
+      "width": 1536,
+      "height": 2048,
+      "sha256": "97fda0cf201addc3aed8373d7f66ba1fb8f0d981b6a52eb10964ecc252ab20b3",
+      "sourceKind": "programmatic_editorial_mockup",
+      "template": "mixed",
+      "compositionIds": [
+        "type_poem.ink_lower_left",
+        "editorial.facade_split",
+        "location.photo_strip"
+      ],
+      "artMode": "art:ink_line",
+      "fitTags": [
+        "fit:small_facility",
+        "fit:urban",
+        "fit:daily_service"
+      ],
+      "moodTags": [
+        "mood:quiet",
+        "mood:nostalgic"
+      ],
+      "useTags": [
+        "use:reference_only",
+        "use:art_direction"
+      ],
+      "sheetRole": "concept_overview",
+      "refStatus": "candidate",
+      "reviewStatus": "self_reviewed_not_approved",
+      "binaryStatus": "local_package_only",
+      "publishedAllowed": false,
+      "rightsStatus": "review_required",
+      "mapEvidence": false,
+      "mockOnly": true,
+      "detailMdPath": "REF-0008.md",
+      "strength": "小設備を詩の題材にするというAPP-003固有の面白さを形にできる。",
+      "weakness": "ポストが実物の位置証拠に見える点に注意。商品広告としての迫力は控えめ。"
+    }
+  ],
+  "repositoryDistribution": {
+    "referenceShareAuthorizedByUser": true,
+    "descriptiveDocsInPR": true,
+    "imageBinariesUploaded": false,
+    "renderApproval": false,
+    "prodArtApproval": false
+  }
+}
