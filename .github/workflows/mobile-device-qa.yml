@@ -47,6 +47,7 @@ jobs:
           sleep 2
           curl --fail --silent http://127.0.0.1:8765/index.html >/dev/null
           CHROME_PATH="$CHROME_BIN" APP003_TEST_URL="http://127.0.0.1:8765/index.html" APP003_SCREENSHOTS="$SCREENSHOT_DIR" node tests/mobile-device/browser-smoke.cjs
+          CHROME_PATH="$CHROME_BIN" APP003_TEST_URL="http://127.0.0.1:8765/index.html" APP003_SCREENSHOTS="$SCREENSHOT_DIR" node tests/mobile-device/full-flow.cjs
       - name: Package isolated Web UI preview (not deployed)
         run: |
           set -euo pipefail
