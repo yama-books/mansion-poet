@@ -28,18 +28,26 @@ jobs:
         run: node --test tests/*.test.mjs
       - name: Install small browser automation driver
         run: npm install --no-save --ignore-scripts --package-lock=false playwright-core@1.56.1
-      - name: Ensure Japanese text renders in screenshot review (bounded)
+      - name: Ensure Japanese screenshots have actual glyphs
         timeout-minutes: 2
-        continue-on-error: true
         run: |
-          # Missing fonts must not consume the entire job or prevent functional E2E.
+          set -euo pipefail
           if fc-list :lang=ja family | grep -q .; then
-            echo "Japanese font already available"
+            echo "Japanese glyph-capable font already installed"
           else
-            echo "Attempting a time-bounded Japanese font installation"
-            sudo timeout --signal=TERM --kill-after=5s 80s env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends fonts-noto-cjk               || echo "::warning::Japanese font installation unavailable; functional browser QA continues. Screenshot glyphs require review."
+            echo "Install OFL-licensed Noto Sans JP directly into runner's user font directory"
+            fonts="$HOME/.local/share/fonts"
+            mkdir -p "$fonts"
+            curl --fail --location --silent --show-error --connect-timeout 10 --max-time 75 --retry 1 \
+              'https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf' \
+              --output "$fonts/NotoSansJP.ttf"
+            test "$(wc -c < "$fonts/NotoSansJP.ttf")" -gt 500000
+            fc-cache -f "$fonts"
           fi
-          # Do not force-rebuild the entire runner font cache (previous run hung here).
+          if ! fc-list :lang=ja family | grep -q .; then
+            echo "::error::No Japanese glyph-capable font; refuse misleading tofu screenshots"
+            exit 1
+          fi
           echo "Japanese font candidate: $(fc-match -f '%{family}' ':lang=ja')"
       - name: Real Chrome 320, 375, 390, 430px and desktop smoke
         env:
