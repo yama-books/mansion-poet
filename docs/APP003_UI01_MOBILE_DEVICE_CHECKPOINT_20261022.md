@@ -75,3 +75,17 @@ Draft PR #40のActionsに `app003-ui01-preview-site` artifact出力を追加し�
 ## 次の1操作
 
 自動CIは合格。GitHub ActionsのChromeスクリーンショットをレビューし、公開可能なiPhone Safari実機確認用のプレビュー方法を選定する。ユーザー検収前にmainマージやPages公開を行わない。PRINT03画像合成のPR #39と編集範囲を分ける。
+
+
+## 引継ぎ再開後の検証（2026-10-24 JST / HEAD `8c60d2a`）
+
+- 引継ぎ正本：[`APP003_UI01_MOBILE_HANDOFF_READY_20261024.md`](checkpoints/APP003_UI01_MOBILE_HANDOFF_READY_20261024.md)（独立した引継ぎ用Draftブランチ上）。
+- 停止時の[Mobile QA #39947614380](https://github.com/yama-books/mansion-poet/actions/runs/39947614380)をログから再調査。既存Node **130/130成功**後、フォント準備工程が約12分間進まずキャンセル。Chrome smoke / 新規`full-flow.cjs`へ未到達。フォント準備内のどのコマンドで停止したかは確証なし。
+- UI01の作業ブランチに限りCIファイルを修正（commit [`8c60d2a`](https://github.com/yama-books/mansion-poet/commit/8c60d2a3ac1cd57a8b3b7cb6b4d66823688689f4)）。フォント導入はベストエフォート・80秒制限、工程上限2分とし、`fc-cache -f`による強制再構築を撤去。主検証のブラウザQAを阻害しない。
+- [Mobile QA #40038418735](https://github.com/yama-books/mansion-poet/actions/runs/40038418735) **completed/success**。既存Node **130/130**、Chromeの **320 / 375 / 390 / 430 / 1440px：5/5 PASS**、決定的モックによる検索→施設→生成→コピー2種→印刷→通信障害時の旧地点コピー混入防止が **mobile-390 / desktop-1440の両方で PASS**。本処理のログ `E2E COMPLETE FLOW OK` と `E2E OUTAGE / NO STALE COPIES OK` を各2件確認。
+- [従来Verify #40038418740](https://github.com/yama-books/mansion-poet/actions/runs/40038418740) **completed/success**。
+- `app003-ui01-preview-site` artifact [#12538605572](https://github.com/yama-books/mansion-poet/actions/runs/40038418735/artifacts/12538605572)（HTMLと依存JS 5ファイル）。`app003-ui01-mobile-viewports` artifact [#12538530881](https://github.com/yama-books/mansion-poet/actions/runs/40038418735/artifacts/12538530881)（PNG 16枚）を取得確認。
+- 代表キャプチャ `iphone-320-workspace.png`、`iphone-320-poem.png`、`iphone-430-workspace.png`、`mobile-390-complete-poem.png` を画像として目視確認。明白な横はみ出しやボタンの欠落は認めず。320/430pxの「POETRY INDEX / ポエム濃度」と項番03が窮屈に近接しているため、実機での可読性確認候補とする。自動検査合格はこの視覚的課題を否定しない。
+- **未完了**：iPhone Safari実機操作（検索、文字入力、クリップボード、共有/印刷、画面回転）、HTTPSの候補版プレビュー実URL提供と到達確認。GitHub Pages既存本番とmain、他担当PRを変更していない。
+
+**次の1操作**：本番を上書きしないHTTPS候補版のホストとアクセス確認を決定。iPhone Safariで本人が操作・検収できるURLを確認してから実機受入へ進む。
