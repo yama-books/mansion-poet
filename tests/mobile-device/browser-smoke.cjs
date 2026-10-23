@@ -34,6 +34,14 @@ async function assertUsable(page,label,isMobile){
   assert.ok(size>=16,'iPhone keyboard zoom regression '+label+': '+size);
   assert.equal(await page.locator('#placeInput').getAttribute('enterkeyhint'),'search','iPhone search keyboard action '+label);
   assert.equal(await page.locator('#searchStatus').getAttribute('role'),'status','Search feedback must be announced '+label);
+  const densityLayout=await page.evaluate(()=>{
+   const title=document.querySelector('.range-head .range-title')?.getBoundingClientRect();
+   const step=document.querySelector('.range-head .range-step')?.getBoundingClientRect();
+   const value=document.querySelector('#densityValue')?.getBoundingClientRect();
+   return title&&step&&value?{titleRight:title.right,stepLeft:step.left,stepRight:step.right,valueLeft:value.left}:null;
+  });
+  assert.ok(densityLayout && densityLayout.titleRight+5<=densityLayout.stepLeft && densityLayout.stepRight+5<=densityLayout.valueLeft,
+   'POETRY INDEX, 03, and density value overlap '+label+': '+JSON.stringify(densityLayout));
   await quick.click();
   assert.equal(new URL(page.url()).hash,'#discover','Shortcut should navigate to studio');
   const position=await page.locator('#discover').evaluate(el=>el.getBoundingClientRect().top);
