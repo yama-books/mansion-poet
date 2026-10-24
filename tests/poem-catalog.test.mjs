@@ -215,3 +215,26 @@ test('POEM-01 exactly 200 different advertisement openings, independently of ten
   }
  }
 });
+
+test('POEM-01 editorial upgrade: every style and density remains succinct and distinct',()=>{
+ const sample=poi({name:'明治鍼灸柔整予備校',source:'OpenPOI',providerCategory:'education',theme:'knowledge'});
+ const subject=lib.resolve(sample)?sample:poi({name:sample.name,tags:{amenity:'school'},theme:'knowledge'});
+ const blocked=/公開データ|公開情報|記された|選定地点|徒歩約|駅から[0-9]|学区内|入学保証/;
+ for(let serial=1;serial<=200;serial++){
+  for(const style of ['heritage','urban','nature']){
+   const texts=[20,85,95].map(intensity=>lib.compose(subject,{serial,style,intensity,location:'神保町'}).body);
+   assert.equal(new Set(texts).size,3,'intensity must alter actual prose');
+   for(const text of texts){
+    const lines=text.split('\n');
+    assert.equal(lines.length,3,'three meaningful lines prevent fixed filler and reduce print overflow');
+    assert.ok(lines.every(line=>line.length>=7));
+    assert.ok(text.includes(subject.name));
+    assert.doesNotMatch(text,blocked);
+    assert.ok(text.length<=180,'A4 copy length limit');
+   }
+  }
+ }
+ const styleClosings=['heritage','urban','nature'].map(style=>
+  lib.compose(subject,{serial:42,intensity:95,style}).body.split('\n').at(-1));
+ assert.equal(new Set(styleClosings).size,3,'styles need different closings');
+});
