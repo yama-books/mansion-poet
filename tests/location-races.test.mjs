@@ -964,7 +964,7 @@ test('GEO-01 mocked OSM evidence yields real-ID LOCATION cards without invented 
  const names=cards.map(c=>c.children[1].textContent);
  assert.ok(names.includes('郵便ポスト（名称未登録）'));
  assert.ok(names.includes('暗渠（名称未登録）'));
- assert.ok(cards.every(c=>!c.children[2].textContent.includes('所在地')&&c.children[2].textContent.includes('直線 約')),'unknown addresses must not be invented or advertised');
+ assert.ok(cards.every(c=>c.children[2].children.length===1&&c.children[2].children[0].textContent.includes('直線 約')),'unknown addresses must not be invented or advertised');
  assert.ok(cards.every(c=>!c.children[2].textContent.includes('徒歩')));
  assert.ok(ui.el('#evidenceTags').children.some(c=>c.textContent.includes('郵便ポスト')));
 });
@@ -1127,9 +1127,10 @@ test('ADDRESS-01 selected place is not silently inserted into any unrelated POI 
  const cards=ui.el('#locationCards').children;
  assert.equal(cards.length,2);
  for(const card of cards){
-  const meta=card.children[2].textContent;
-  assert.match(meta,/直線 約/);
-  assert.ok(!meta.includes('所在地')&&!meta.includes('東京都中野区中野'),'unknown address must be omitted, not filled from selected place');
+  const metaChildren=card.children[2].children;
+  assert.equal(metaChildren.length,1,'unknown address must not add an address label');
+  assert.match(metaChildren[0].textContent,/直線 約/);
+  assert.ok(!metaChildren[0].textContent.includes('東京都中野区中野'));
  }
 });
 
