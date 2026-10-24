@@ -74,6 +74,7 @@ async function verifyFlow(browser,scenario){
   let copied=await page.evaluate(()=>navigator.clipboard.readText());
   assert.ok(copied.includes('※架空の物件を題材にした創作広告です。'));
   assert.ok(!copied.includes('【LOCATION 01'),'Poem-only copy included card information');
+  assert.doesNotMatch(copied,/周辺の公開データに記された|公開データ|公開情報|データ上では/,'Advertisement contains meta-data phrasing');
 
   await page.locator('#copyBundleBtn').click();
   copied=await page.evaluate(()=>navigator.clipboard.readText());
@@ -94,6 +95,21 @@ async function verifyFlow(browser,scenario){
   assert.equal(pageCount,1,'A4 onepage layout generated extra sheets: '+scenario.name);
   await page.locator('#poem').screenshot({path:path.join(OUT,scenario.name+'-complete-poem.png')});
   await page.locator('#discover').screenshot({path:path.join(OUT,scenario.name+'-complete-workspace.png')});
+  // Stress the single-sheet composition using lengths comparable with real
+  // long school, library and cultural names, while retaining all three cards.
+  await page.evaluate(()=>{
+    const names=['明治鍼灸柔整予備校','神保町文化学術交流センター','都心文化情報総合ライブラリー'];
+    document.querySelectorAll('#locationCards .location-card').forEach((card,i)=>{
+      const h=card.querySelector('.location-card-name');
+      const p=card.querySelector('.location-card-copy');
+      if(h)h.textContent=names[i]||'学術文化交流施設';
+      if(p)p.textContent='街角の多様な表情をつなぐ、身近な文化の一景。日々の風景に、新しい視線と余韻を重ねるロケーション。';
+    });
+  });
+  const longPdf=await page.pdf({format:'A4',preferCSSPageSize:true,printBackground:true,
+    path:path.join(OUT,scenario.name+'-onepage-long-names.pdf')});
+  const longPages=(longPdf.toString('latin1').match(/\/Type\s*\/Page\b/g)||[]).length;
+  assert.equal(longPages,1,'Long-name A4 advertisement overflowed to another sheet: '+scenario.name);
   console.log('E2E COMPLETE FLOW OK',scenario.name);
 
   // Simulate service outage only after selection. Previous POI copy must be cleared.
