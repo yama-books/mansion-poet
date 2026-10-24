@@ -168,3 +168,10 @@
 5. 大きな節目のみ本書と画像案内板、APP_PORTFOLIOへ短いCHECKPOINTを追加。
 
 **次の1操作（2026-10-22）**：新規制作セッションの独立ARTが保存されたブランチ・commit・原画像・プロンプト・権利判定を照合する。PR #37の3点写真切り出しはGitHubに保存済みだが本番利用不可、元コンセプトシート7点は別件として保存先を確認する。
+
+### 2026-10-25｜ASSET-ART-01 初回3原画のGitHub保全達成（Draft・本番未採用）
+
+- 文教・緑地・都市小設備の独立した写真調ART原画3点（各1672×941px）を専用 `assets/app003-asset-art-01-photo-trial-20261023` へ保存。GitHub原画ファイル、blob SHA・byte数の3/3一致、Actions #40141561698によるSHA-256・PNG寸法検証success
+- 固定保全コミット：[`134f5d9`](https://github.com/yama-books/mansion-poet/commit/134f5d986359a359e391997731978b0ad16200ca)／[ASSET-ART-01 CHECKPOINT](checkpoints/APP003_ASSET_ART_01_CHECKPOINT.md)／[候補manifest](../research/asset-art-01-manifest.json)
+- **制作側の初回ゴール到達**。PR #39の実ブラウザ・A4差替え検収、PRINT03統合、本番使用許諾は未実施。ユーザーレビュー結果が出るまで新規量産しない。mainと公開Pagesは変更していない
+- 次の1操作：実装側がPR #39の画像スロットで高解像度原画1点を試作限定で差替え、PC/A4比較を報告
