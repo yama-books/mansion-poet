@@ -964,7 +964,7 @@ test('GEO-01 mocked OSM evidence yields real-ID LOCATION cards without invented 
  const names=cards.map(c=>c.children[1].textContent);
  assert.ok(names.includes('郵便ポスト（名称未登録）'));
  assert.ok(names.includes('暗渠（名称未登録）'));
- assert.ok(cards.every(c=>c.children[2].children[0].textContent.includes('公開データ未収録')));
+ assert.ok(cards.every(c=>!c.children[2].textContent.includes('所在地')&&c.children[2].textContent.includes('直線 約')),'unknown addresses must not be invented or advertised');
  assert.ok(cards.every(c=>!c.children[2].textContent.includes('徒歩')));
  assert.ok(ui.el('#evidenceTags').children.some(c=>c.textContent.includes('郵便ポスト')));
 });
@@ -1127,9 +1127,9 @@ test('ADDRESS-01 selected place is not silently inserted into any unrelated POI 
  const cards=ui.el('#locationCards').children;
  assert.equal(cards.length,2);
  for(const card of cards){
-  const label=card.children[2].children[0].textContent;
-  assert.equal(label,'所在地詳細：公開データ未収録');
-  assert.ok(!label.includes('東京都中野区中野'));
+  const meta=card.children[2].textContent;
+  assert.match(meta,/直線 約/);
+  assert.ok(!meta.includes('所在地')&&!meta.includes('東京都中野区中野'),'unknown address must be omitted, not filled from selected place');
  }
 });
 
@@ -1146,7 +1146,7 @@ test('ADDRESS-01 location UI exposes area-only provenance without claiming a ful
  const cards=ui.el('#locationCards').children;
  assert.equal(cards.length,1);
  const location=cards[0].children[2].children[0].textContent;
- assert.match(location,/^所在地（地域情報のみ）：東京都 中野区$/);
+ assert.match(location,/^エリア：東京都 中野区$/);
  assert.ok(!location.includes('番地'));
 });
 
@@ -1169,8 +1169,8 @@ test('UI-01 poem-only copy remains distinct from the complete ad copy',async()=>
  assert.ok(poem.includes('架空図書館'));
  assert.ok(!poem.includes('【LOCATION 01'));
  assert.ok(bundle.includes('【LOCATION 01'));
- assert.ok(bundle.includes('所在地（公開データ）：東京都中野区中央4丁目'));
- assert.ok(bundle.includes('所在地詳細：公開データ未収録'));
+ assert.ok(bundle.includes('所在地：東京都中野区中央4丁目'));
+ assert.ok(!bundle.includes('所在地詳細：公開データ未収録'),'missing addresses must not appear as advertising copy');
  assert.ok(bundle.includes('直線 約'));
  assert.ok(bundle.includes('※施設情報・直線距離は公開データをもとにした参考値です。'));
  assert.ok(bundle.includes('\n'),'clipboard text should include actual line breaks');
