@@ -2,7 +2,7 @@
   "schemaVersion": "app003.art-candidate.v1",
   "workId": "APP-003/ASSET-ART-01",
   "purpose": "Preview-only photo-style original images; NOT production ART approved",
-  "assetStatus": "generated_candidate",
+  "assetStatus": "preserved_review_candidate",
   "publishedAllowed": false,
   "rightsStatus": "review_required",
   "createdFor": "reference image library and PRINT03 visual pilot, not real property/POI evidence",
@@ -36,8 +36,11 @@
       "permissionToRedistribute": "reference_repository_only",
       "publishedAllowed": false,
       "productionApproval": "pending",
-      "printSuitability": "not_tested",
-      "notes": "Visual check: no visible ad headline, numeric price, map, logo or information card; book spines remain abstract. Real-world property/facility evidence: none."
+      "printSuitability": "pending_layout_qa",
+      "notes": "Visual check: no visible ad headline, numeric price, map, logo or information card; book spines remain abstract. Real-world property/facility evidence: none.",
+      "githubPreservationStatus": "verified_original_bytes",
+      "githubVerifiedCommit": "134f5d986359a359e391997731978b0ad16200ca",
+      "rightsStatus": "review_required"
     },
     {
       "assetId": "ART-REF0004-PHOTO-01",
@@ -68,8 +71,11 @@
       "permissionToRedistribute": "reference_repository_only",
       "publishedAllowed": false,
       "productionApproval": "pending",
-      "printSuitability": "not_tested",
-      "notes": "Visual check: no visible ad headline, numeric price, map, logo or information card; book spines remain abstract. Real-world property/facility evidence: none."
+      "printSuitability": "pending_layout_qa",
+      "notes": "Visual check: no ad headline, numeric price, map, logo or information card; fictional lakeside urban park scene.",
+      "githubPreservationStatus": "verified_original_bytes",
+      "githubVerifiedCommit": "134f5d986359a359e391997731978b0ad16200ca",
+      "rightsStatus": "review_required"
     },
     {
       "assetId": "ART-REF0008-PHOTO-01",
@@ -100,8 +106,27 @@
       "permissionToRedistribute": "reference_repository_only",
       "publishedAllowed": false,
       "productionApproval": "pending",
-      "printSuitability": "not_tested",
-      "notes": "Visual check: no visible ad headline, numeric price, map, logo or information card; book spines remain abstract. Real-world property/facility evidence: none."
+      "printSuitability": "pending_layout_qa",
+      "notes": "Visual check: no ad headline, numeric price, map, logo or information card; fictional quiet alley and red postbox.",
+      "githubPreservationStatus": "verified_original_bytes",
+      "githubVerifiedCommit": "134f5d986359a359e391997731978b0ad16200ca",
+      "rightsStatus": "review_required"
     }
-  ]
+  ],
+  "storage": {
+    "githubVerified": true,
+    "verifiedCount": 3,
+    "immutableVerificationCommit": "134f5d986359a359e391997731978b0ad16200ca",
+    "validationRunUrl": "https://github.com/yama-books/mansion-poet/actions/runs/40141561698",
+    "checks": [
+      "PNG source bytes",
+      "byte size",
+      "SHA-256",
+      "git blob SHA-1",
+      "PNG IHDR dimensions"
+    ],
+    "publicRepoReferenceOnly": true,
+    "productionApproved": false,
+    "appIntegrated": false
+  }
 }
