@@ -89,7 +89,7 @@ async function verifyFlow(browser,scenario){
   fs.mkdirSync(OUT,{recursive:true});
   const pdf=await page.pdf({format:'A4',preferCSSPageSize:true,printBackground:true,
     path:path.join(OUT,scenario.name+'-onepage-ad.pdf')});
-  const pageCount=(pdf.toString('latin1').match(/\\/Type\\s*\\/Page\\b/g)||[]).length;
+  const pageCount=(pdf.toString('latin1').match(/\/Type\s*\/Page\b/g)||[]).length;
   assert.ok(pageCount>0,'Unable to read PDF page count');
   assert.equal(pageCount,1,'A4 onepage layout generated extra sheets: '+scenario.name);
   await page.locator('#poem').screenshot({path:path.join(OUT,scenario.name+'-complete-poem.png')});
