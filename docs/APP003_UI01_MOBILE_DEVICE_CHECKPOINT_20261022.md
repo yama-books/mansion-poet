@@ -134,3 +134,16 @@ Draft PR #40のActionsに `app003-ui01-preview-site` artifact出力を追加し�
 **Chromeの印刷PDF成功を、iPhone Safariでの印刷2ページ問題の実機解消と同一視しない。** Apple印刷オプションで100%、A4、案2「1枚広告」を選び、新候補版で再検証する必要がある。今後同種の実機2ページ化が残れば、Safari特有の余白/改ページ・文字拡大等を端末実測により補正する。
 
 **次の1操作**：iPhone Safariで上記固定候補URLを開き、神保町等のサンプル地点を生成し、「案2：1枚広告」→印刷プレビューが**1/1ページ**となり広告本文が資料説明調でないことを確認。
+
+## POEM-OPENINGS-200｜2026-10-25 JST
+
+- ユーザー要望：施設名を含む広告の導入表現を従来10種から約200種に増補する。情報ソースの説明調には戻さず、事実に裏づけられない権利・距離・歴史・サービスを宣言しない。
+- `src/poem-catalog.js` に**固有の手書き文案200種**を格納。最初の10種は既存のまま。20群×10表現で視点・余白・都市の時間・物語・邸宅観・名の響きなどを展開。施設名を`{name}`にテキスト置換する。既存のジャンル別見出し（10種）、スタイル、濃度、適格性判定を変更しない。
+- 導入文の選択のみ `serial` を200周期化し、11回目にも新しい導入が選ばれ、201回目に1番へ戻る。UIや通信は増やさない。
+- `tests/poem-catalog.test.mjs`：施設3例・濃度3種の全文生成、広告導入200個の一意性、ジャンル見出し10種の維持、元POI名維持、禁止文言不使用、201番目の周期を検証。
+- [Draft PR #40](https://github.com/yama-books/mansion-poet/pull/40) 作業ブランチのコミット [`e00932a`](https://github.com/yama-books/mansion-poet/commit/e00932af544f2f01226f0e269fadc94a3e5d8673)、[`76f7617`](https://github.com/yama-books/mansion-poet/commit/76f7617c760f862ad75af7a92f40afc04c36ead2)。
+- [Verify #40110624630](https://github.com/yama-books/mansion-poet/actions/runs/40110624630)：completed/success、Node **134/134**。
+- [Mobile QA #40110624616](https://github.com/yama-books/mansion-poet/actions/runs/40110624616)：completed/success、Node **134/134**、Chrome **320/375/390/430/1440px 5/5**、mobile/desktopのコピー・生成・印刷・旧地点混入防止E2E PASS。固定コミット候補のHTTPS取得も成功。
+- **未確認**：iPhone Safariで200種類を目視評価した事実はない。紙面レイアウトに関するSafari実機受入は引き続き未了。main、Pages、本番公開、他PRを更新しない。
+
+**次の1操作**：iPhone Safariで固定候補 https://raw.githack.com/yama-books/mansion-poet/76f7617c760f862ad75af7a92f40afc04c36ead2/index.html を開き、施設生成と再生成、印刷1ページを目視確認する。
