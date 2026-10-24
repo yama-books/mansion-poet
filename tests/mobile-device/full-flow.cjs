@@ -67,6 +67,9 @@ async function verifyFlow(browser,scenario){
   assert.equal(await page.locator('#copyBundleBtn').isEnabled(),true,'Bundle copy enabled with verified POI');
   assert.equal(await page.locator('#printBtn').isEnabled(),true,'Print enabled after generation');
   assert.ok(await page.locator('#locationCards .location-card').count()>0,'No location cards for valid POIs');
+  assert.doesNotMatch(await page.locator('#locationCards').innerText(),
+   /所在地詳細：公開データ未収録|所在地（公開データ|地域情報のみ/,
+   'An advertisement should omit missing-address source diagnostics');
   const current=await page.locator('#poemBody').innerText();
   assert.ok(current.length>10,'Generated poem is empty');
 
@@ -80,6 +83,7 @@ async function verifyFlow(browser,scenario){
   copied=await page.evaluate(()=>navigator.clipboard.readText());
   assert.ok(copied.includes('【LOCATION 01'),'Bundled copy is missing location header');
   assert.ok(copied.includes('直線 約'),'Bundled copy is missing straight-line distance');
+  assert.ok(!copied.includes('所在地詳細：公開データ未収録'),'No missing-address message in the copied advertisement');
   assert.ok(!copied.includes('徒歩約'),'Never invent walking time from straight-line distance');
 
   await page.locator('#printLayout').selectOption('onepage');
