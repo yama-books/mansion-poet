@@ -145,3 +145,11 @@ test('LOCATION-01 every broad category has three unique PR headline and body var
  const copies=[1,2,3].map(serial=>create([generic],{catalog,serial})[0].headline);
  assert.equal(new Set(copies).size,3);
 });
+
+test('LOCATION-01 all generated ad messages exclude information-source narration',()=>{
+ for(const [kind,variants] of [...Object.entries(copy),...Object.entries(themes)]){
+  for(const pair of variants)for(const phrase of pair){
+   assert.doesNotMatch(phrase,/公開データ|公開情報|記された|資料によると|取得された/,kind);
+  }
+ }
+});
