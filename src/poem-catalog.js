@@ -265,9 +265,22 @@
   // Each regeneration receives its own literary opening without unverified history,
   // guaranteed access, school services, or a claim about the property.
   const adIntro=adOpenings[openingPosition].replace('{name}',p.name);
+  // Editorial rhythm: three meaningful lines, not a fixed explanation appended
+  // to every ad. Tone affects diction; intensity affects rhetorical weight.
+  const quietClosings={
+   heritage:['風景に、端正な余韻を。','飾らない日常に、確かな美意識を。','その静けさを、邸宅の思想へ。','都市の細部に、気品という余白。','街の一場面を、丁寧に味わう。'],
+   urban:['この一景から、都市を見つめ直す。','さりげない輪郭を、次の都市像へ。','街の表情は、いつも一つではない。','日常に、もう一つの視点を。','新しい都市の解釈が、ここから。'],
+   nature:['風景の行間に、穏やかな豊かさを。','小さな一景を、ゆっくりと味わう。','街の表情に、静かな間合いを。','日常の向こうに、心地よい余白を。','目立たないものにも、美しさはある。']
+  };
+  const grandClosings={
+   heritage:['格を語るより、格を感じる街へ。','住まうという行為に、新たな矜持を。','都市の一景を、私邸の品格へと昇華する。','伝統に頼らず、風格を想像する。','その余韻を、まだ見ぬ邸宅の美学へ。'],
+   urban:['都市の既成概念を、美しく塗り替える。','その一景から、都心の価値観を更新する。','街の細部が、次の時代の主役になる。','都市を選ぶという思想に、新たな尺度を。','当たり前の輪郭を、非凡な日常へ。'],
+   nature:['都市のなかに、想像の静寂をひらく。','風景に眠る余白を、邸宅の贅沢へ。','何気ない一景こそ、豊かさの原点。','心をほどく都市の余韻を、ここに。','壮大さは、ときに小さな風景に宿る。']
+  };
+  const tone=Object.hasOwn(endings,style)?style:'heritage';
   let body;
-  if(intensity<=30)body=`${location}に息づく、ささやかな都市の表情。\n${adIntro}\n${second}\n日常の輪郭を、これからの邸宅観へ。`;
-  else if(intensity>=90)body=`${adIntro}\n${second}\n${phrase}\nこの街の風景から、まだ見ぬ邸宅の美学へ。`;
+  if(intensity<=30)body=`${adIntro}\n${second}\n${quietClosings[tone][position%5]}`;
+  else if(intensity>=90)body=`${adIntro}\n${second}\n${grandClosings[tone][position%5]}`;
   else body=`${adIntro}\n${second}\n${phrase}`;
   return {genreId:genre.id,label:genre.label,variant:position+1,headline,body,evidenceId:p.sourceId||null};
  }
