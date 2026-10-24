@@ -147,3 +147,18 @@ Draft PR #40のActionsに `app003-ui01-preview-site` artifact出力を追加し�
 - **未確認**：iPhone Safariで200種類を目視評価した事実はない。紙面レイアウトに関するSafari実機受入は引き続き未了。main、Pages、本番公開、他PRを更新しない。
 
 **次の1操作**：iPhone Safariで固定候補 https://raw.githack.com/yama-books/mansion-poet/76f7617c760f862ad75af7a92f40afc04c36ead2/index.html を開き、施設生成と再生成、印刷1ページを目視確認する。
+
+## POEM-EDITORIAL-01｜文体品質の研磨（2026-10-25 JST）
+
+- 全体計画の正本：[`docs/APP003_MASTER_PLAN_PROGRESS.md`](https://github.com/yama-books/mansion-poet/blob/main/docs/APP003_MASTER_PLAN_PROGRESS.md)、画像の正本：[`APP003_ASSET_WORKBOARD.md`](https://github.com/yama-books/mansion-poet/blob/main/docs/APP003_ASSET_WORKBOARD.md)。
+- ユーザー要望：200種類の導入広告表現を、数ではなく意匠の質で改善。従来の200種は保持し、**うち68文を編集校正**。抽象語・創作手順の自己言及・不自然な言い回しを抑えて不動産広告の語感と余白を調整。根拠のない施設属性や住戸からの眺め等は追加していない。
+- **既存63ジャンル×10見出し（630件）／導入200種／地点の採否・出典・距離・選定ロジックは維持**。`src/poem-catalog.js` だけで三段の濃度表現を調整。高濃度の機械的な固定第四行を廃止し、`heritage`／`urban`／`nature`の結びを明確に差別化。全濃度で3行の広告文を基本とし、長い紙面での内容冗長性を減らした。最初の10種の導入文は改変なし。
+- 主なコードコミット：[`5b0ee43`](https://github.com/yama-books/mansion-poet/commit/5b0ee43119cd02197c3fd75ba0f620a5164355ba)（68文の編集）、[`c453f3b`](https://github.com/yama-books/mansion-poet/commit/c453f3b6ac3eebf59f16174c30c21bac043968e4)（3濃度×3文体）、[`ad65ea6`](https://github.com/yama-books/mansion-poet/commit/ad65ea6f425dce29ea9ba0d7905d317eea69c533)（200種×3文体×3濃度の検証追加）。
+- GitHub Actions [Verify #40140998545](https://github.com/yama-books/mansion-poet/actions/runs/40140998545)：**completed/success、Node 135/135、fail 0**。
+- [Mobile QA #40140998556](https://github.com/yama-books/mansion-poet/actions/runs/40140998556)：**completed/success、Node 135/135、Chrome 320/375/390/430/1440px 5幅成功、生成・コピー・印刷／地点切替E2E成功**。GitHub Actions上でコミット固定HTTPSプレビューのHTML/依存JSへのHTTPアクセス成功。
+- 端末試用プレビュー：https://raw.githack.com/yama-books/mansion-poet/ad65ea6f425dce29ea9ba0d7905d317eea69c533/index.html （外部プレビュー、GitHub Pages本番ではない）。
+- **未完了**：全文200本の利用者による文学的採否、iPhone Safariの実機印刷（1ページか）、印刷用ARTの独立原画・採用・画像合成と配信。CIで合格しても実機合格を宣言しない。
+- **全体計画からの次の優先**：①画像セッションで既存ART成果を照合し独立ART最大3点の原本を専用PRに保全、②PRINT03-IMG-01（PR #39）で代表1点を合成してA4/Webの比較、③PR間の最新HEADを再比較して段階的統合、④iPhone Safari印刷・操作の受入。大量画像生成・公開・mainマージはそれぞれ別承認／ゲート。
+- **競合防止**：このブランチは文章・UI01・限定印刷CSSのDraft PR #40。画像制作担当は `src/poem-catalog.js`、`index.html`、`tests/mobile-device/` を編集しない。PR #39／#38／#37のファイルは現状維持。
+
+**次の1操作**：独立ARTの保存が確認でき次第、PR #39の実画像合成PoCに渡す。文章ブランチはmainへはまだ統合せず、Safari印刷再検収の結果を待つ。
