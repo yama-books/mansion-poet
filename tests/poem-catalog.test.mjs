@@ -155,3 +155,27 @@ test('POEM-01 precision: Indian cuisine alone does not prove a curry speciality'
  assert.notEqual(lib.resolve(indian)?.id,'curry');
  assert.equal(lib.resolve(poi({tags:{cuisine:'curry'},theme:'dining'}))?.id,'curry');
 });
+
+test('POEM-01 advertisement openings contain no public-data explanation at any intensity',()=>{
+ const examples=[
+  poi({name:'明治鍼灸柔整予備校',source:'OpenPOI',providerCategory:'education',theme:'knowledge'}),
+  poi({name:'架空の公園',tags:{leisure:'park'},theme:'green'}),
+  poi({name:'架空の郵便ポスト',tags:{amenity:'post_box'},theme:'urban_detail'})
+ ];
+ const blocked=/公開データ|公開情報|周辺情報によると|データ上では|記された|データに記録|出典によると/;
+ const introductions=new Set();
+ for(const p of examples){
+  // Some generic education tags may not have a resolved genre; test qualified subjects.
+  const qualified=lib.resolve(p)?p:poi({name:p.name,tags:{amenity:'school'},theme:'knowledge'});
+  for(const intensity of [20,85,95]){
+   for(let serial=1;serial<=10;serial++){
+    const result=lib.compose(qualified,{style:'heritage',intensity,serial,location:'神保町'});
+    assert.ok(result,qualified.name);
+    assert.ok(result.body.includes(qualified.name),'Name must remain the ad subject');
+    assert.doesNotMatch(result.body,blocked,`${qualified.name} / ${intensity} / ${serial}`);
+    if(intensity===85)introductions.add(result.body.split('\\n')[0]);
+   }
+  }
+ }
+ assert.ok(introductions.size>=10,'Ad openings should vary on regeneration');
+});
