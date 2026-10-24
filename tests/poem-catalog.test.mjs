@@ -179,3 +179,9 @@ test('POEM-01 advertisement openings contain no public-data explanation at any i
  }
  assert.ok(introductions.size>=10,'Ad openings should vary on regeneration');
 });
+
+test('POEM-01 variants must never describe the underlying records',()=>{
+ for(const genre of lib.genres)for(const phrase of genre.variants){
+  assert.doesNotMatch(phrase,/公開データ|公開情報|記された|資料によると|登録された/,genre.id);
+ }
+});
