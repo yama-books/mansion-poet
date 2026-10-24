@@ -185,3 +185,33 @@ test('POEM-01 variants must never describe the underlying records',()=>{
   assert.doesNotMatch(phrase,/公開データ|公開情報|記された|資料によると|登録された/,genre.id);
  }
 });
+
+test('POEM-01 exactly 200 different advertisement openings, independently of ten genre headlines',()=>{
+ const candidates=[
+  poi({name:'明治鍼灸柔整予備校',source:'OpenPOI',providerCategory:'education',theme:'knowledge'}),
+  poi({name:'架空の公園',tags:{leisure:'park'},theme:'green'}),
+  poi({name:'架空の郵便ポスト',tags:{amenity:'post_box'},theme:'urban_detail'})
+ ];
+ const forbidden=/公開データ|公開情報|記された|出典によると|データ上では|徒歩約|住戸から見える|学区を保証/;
+ for(const original of candidates){
+  // Education and similar broad provider types are not automatically school.
+  const subject=lib.resolve(original)?original:poi({name:original.name,tags:{amenity:'school'},theme:'knowledge'});
+  const all=Array.from({length:200},(_,i)=>lib.compose(subject,{style:'heritage',intensity:85,serial:i+1,location:'神保町'}));
+  const intros=all.map(x=>x.body.split('\n')[0]);
+  assert.equal(new Set(intros).size,200,subject.name);
+  assert.equal(new Set(all.map(x=>x.headline)).size,10,'Headline cycle must remain 10');
+  assert.ok(all.every(x=>x.body.includes(subject.name)),'Observed POI name must be retained');
+  assert.ok(all.every(x=>!forbidden.test(x.body)),'Explanatory or unsupported copy returned');
+  assert.ok(all.every(x=>x.body.length<=180),'Unexpectedly long prose may overflow A4');
+  assert.notEqual(intros[0],intros[10],'Regeneration #11 must not replay opening #1');
+  assert.equal(lib.compose(subject,{serial:201,intensity:85}).body,all[0].body,'Only #201 wraps 200-opening cycle');
+  assert.equal(lib.compose(subject,{serial:401,intensity:85}).body,all[0].body);
+  for(const intensity of [20,95]){
+   for(let serial=1;serial<=200;serial++){
+    const result=lib.compose(subject,{serial,intensity,location:'神保町'});
+    assert.ok(result.body.includes(subject.name));
+    assert.doesNotMatch(result.body,forbidden);
+   }
+  }
+ }
+});
