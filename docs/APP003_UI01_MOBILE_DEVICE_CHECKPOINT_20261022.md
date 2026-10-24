@@ -106,3 +106,31 @@ Draft PR #40のActionsに `app003-ui01-preview-site` artifact出力を追加し�
 - **未確認**：iPhone Safariのタッチ/キーボード/クリップボード/共有/印刷、実機でのレイアウト・縦横回転・フォント拡大、最終的な本番反映可否。ChromeエミュレーションやGitHub Actions上のHTTP成功は、iPhone Safari実機受入を代替しない。
 
 **次の1操作**：iPhone Safariで固定プレビューを開き、「つくる」→中野→生成→コピー2種→京都へ地点変更→印刷の導線を実操作する。不具合があればPR #40へ最小修正し、問題なければ独立した公開/統合判断を行う。
+
+## AD-COPY / PRINT02-SAFARI-FIT 実装修正 CHECKPOINT（2026-10-24 JST）
+
+**根拠：iPhone Safariの印刷画面で1広告が2ページになり、本文に「周辺の公開データに記された『明治鍼灸柔整予備校』。」が混入した実機指摘。**
+
+### 対応（PR #40 内）
+
+1. `src/poem-catalog.js` の出典説明型 `sourceIntro` を廃止。施設名を保持しつつ、生成番号に応じた10種の広告向け導入文へ置換。文体・濃度による出力差は維持。周辺データから確認できない物件の実在・入学・居住者特性等を新たに断定しない。
+2. `src/location-highlights.js` とPOEM語彙内に残っていた「地図に記された〜」という資料説明型の3表現も広告向け表現へ変更。本文とLOCATIONの全バリエーションで出典説明型フレーズを禁止する回帰テストを追加。
+3. `index.html` の案2「1枚広告」をA4向けに組み直し。余白・行間・カード配置を印刷CSS内で縮小。**カードを削除したり、はみ出し箇所を隠したりしない。** 全3件の施設・直線距離・必要な出典・創作注記を保持する。
+4. LOCATIONの住所不明時に「所在地詳細：公開データ未収録」を広告欄へ焼き込まず、住所行を省略する。検証できた地域・住所のみ簡潔なラベルで表示。施設住所を選択地点の住所で補う処理は引き続き禁止。出典はカードの小さな表記と注意書きに保持。
+5. `tests/mobile-device/full-flow.cjs` に実PDFのA4ページ数判定を追加。通常例と長い施設名3件のストレス例をそれぞれ390px相当と1440pxで生成し、**各PDFが1ページ**であることを検査。コピー・地点変更・通信障害時の旧情報混入防止も継続。
+6. `tests/location-races.test.mjs` は住所欠落を省略する新表示と整合させ、所在地の創作禁止・地域精度維持・POEM単独と全部コピーの区別を継続検証。
+
+### 確認・証拠
+
+- [Actions #40045357599](https://github.com/yama-books/mansion-poet/actions/runs/40045357599) **completed/success**。既存+追加Node回帰 **133/133 PASS**、Chrome幅 **320 / 375 / 390 / 430 / 1440px** 全成功。モックE2E mobile-390 / desktop-1440 完走。
+- [Verify #40045357679](https://github.com/yama-books/mansion-poet/actions/runs/40045357679) **completed/success**。
+- [検証artifact #12541061365](https://github.com/yama-books/mansion-poet/actions/runs/40045357599/artifacts/12541061365) にはスクリーンショットとPDFを保全。実際のPDFを `pdfinfo` で読戻し、**mobile-390/desktop-1440 × 通常/長名の4ケースがすべて1ページ**。紙面を画像化して3件のLOCATIONカードと注意書き、文字描画を目視確認。PDFテキスト層に却下された「周辺の公開データに記された」はなし。未確認住所の診断文もない。
+- アプリ変更最終検証コミット：[`902e613`](https://github.com/yama-books/mansion-poet/commit/902e61316977e080fda7b4e50bc39a9beb400b81)。
+- GitHub ActionsからHTTPSでHTMLと依存JSを取得成功。**更新版候補URL**：https://raw.githack.com/yama-books/mansion-poet/902e61316977e080fda7b4e50bc39a9beb400b81/index.html
+- PR #40はDraft・未マージ。本番Pagesとmain、印刷独立エンジンPR #31・写真PR #39等は変更していない。
+
+### 制限・残る実機受入
+
+**Chromeの印刷PDF成功を、iPhone Safariでの印刷2ページ問題の実機解消と同一視しない。** Apple印刷オプションで100%、A4、案2「1枚広告」を選び、新候補版で再検証する必要がある。今後同種の実機2ページ化が残れば、Safari特有の余白/改ページ・文字拡大等を端末実測により補正する。
+
+**次の1操作**：iPhone Safariで上記固定候補URLを開き、神保町等のサンプル地点を生成し、「案2：1枚広告」→印刷プレビューが**1/1ページ**となり広告本文が資料説明調でないことを確認。
