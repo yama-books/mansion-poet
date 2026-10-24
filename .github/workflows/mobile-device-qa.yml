@@ -1,0 +1,110 @@
+name: APP-003 mobile device viewport QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - index.html
+      - tests/mobile-device/**
+      - .github/workflows/mobile-device-qa.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mobile-viewport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Existing app and location-race tests
+        run: node --test tests/*.test.mjs
+      - name: Install small browser automation driver
+        run: npm install --no-save --ignore-scripts --package-lock=false playwright-core@1.56.1
+      - name: Ensure Japanese screenshots have actual glyphs
+        timeout-minutes: 2
+        run: |
+          set -euo pipefail
+          if fc-list :lang=ja family | grep -q .; then
+            echo "Japanese glyph-capable font already installed"
+          else
+            echo "Install OFL-licensed Noto Sans JP directly into runner's user font directory"
+            fonts="$HOME/.local/share/fonts"
+            mkdir -p "$fonts"
+            curl --fail --location --silent --show-error --connect-timeout 10 --max-time 75 --retry 1 \
+              'https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf' \
+              --output "$fonts/NotoSansJP.ttf"
+            test "$(wc -c < "$fonts/NotoSansJP.ttf")" -gt 500000
+            fc-cache -f "$fonts"
+          fi
+          if ! fc-list :lang=ja family | grep -q .; then
+            echo "::error::No Japanese glyph-capable font; refuse misleading tofu screenshots"
+            exit 1
+          fi
+          echo "Japanese font candidate: $(fc-match -f '%{family}' ':lang=ja')"
+      - name: Real Chrome 320, 375, 390, 430px and desktop smoke
+        env:
+          SCREENSHOT_DIR: ${{ runner.temp }}/app003-ui01-mobile-screens
+        run: |
+          set -euo pipefail
+          CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME_BIN" ]; then echo "::error::Chromium unavailable"; exit 1; fi
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory . >/tmp/ui01-http.log 2>&1 &
+          sleep 2
+          curl --fail --silent http://127.0.0.1:8765/index.html >/dev/null
+          CHROME_PATH="$CHROME_BIN" APP003_TEST_URL="http://127.0.0.1:8765/index.html" APP003_SCREENSHOTS="$SCREENSHOT_DIR" node tests/mobile-device/browser-smoke.cjs
+          CHROME_PATH="$CHROME_BIN" APP003_TEST_URL="http://127.0.0.1:8765/index.html" APP003_SCREENSHOTS="$SCREENSHOT_DIR" node tests/mobile-device/full-flow.cjs
+      - name: Package isolated Web UI preview (not deployed)
+        run: |
+          set -euo pipefail
+          dest="${RUNNER_TEMP}/app003-ui01-preview"
+          mkdir -p "$dest/src"
+          cp index.html "$dest/index.html"
+          cp src/subject-policy.js src/poem-catalog.js src/location-highlights.js "$dest/src/"
+          test -s "$dest/index.html"
+          for f in subject-policy.js poem-catalog.js location-highlights.js; do test -s "$dest/src/$f"; done
+          cat > "$dest/PREVIEW_README.txt" <<'EOF'
+          APP-003 UI01-MOBILE candidate, Draft PR #40.
+          Not a published GitHub Pages URL. Requires an HTTPS static host to test iPhone Safari.
+          The HTML makes external tile/geocoder/POI calls only on user interaction.
+          This artifact preserves the exact candidate files for a later reviewed staging deployment.
+          EOF
+      - name: Upload standalone Web UI preview files
+        uses: actions/upload-artifact@v4
+        with:
+          name: app003-ui01-preview-site
+          path: ${{ runner.temp }}/app003-ui01-preview
+          retention-days: 7
+          if-no-files-found: error
+      - name: Upload viewport review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app003-ui01-mobile-viewports
+          path: ${{ runner.temp }}/app003-ui01-mobile-screens
+          retention-days: 7
+          if-no-files-found: ignore
+      - name: Check independent HTTPS preview URL (informational)
+        timeout-minutes: 2
+        continue-on-error: true
+        env:
+          PREVIEW_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          base="https://raw.githack.com/yama-books/mansion-poet/${PREVIEW_REF}"
+          mkdir -p /tmp/app003-ui01-remote-preview
+          for file in index.html src/subject-policy.js src/poem-catalog.js src/location-highlights.js; do
+            curl --fail --location --silent --show-error --connect-timeout 10 --max-time 25 --retry 1 \
+              "$base/$file" -o "/tmp/app003-ui01-remote-preview/$(basename "$file")"
+            test -s "/tmp/app003-ui01-remote-preview/$(basename "$file")"
+          done
+          grep -q "POÈME / ESTATE" /tmp/app003-ui01-remote-preview/index.html
+          echo "PREVIEW_HTTP_OK $base/index.html"
+          echo "Note: external proxy may require a browser confirmation; iPhone Safari acceptance is still pending."
