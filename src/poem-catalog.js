@@ -57,11 +57,26 @@
   const second=genre.variants[(position+3)%10]+'。';
   const last=endings[style]||endings.heritage;
   const phrase=last[position%last.length];
-  const sourceIntro=`周辺の公開データに記された「${p.name}」。`;
+  // POEM-01: public-data attribution belongs in evidence/source notes, never in the ad itself.
+  // Each regeneration receives its own literary opening without unverified history,
+  // guaranteed access, school services, or a claim about the property.
+  const adOpenings=[
+   name=>`「${name}」。街の輪郭に添える、ひとつの固有名。`,
+   name=>`街の一景として、「${name}」に目を向ける。`,
+   name=>`「${name}」から、この土地の表情をたどる。`,
+   name=>`都市の細部に視線を向ければ、「${name}」という名がある。`,
+   name=>`「${name}」。見慣れた街を、異なる角度から。`,
+   name=>`「${name}」を手がかりに、街角の物語を紡ぐ。`,
+   name=>`この街の風景に重なる、「${name}」という存在。`,
+   name=>`「${name}」。日常のすぐそばにある、街の一場面。`,
+   name=>`「${name}」を映し、街の表情に奥行きを。`,
+   name=>`街を語る言葉のひとつに、「${name}」を。`
+  ];
+  const adIntro=adOpenings[position](p.name);
   let body;
-  if(intensity<=30)body=`${location}という場所を考える。\n${sourceIntro}\n${second}\n日常を丁寧に見つめる、架空の住まいの物語。`;
-  else if(intensity>=90)body=`${sourceIntro}\n${second}\n${phrase}\nこの街のささやかな事実を、壮大なる広告の言葉へ。`;
-  else body=`${sourceIntro}\n${second}\n${phrase}`;
+  if(intensity<=30)body=`${location}に息づく、ささやかな都市の表情。\n${adIntro}\n${second}\n日常の輪郭を、これからの邸宅観へ。`;
+  else if(intensity>=90)body=`${adIntro}\n${second}\n${phrase}\nこの街の風景から、まだ見ぬ邸宅の美学へ。`;
+  else body=`${adIntro}\n${second}\n${phrase}`;
   return {genreId:genre.id,label:genre.label,variant:position+1,headline,body,evidenceId:p.sourceId||null};
  }
  const api=Object.freeze({genres,resolve,suppressed,compose});
