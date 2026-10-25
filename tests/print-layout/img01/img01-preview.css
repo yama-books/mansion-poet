@@ -4,7 +4,7 @@
 .pl-ed-figure.pl-img01-photo{position:relative;isolation:isolate;overflow:hidden}
 .pl-ed-figure.pl-img01-photo > img.pl-img01-preview-photo{
  position:absolute;left:0;top:0;width:100%;height:calc(100% - 8mm);
- object-fit:cover;object-position:var(--img01-focus,50%) center;
+ object-fit:cover;object-position:center var(--img01-focus,50%);
  -webkit-print-color-adjust:exact;print-color-adjust:exact;
 }
 .pl-ed-figure.pl-img01-photo>svg{visibility:hidden}

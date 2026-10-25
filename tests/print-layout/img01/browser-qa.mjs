@@ -16,11 +16,12 @@ const cases=[['F01_jimbocho_3','svg','auto'],['F01_jimbocho_3','photo','auto'],
  ['F01_jimbocho_3','missing','auto'],['F01_jimbocho_3','photo','duplex'],
  ['F04_residential_0','photo','auto'],['F03_kyoto_3_longnames','photo','auto'],
  ['F01_jimbocho_3','art','auto'],['F01_jimbocho_3','art','duplex'],
- ['F04_residential_0','art','auto'],['F03_kyoto_3_longnames','art','auto']];
+ ['F04_residential_0','art','auto'],['F03_kyoto_3_longnames','art','auto'],
+ ['F01_jimbocho_3','art','auto',10],['F01_jimbocho_3','art','auto',90]];
 const reports=[];
-for(const [fixture,media,sheet] of cases){
- const url=base+'?fixture='+fixture+'&media='+media+'&sheet='+sheet+'&height=84&focus=50';
- const name=fixture+'__'+media+(sheet==='duplex'?'__duplex':'');
+for(const [fixture,media,sheet,focus=50] of cases){
+ const url=base+'?fixture='+fixture+'&media='+media+'&sheet='+sheet+'&height=84&focus='+focus;
+ const name=fixture+'__'+media+(sheet==='duplex'?'__duplex':'')+(focus===50?'':'__focus'+focus);
  const run=opts=>execFileSync(browser,[...flags,...opts,url],{
    encoding:'utf8',timeout:65000,maxBuffer:12*1024*1024});
  try{
@@ -30,7 +31,7 @@ for(const [fixture,media,sheet] of cases){
   const wanted=media==='art'?'independent_art':media==='photo'?'reference_photo':'existing_svg';
   const ok=marker==='pass'&&mode===wanted;
   let pdfPages=null,pdfA4=null,pdfTextLength=null;
-  const needsPdf=fixture==='F01_jimbocho_3'||fixture==='F03_kyoto_3_longnames'||media==='art';
+  const needsPdf=focus===50&&(fixture==='F01_jimbocho_3'||fixture==='F03_kyoto_3_longnames'||media==='art');
   if(ok){
    run(['--window-size=1250,1900','--screenshot='+folder+'/'+name+'.png']);
    if(statSync(folder+'/'+name+'.png').size<1000)throw new Error('empty screenshot');
@@ -52,7 +53,7 @@ for(const [fixture,media,sheet] of cases){
    }
   }
   const ppi=Number(html.match(/data-img01-ppi="([^"]+)"/)?.[1]);
-  const row={fixture,media,sheet,ok,marker,mode,
+  const row={fixture,media,sheet,focus,ok,marker,mode,
    effectivePpiCover:Number.isFinite(ppi)&&ppi>0?ppi:null,
    screenshot:ok?name+'.png':null,pdf:ok&&needsPdf?name+'.pdf':null,
    pdfPages,pdfA4,pdfTextLength,singlePageRequirementMet:pdfPages===null?null:pdfPages===1};
