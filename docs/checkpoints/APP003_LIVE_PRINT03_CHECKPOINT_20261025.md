@@ -42,3 +42,16 @@
 ## 次の1操作
 
 iPhone Safariで上の確認専用HTTPS previewを開き「神保町または中野→この街を、詩にする→PRINT STYLE 案3→PRINT/PDF→高解像度ART→この紙面を印刷/PDF」を試し、実機のプレビュー・1ページ判定・文字の見切れ・画面スクロールを記録する。ユーザー受入後、PR #31 → #39 → #44 に加えて #40 の差分競合を整理して、ART本番承認とは分けてmainへの統合可否を判断する。
+
+## 2026-10-26｜実機Safariでの組版失敗と修正候補
+
+- **実機フィードバック（確定）**：ユーザーがiPhoneで確認用 `raw.githack.com` ページの「高解像度ART（試作・未承認）」を選択したところ、「組版に失敗しました。線画へ切り替えるか再生成してください。」と表示され、印刷ボタンが無効。焦点位置変更を繰り返しても失敗。iPhoneでの正常なA4印刷・PDF保存は**未確認／未達**。
+- **問題の切り分け**：焦点スライダーは `object-position` の画角調整しか行わない。一方、例外は `PrintImage01Preview.mount` / PRINT03 preflightの `report.ok` を受けた部分で握りつぶされ、実機では詳細がわからなかった。ユーザー操作ではなく実装側の診断情報不足を是正する。
+- **変更**：
+  1. `src/print-layout/live-app.js` に失敗時のH-06/T/H-01種別表示、`window.__APP003_PRINT_DIAGNOSTICS`、失敗時の紙面保持・印刷禁止、前回結果の破棄を追加。古いエラーを流用しない。
+  2. `src/print-layout/print-layout.css` のA4紙面だけに `-webkit-text-size-adjust:100%;text-size-adjust:100%` を追加。iOS Safariのviewport起因の文字自動拡大が文字あふれを起こす可能性に対する保守的な対処。**原因としての断定はしない**。
+  3. `tests/mobile-device/webkit-print03.cjs` のiPhone UA/390px/WebKitエンジンprobeを追加。GitHub Actions側でSafariエンジンの検証を独立取得し、将来の差分を観測可能にした。
+- **確認できた範囲**：iPhone emulation WebKit の [Actions #40236858269](https://github.com/yama-books/mansion-poet/actions/runs/40236858269) は修正候補CSS追加前のコードでSVG/独立ARTともA4 1ページ PASS。iOS Safari実機とLinux WebKitには実装差があり、この成功だけで実機復旧とは判定しない。
+- **コード上の修正候補HEAD**：`7962a90a1ea4618e717661e50f4812f9aa0d64ec`。対応する [PRINT03 #40237215560](https://github.com/yama-books/mansion-poet/actions/runs/40237215560) はSUCCESS。対応する[モバイル/WebKit #40237215559](https://github.com/yama-books/mansion-poet/actions/runs/40237215559) はこの記録時点で実行中、完了・合格を未確認。後から確認して結果を追記する。
+- 状態：**80%（G1-G4）を維持、G5はiPhone実機不合格につき未達**。main統合/Pages公開/画像本番採用は依然禁止・未実施。
+- **次の1操作**：最新コミット固定の確認用URLをiPhoneで開き、同じ手順で再生成して新しい詳細エラーを記録する。成功時は実機の印刷UI・A4 PDFページ数まで確認する。
