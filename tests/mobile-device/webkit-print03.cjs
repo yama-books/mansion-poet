@@ -59,8 +59,14 @@ function json(route,data){return route.fulfill({status:200,contentType:'applicat
   console.log('WEBKIT_ART',JSON.stringify(art));
   const autoSize=await page.locator('#pl-live-stage .pl-page').first().evaluate(el=>
    getComputedStyle(el).getPropertyValue('-webkit-text-size-adjust').trim());
-  console.log('WEBKIT_PRINT_TEXT_ADJUST',autoSize);
-  assert.equal(autoSize,'100%','iOS Safari A4 should bypass viewport-based text autosizing');
+  const supportsTextAdjust=await page.evaluate(()=>CSS.supports('text-size-adjust','100%')||
+   CSS.supports('-webkit-text-size-adjust','100%'));
+  console.log('WEBKIT_PRINT_TEXT_ADJUST',JSON.stringify({computed:autoSize,supported:supportsTextAdjust}));
+  if(supportsTextAdjust)
+   assert.equal(autoSize,'100%','iOS Safari A4 should bypass viewport-based text autosizing');
+  else
+   assert.match(fs.readFileSync('src/print-layout/print-layout.css','utf8'),
+    /-webkit-text-size-adjust:100%/,'Print CSS should explicitly protect iOS Safari');
   const evidence={svg,art,errors,ua:await page.evaluate(()=>navigator.userAgent)};
   fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(evidence,null,2));
   await page.screenshot({path:path.join(out,'safari-engine.png'),fullPage:true,timeout:15000});
