@@ -115,7 +115,7 @@ async function verifyFlow(browser,scenario){
   assert.equal(await page.evaluate(()=>document.body.classList.contains('pl-live-print')),true);
   const livePdf=await page.pdf({format:'A4',preferCSSPageSize:true,printBackground:true,
     path:path.join(OUT,scenario.name+'-print03-live-art.pdf')});
-  const livePages=(livePdf.toString('latin1').match(/\\/Type\\s*\\/Page\\b/g)||[]).length;
+  const livePages=(livePdf.toString('latin1').match(/\/Type\s*\/Page\b/g)||[]).length;
   assert.ok(livePages>=1&&livePages<=3,'Unexpected live A4 page count '+livePages);
   await page.evaluate(()=>window.dispatchEvent(new Event('afterprint')));
   await page.locator('#pl-live-close').click();
