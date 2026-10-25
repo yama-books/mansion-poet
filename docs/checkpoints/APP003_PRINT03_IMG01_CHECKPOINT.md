@@ -42,3 +42,18 @@ Draft PRのCIとartifactを確認し、画像あり/なし/失敗時のスクリ
 - 現段階の未確認：今回のHEADのNode/Chromium結果、A4実ページ数、PDF文字層、見た目の目視判定、Safari実機。
 - 非対象：本番承認フラグ、mainマージ、Pagesデプロイ、他2テーマの投入、新規ART生成。
 - 次の1操作：CI完了後に比較PNG・A4 PDF・ページ数・ppiを確認してこのCHECKPOINTに根拠を追記する。
+
+## 最終Chromium QA結果（2026-10-25 JST）
+
+**本セクションのコード検証対象SHA：`f8cde183d7c6da333d43a1300eb30265a4ded431`。**
+
+- [GitHub Actions #40160782946](https://github.com/yama-books/mansion-poet/actions/runs/40160782946)：`completed/success`。Node **202/202 PASS**、Chromiumの代表比較 **10/10で組版判定OK**。画像不達時のSVG復帰、生成トークン判定を維持。
+- [比較PNG・A4 PDF・JSON（artifact）](https://github.com/yama-books/mansion-poet/actions/runs/40160782946/artifacts/12586017848)：`print03-img01-review`、約23MB。標準F01の旧写真と新ARTは `F01_jimbocho_3__photo.png` / `F01_jimbocho_3__art.png`、PDFも同名拡張子で比較可。SVGと写真不達のスクリーンショット/PDFを併録。
+- **実測ppi**：F01幅182mmで参考484px **67.5ppi**、独立ART1672px **233.3ppi**。補間拡大なし、実ファイルのnaturalWidth/naturalHeightとDOM枠実測からcover比率を算出。**300ppiの商業印刷合格を主張しない**。
+- **A4縦単面（1ページ）合格**：F01旧写真・独立ART・SVG・写真不達の4ケース、およびF04施設0件ARTが各1ページ（`pdfinfo`でA4サイズ確認）。`pdftotext`による日本語本文の抽出、創作注記、F01見出しを検査し失敗0。DOMの既存組版プリフライト10/10合格。
+- **意図的なduplex指定**：F01旧写真・ARTともA4縦2ページ（表面／裏面）で正常。
+- **未解決：F03京都・非常に長い施設名**：旧写真・ARTどちらも`sheet=auto`がA4縦**2ページ**。同条件PDFの文字層は取得でき、長名も組版プリフライトで欠落なし。ただし**「すべての広告をA4単面1ページ」は未達**。ブラウザCI成功はこの例の単面合格を意味しない。`browser-results.json`の`singlePageRequirementMet=false`とCIの`KNOWN OPEN`で明示。
+- 1回目の失敗で、試作CSSの`height:84mm!important`がPRINT03の縮小レベルを抑制していたことを発見。2回目の検証でこの`!important`を外し既存の72/60mm段階縮小を復旧したが、F03の文章量はなお2ページ。本文の削除・フォント下限違反による強制一枚化は行わなかった。
+- **残る目視／実機検収**：実際の写真トリミング、施設名と地図の視覚的読解性、紙の実物、iPhone Safari。CIによるPDF文字抽出だけで人の目視受入と同一視しない。
+- **非対象を維持**：原画制作、他2ARTテーマの大量投入、権利・本番承認フラグ、mainへの統合、PR #40との無計画なマージ、Pages公開。PR #39はDraftを維持。
+- **次の1操作**：上記artifact内の`F01_jimbocho_3__art.png/.pdf`と`__photo`を同じ表示倍率で比較し、F03のA4単面要否とトリミングを利用者レビューで判断する。その後にPR #31/#39/#40の結合計画を再点検する。
