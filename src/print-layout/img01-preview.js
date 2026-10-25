@@ -9,6 +9,8 @@ const original=RC.templateInfo('editorial');
 if(!original)throw new Error('IMG01: editorial unavailable');
 const REF_URL='./ART-REF0003-library-refcrop.png';
 const ART_URL='../../../assets/art-candidates/asset-art-01/ART-REF0003-PHOTO-01.png';
+const ART_APP_URL='./assets/art-candidates/asset-art-01/ART-REF0003-PHOTO-01.png';
+const REF_APP_URL='./tests/print-layout/img01/ART-REF0003-library-refcrop.png';
 const ATTRIBUTION='参考画像から切り出した架空の情景イメージ（実在施設・物件の証拠ではありません）。本番ART未承認。';
 const ART_ATTRIBUTION='AI生成の架空の図書空間（PR #43の独立ART候補・試作専用）。実在施設・物件の外観ではなく、本番使用未承認。';
 let serial=0;
@@ -45,8 +47,8 @@ async function mount(container,data,opts={}){
  if(!['svg','photo','art','missing'].includes(media)||![72,84].includes(height)||
   !Number.isFinite(focus)||focus<0||focus>100)throw new Error('IMG01: invalid preview option');
  const view=opts.view||root;
- const source=media==='art'?{url:ART_URL,sourceKind:'generated_single_scene_art_preview_only',alt:'AI生成による架空の図書空間。実在する物件・施設ではありません'}:
-  {url:REF_URL,sourceKind:'ref_crop_reference_only',alt:'参考画像からの架空の図書空間。実在する物件・施設ではありません'};
+ const source=media==='art'?{url:opts.assetScope==='app'?ART_APP_URL:ART_URL,sourceKind:'generated_single_scene_art_preview_only',alt:'AI生成による架空の図書空間。実在する物件・施設ではありません'}:
+  {url:opts.assetScope==='app'?REF_APP_URL:REF_URL,sourceKind:'ref_crop_reference_only',alt:'参考画像からの架空の図書空間。実在する物件・施設ではありません'};
  const dimensions=media!=='svg'&&await checkImage(media==='missing'?'./__missing__.png':source.url,view);
  if(ticket!==serial)throw new Error('H-07: superseded preview');
  const photo=(media==='photo'||media==='art')&&Boolean(dimensions);

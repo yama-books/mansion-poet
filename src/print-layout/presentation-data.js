@@ -16,7 +16,7 @@ const str=v=>v==null?'':String(v);
 const clean=v=>str(v).replace(/\r\n?/g,'\n').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g,'').trim();
 
 function formatAddress(loc){
- if(!loc.address)return '所在地詳細：公開データ未収録';
+ if(!loc.address)return ''; // A creative advertisement omits unreported address, never fabricates it.
  if(loc.addressPrecision==='area')return '所在地（地域情報のみ）：'+loc.address;
  if(loc.addressPrecision==='street')return '所在地（公開データの街路情報）：'+loc.address;
  return '所在地（公開データ）：'+loc.address;

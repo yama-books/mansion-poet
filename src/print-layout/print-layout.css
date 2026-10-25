@@ -17,6 +17,8 @@
  line-height:1.7;overflow:hidden;position:relative;
  -webkit-print-color-adjust:exact;print-color-adjust:exact;
  line-break:strict;word-break:normal;overflow-wrap:anywhere;font-kerning:normal;
+ /* iOS Safari must not text-autosize the offscreen 210mm A4 stage to the phone viewport. */
+ -webkit-text-size-adjust:100%;text-size-adjust:100%;
 }
 .pl-page *,.pl-page *::before,.pl-page *::after{box-sizing:border-box}
 .pl-page-body{flex:1 1 auto;min-height:0;position:relative}
