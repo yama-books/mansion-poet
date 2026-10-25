@@ -51,15 +51,26 @@ async function preview(){
    media:el('pl-live-media').value,assetScope:'app',mmHeight:84,
    focus:Number(el('pl-live-focus').value),sheet:'auto'});
   if(mine!==ticket||snapshot!==current)return;
+  root.__APP003_PRINT_DIAGNOSTICS={token:current.generationToken,preflight:r.report,media:r.mediaUsed,
+   viewport:root.innerWidth,ua:root.navigator?.userAgent||'',at:new Date().toISOString()};
   if(!r.report.ok)throw Error('A4 preflight failed '+JSON.stringify(r.report.failures));
   root.__APP003_PRINT_REPORT={token:current.generationToken,ok:true,pages:r.report.pageCount,
    mode:r.report.mode,media:r.mediaUsed};
   el('pl-live-status').textContent=r.report.pageCount===1?'A4片面1ページに収まりました。':
    'A4 '+r.report.pageCount+'ページ（情報を省略しない表裏構成）になります。';
   el('pl-live-printbtn').disabled=false;
- }catch(e){if(mine!==ticket)return;stage.textContent='';
-  el('pl-live-status').textContent='組版に失敗しました。線画へ切り替えるか再生成してください。';
-  console.warn('PRINT03 preview error',e);
+ }catch(e){if(mine!==ticket)return;
+  const report=root.__APP003_PRINT_DIAGNOSTICS?.token===current.generationToken?
+   root.__APP003_PRINT_DIAGNOSTICS?.preflight:null;
+  const failures=(report?.failures||[]).slice(0,3).map(f=>f.gate+'/'+f.kind).join('、');
+  const message=failures||String(e?.message||e).slice(0,130);
+  root.__APP003_PRINT_DIAGNOSTICS={...(root.__APP003_PRINT_DIAGNOSTICS||{}),
+   token:current.generationToken,error:String(e?.stack||e),failures:report?.failures||[],
+   viewport:root.innerWidth,ua:root.navigator?.userAgent||'',at:new Date().toISOString()};
+  el('pl-live-status').textContent='A4組版を確認できませんでした（'+message+'）。焦点とは独立した問題です。';
+  // Retain the diagnostic paper in place, but do not enable printing until preflight passes.
+  el('pl-live-printbtn').disabled=true;
+  console.warn('PRINT03 preview error',e,root.__APP003_PRINT_DIAGNOSTICS);
  }
 }
 el('pl-live-media').addEventListener('change',preview);
