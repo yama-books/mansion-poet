@@ -120,6 +120,9 @@ async function verifyFlow(browser,scenario){
   await page.evaluate(()=>window.dispatchEvent(new Event('afterprint')));
   await page.locator('#pl-live-close').click();
   console.log('PRINT03 LIVE FLOW OK',scenario.name,'pages',livePages);
+  // Restore the legacy onepage selector for the pre-existing PRINT-02 stress test.
+  await page.locator('#printLayout').selectOption('onepage');
+  await page.locator('#printBtn').click();
   // Stress the single-sheet composition using lengths comparable with real
   // long school, library and cultural names, while retaining all three cards.
   await page.evaluate(()=>{
