@@ -1,5 +1,6 @@
 /* PRINT03-IMG-01 proof only. No production ART manifest or app stylesheet. */
-.pl-tpl-editorial .pl-ed-figure{height:var(--img01-height,84mm)!important}
+/* Keep PRINT03 level-2..4 shrink rules so long names still fit one A4 sheet. */
+.pl-tpl-editorial .pl-ed-figure{height:var(--img01-height,84mm)}
 .pl-ed-figure.pl-img01-photo{position:relative;isolation:isolate;overflow:hidden}
 .pl-ed-figure.pl-img01-photo > img.pl-img01-preview-photo{
  position:absolute;left:0;top:0;width:100%;height:calc(100% - 8mm);
