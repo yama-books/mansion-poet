@@ -1081,7 +1081,7 @@ async function generate(regen=false){
   poemWrite(plan.poemPOIs,plan.poemPOIs.length>0);
   renderLocationHighlights(plan.locationCards,place);
   renderReality(pois,health,place);
-   window.PrintLive.capture({place,plan,pois,token:[selectionVersion,generationVersion,generation].join(':'),propertyName:$('#poemProperty').textContent,headline:$('#poemHeadline').textContent,body:$('#poemBody').textContent});
+   window.PrintLive?.capture({place,plan,pois,token:[selectionVersion,generationVersion,generation].join(':'),propertyName:$('#poemProperty').textContent,headline:$('#poemHeadline').textContent,body:$('#poemBody').textContent});
   generatedCurrent=true;
   $('#copyBtn').disabled=false;
   $('#regenerateBtn').disabled=false;
