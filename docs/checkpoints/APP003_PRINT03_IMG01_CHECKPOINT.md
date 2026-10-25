@@ -30,3 +30,15 @@ Draft PRのCIとartifactを確認し、画像あり/なし/失敗時のスクリ
 - 現行の独立元データ・IMG-00権限判定に変更なし。端末実機Safari・Pages公開・mainマージは未実施。
 
 **意匠面の次の提案**：この試作の横182mm表示でA4品質を得るには、横2000px級以上の独立写真を候補として比べる価値がある。ただし採用寸法・ppiの正式規格は、実際の高解像度ARTを同じ組版で試してから決める。
+
+## 独立高解像度ARTの組版追加（2026-10-25 JST・CI結果確定前）
+
+- 担当：APP-003/PRINT03-IMG-01。既存Draft PR #39の作業ブランチを継続し、PR #31の独立印刷エンジンを流用。PR #40には触れない。
+- 比較元：484×295px参考切り出し（PR #37）。追加：1672×941px独立ART `ART-REF0003-PHOTO-01`（PR #43、原画保全コミット `134f5d9`、Git blob `2ee714f8e57193c2e4af3406c7f92a9a33d8bde0`）。同一Git blobをPR #39のtreeで再利用しており、新たに画像を生成・拡大していない。
+- ART所在：`assets/art-candidates/asset-art-01/ART-REF0003-PHOTO-01.png`。状態は `rightsStatus=review_required`、`productionApproval=pending`、`publishedAllowed=false` のまま。架空のAI生成情景であり、実在物件・施設の写真ではない。
+- 差分は試作専用 `img01-preview.js`、`preview.html`、Nodeテスト、既存Chromium QAとworkflowに限定。REF完成広告の貼付け、生成文字列・施設名・座標・地図・コピー・安全規則・本体 `index.html` の変更なし。従来SVG、旧参考写真、画像不達の比較を維持。
+- 代表条件：施設3件・0件・京都長名。Chromeで旧版・独立ART・SVG、A4縦PDFのスクリーンショットと文字層を検査し、成果は既存 `print03-img01-review` artifactに保存する計画。
+- 理論値：既存182mm幅枠の場合、独立ARTの cover 実効ppi ≈ 1672÷(182/25.4)＝**233.3ppi**。旧参考写真は ≈ 67.5ppi。実測値はCIの `browser-results.json` で追記する。300ppiの商業印刷を保証する値ではない。
+- 現段階の未確認：今回のHEADのNode/Chromium結果、A4実ページ数、PDF文字層、見た目の目視判定、Safari実機。
+- 非対象：本番承認フラグ、mainマージ、Pagesデプロイ、他2テーマの投入、新規ART生成。
+- 次の1操作：CI完了後に比較PNG・A4 PDF・ページ数・ppiを確認してこのCHECKPOINTに根拠を追記する。

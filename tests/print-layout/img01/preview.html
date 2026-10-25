@@ -16,13 +16,13 @@ body{margin:0;background:#dcd9d2;font:14px/1.5 system-ui,sans-serif;color:#20292
 <div class="img01-tools">
 <strong>PRINT03-IMG-01</strong>
 <label>fixture <select id="fx"></select></label>
-<label>画像 <select id="media"><option value="svg">従来SVG</option><option value="photo">参考写真</option><option value="missing">写真不達→SVG</option></select></label>
+<label>画像 <select id="media"><option value="svg">従来SVG</option><option value="photo">参考写真（旧）</option><option value="art">独立ART（1672px）</option><option value="missing">写真不達→SVG</option></select></label>
 <label>写真枠 <select id="height"><option value="84">84mm</option><option value="72">72mm</option></select></label>
 <label>焦点 <input type="range" id="focus" min="0" max="100" step="5" value="50"></label>
 <label>面 <select id="sheet"><option value="auto">自動</option><option value="duplex">表裏</option></select></label>
 <button id="print">印刷／PDF</button>
 </div>
-<div class="img01-banner">すべて架空の検証データです。写真はPR #37の参考切り出し（本番ART未承認）。実在施設や物件の外観ではありません。</div>
+<div class="img01-banner">すべて架空の検証データです。参考写真はPR #37の切り出し、独立ARTはPR #43の原画を使用（どちらも本番未承認）。実在施設や物件の外観ではありません。</div>
 <div id="report" class="img01-report" role="status"></div>
 <main id="out" class="pl-stage"></main>
 <script src="../../../src/print-layout/presentation-data.js"></script>
@@ -39,7 +39,7 @@ const $=id=>document.getElementById(id),q=new URLSearchParams(location.search);
 const choices=['F01_jimbocho_3','F04_residential_0','F03_kyoto_3_longnames'];
 for(const id of choices){const f=PrintFixtures.byId(id);if(f)$('fx').add(new Option(f.fixtureId+' '+f.description,id))}
 $('fx').value=choices.includes(q.get('fixture'))?q.get('fixture'):choices[0];
-$('media').value=['photo','missing'].includes(q.get('media'))?q.get('media'):'svg';
+$('media').value=['photo','art','missing'].includes(q.get('media'))?q.get('media'):'svg';
 $('height').value=q.get('height')==='72'?'72':'84';
 $('sheet').value=q.get('sheet')==='duplex'?'duplex':'auto';
 $('focus').value=/^(?:0|[1-9]\d?|100)$/.test(q.get('focus')||'')?q.get('focus'):'50';

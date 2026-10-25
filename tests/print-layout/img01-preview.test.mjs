@@ -17,7 +17,7 @@ globalThis.PrintPaginate={mount(host,id,data,opts){
 const api=require('../../src/print-layout/img01-preview.js');
 const data={generationToken:'gen-one',poem:{body:'original body'}};
 const host={style:{setProperty(){}},querySelector(){return null}};
-const view=ok=>({Image:class{set src(value){this.naturalWidth=ok?484:0;queueMicrotask(()=>ok?this.onload():this.onerror())}}});
+const view=ok=>({Image:class{set src(value){this.naturalWidth=ok?(value.includes('PHOTO-01')?1672:484):0;this.naturalHeight=ok?(value.includes('PHOTO-01')?941:295):0;queueMicrotask(()=>ok?this.onload():this.onerror())}}});
 test('photo remains only preview, independent POEM and preserved SVG',async()=>{
  const r=await api.mount(host,data,{media:'photo',view:view(true)});
  assert.equal(r.mediaUsed,'reference_photo');
@@ -47,4 +47,22 @@ test('late photo cannot overwrite newer location',async()=>{
 test('untrusted media and invalid size rejected',async()=>{
  for(const opts of [{media:'https://untrusted'}, {media:'photo',focus:-1},{mmHeight:999}])
  await assert.rejects(api.mount(host,data,{...opts,view:view(true)}),/IMG01/);
+});
+test('independent high-resolution ART keeps the original SVG, POEM and LOCATION separate',async()=>{
+ const r=await api.mount(host,data,{media:'art',view:view(true)});
+ assert.equal(r.mediaUsed,'independent_art');
+ assert.deepEqual(r.photoMetrics.nativePixels,[1672,941]);
+ assert.equal(r.photoMetrics.sourceKind,'generated_single_scene_art_preview_only');
+ assert.equal(r.photoMetrics.publishedAllowed,false);
+ assert.match(r.rendered.blocks[0].node.attrs.class,/pl-img01-photo/);
+ assert.equal(r.rendered.blocks[0].node.children[0].tag,'svg');
+ assert.match(r.rendered.blocks[0].node.children.at(-1).children[0],/独立ART/);
+ assert.equal(r.rendered.blocks[1].node.children[0],'original body');
+ assert.match(r.rendered.sides.back[0].node.children[0],/実在施設・物件の外観ではなく/);
+});
+test('missing independent ART preserves SVG fallback',async()=>{
+ const r=await api.mount(host,data,{media:'art',view:view(false)});
+ assert.equal(r.mediaUsed,'existing_svg');
+ assert.equal(r.fallback,true);
+ assert.equal(r.rendered.blocks[0].node.children[0].tag,'svg');
 });
