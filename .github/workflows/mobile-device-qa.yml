@@ -1,6 +1,8 @@
 name: APP-003 mobile device viewport QA
 
 on:
+  push:
+    branches: [feature/app003-live-print03-20261025]
   pull_request:
     branches: [main]
     paths:
@@ -65,9 +67,12 @@ jobs:
         run: |
           set -euo pipefail
           dest="${RUNNER_TEMP}/app003-ui01-preview"
-          mkdir -p "$dest/src"
+          mkdir -p "$dest/src" "$dest/src/print-layout" "$dest/assets/art-candidates/asset-art-01" "$dest/tests/print-layout/img01"
           cp index.html "$dest/index.html"
           cp src/subject-policy.js src/poem-catalog.js src/location-highlights.js "$dest/src/"
+          cp src/print-layout/*.js src/print-layout/*.css "$dest/src/print-layout/"
+          cp assets/art-candidates/asset-art-01/ART-REF0003-PHOTO-01.png "$dest/assets/art-candidates/asset-art-01/"
+          cp tests/print-layout/img01/ART-REF0003-library-refcrop.png tests/print-layout/img01/img01-preview.css "$dest/tests/print-layout/img01/"
           test -s "$dest/index.html"
           for f in subject-policy.js poem-catalog.js location-highlights.js; do test -s "$dest/src/$f"; done
           cat > "$dest/PREVIEW_README.txt" <<'EOF'

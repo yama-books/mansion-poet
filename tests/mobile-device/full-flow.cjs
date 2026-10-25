@@ -99,6 +99,27 @@ async function verifyFlow(browser,scenario){
   assert.equal(pageCount,1,'A4 onepage layout generated extra sheets: '+scenario.name);
   await page.locator('#poem').screenshot({path:path.join(OUT,scenario.name+'-complete-poem.png')});
   await page.locator('#discover').screenshot({path:path.join(OUT,scenario.name+'-complete-workspace.png')});
+  // PRINT03: actual app-generated POEM/LOCATION must render with independent ART.
+  await page.locator('#printLayout').selectOption('print03');
+  await page.locator('#printBtn').click();
+  await page.waitForFunction(()=>window.__APP003_PRINT_REPORT?.ok===true,{timeout:20000});
+  assert.equal(await page.locator('#pl-live-printbtn').isEnabled(),true,'New A4 print not ready');
+  assert.equal(await page.locator('#pl-live-panel .pl-page').count()>0,true,'Print preview missing A4 paper');
+  const liveText=await page.locator('#pl-live-panel').innerText();
+  assert.ok(liveText.includes('試験用図書館'),'Live POI missing from A4 preview');
+  assert.ok(liveText.includes(current.split('\\n')[0])||liveText.includes('架空の創作広告'),'Poem not represented');
+  await page.locator('#pl-live-media').selectOption('art');
+  await page.waitForFunction(()=>window.__APP003_PRINT_REPORT?.media==='independent_art',{timeout:20000});
+  assert.equal(await page.locator('#pl-live-panel .pl-img01-preview-photo').evaluate(im=>im.naturalWidth),1672,'Expected independent 1672px original');
+  await page.locator('#pl-live-printbtn').click();
+  assert.equal(await page.evaluate(()=>document.body.classList.contains('pl-live-print')),true);
+  const livePdf=await page.pdf({format:'A4',preferCSSPageSize:true,printBackground:true,
+    path:path.join(OUT,scenario.name+'-print03-live-art.pdf')});
+  const livePages=(livePdf.toString('latin1').match(/\\/Type\\s*\\/Page\\b/g)||[]).length;
+  assert.ok(livePages>=1&&livePages<=3,'Unexpected live A4 page count '+livePages);
+  await page.evaluate(()=>window.dispatchEvent(new Event('afterprint')));
+  await page.locator('#pl-live-close').click();
+  console.log('PRINT03 LIVE FLOW OK',scenario.name,'pages',livePages);
   // Stress the single-sheet composition using lengths comparable with real
   // long school, library and cultural names, while retaining all three cards.
   await page.evaluate(()=>{
@@ -120,6 +141,8 @@ async function verifyFlow(browser,scenario){
   providerMode='down';
   await page.locator('[data-preset="kyoto"]').click();
   assert.equal(await page.locator('#copyBtn').isDisabled(),true,'Stale poem copy enabled on selection change');
+  assert.equal(await page.evaluate(()=>window.PrintLive.hasSnapshot()),false,'Stale print snapshot survived location change');
+  assert.equal(await page.locator('#pl-live-panel').isHidden(),true,'Old A4 preview visible on location change');
   assert.equal(await page.locator('#copyBundleBtn').isDisabled(),true,'Stale bundle enabled on selection change');
   await page.locator('#generateBtn').click();
   await page.waitForFunction(()=>!document.querySelector('#generateBtn').disabled,{timeout:20000});
