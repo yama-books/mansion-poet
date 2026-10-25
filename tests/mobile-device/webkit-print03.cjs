@@ -5,7 +5,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const {webkit}=require('playwright');
+const {webkit,devices}=require('playwright');
 const url=process.env.APP003_TEST_URL||'http://127.0.0.1:8765/index.html';
 const out=process.env.APP003_WEBKIT_EVIDENCE||'artifacts/webkit-live';
 fs.mkdirSync(out,{recursive:true});
@@ -18,8 +18,8 @@ function json(route,data){return route.fulfill({status:200,contentType:'applicat
  headers:{'access-control-allow-origin':'*'},body:JSON.stringify(data)})}
 (async()=>{
  const browser=await webkit.launch({headless:true});
- const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,
-  locale:'ja-JP',reducedMotion:'reduce'});
+ const context=await browser.newContext({...devices['iPhone 13'],locale:'ja-JP',reducedMotion:'reduce'});
+ const page=await context.newPage();
  const errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  await page.route('**/*',async route=>{
