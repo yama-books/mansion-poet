@@ -40,6 +40,8 @@ async function preview(){
  const current=snapshot;if(!current){el('generatedStatus').textContent='印刷用の情報を作れませんでした。再生成してください。';return}
  const mine=++ticket;
  root.PrintImage01Preview.abort();
+ root.__APP003_PRINT_REPORT=null;
+ root.__APP003_PRINT_DIAGNOSTICS=null;
  panel.hidden=false;
  const stage=el('pl-live-stage');stage.textContent='';
  el('pl-live-printbtn').disabled=true;el('pl-live-status').textContent='A4の紙面を準備中…';

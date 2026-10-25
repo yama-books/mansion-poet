@@ -57,6 +57,10 @@ function json(route,data){return route.fulfill({status:200,contentType:'applicat
    pixels:document.querySelector('#pl-live-stage .pl-img01-preview-photo')?.naturalWidth||0
   }));
   console.log('WEBKIT_ART',JSON.stringify(art));
+  const autoSize=await page.locator('#pl-live-stage .pl-page').first().evaluate(el=>
+   getComputedStyle(el).getPropertyValue('-webkit-text-size-adjust').trim());
+  console.log('WEBKIT_PRINT_TEXT_ADJUST',autoSize);
+  assert.equal(autoSize,'100%','iOS Safari A4 should bypass viewport-based text autosizing');
   const evidence={svg,art,errors,ua:await page.evaluate(()=>navigator.userAgent)};
   fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(evidence,null,2));
   await page.screenshot({path:path.join(out,'safari-engine.png'),fullPage:true,timeout:15000});
