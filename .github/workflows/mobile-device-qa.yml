@@ -29,7 +29,9 @@ jobs:
       - name: Existing app and location-race tests
         run: node --test tests/*.test.mjs
       - name: Install small browser automation driver
-        run: npm install --no-save --ignore-scripts --package-lock=false playwright-core@1.56.1
+        run: |
+          npm install --no-save --ignore-scripts --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps webkit
       - name: Ensure Japanese screenshots have actual glyphs
         timeout-minutes: 2
         run: |
@@ -63,6 +65,19 @@ jobs:
           curl --fail --silent http://127.0.0.1:8765/index.html >/dev/null
           CHROME_PATH="$CHROME_BIN" APP003_TEST_URL="http://127.0.0.1:8765/index.html" APP003_SCREENSHOTS="$SCREENSHOT_DIR" node tests/mobile-device/browser-smoke.cjs
           CHROME_PATH="$CHROME_BIN" APP003_TEST_URL="http://127.0.0.1:8765/index.html" APP003_SCREENSHOTS="$SCREENSHOT_DIR" node tests/mobile-device/full-flow.cjs
+      - name: Safari WebKit engine A4 preflight regression
+        env:
+          APP003_WEBKIT_EVIDENCE: ${{ runner.temp }}/app003-webkit-evidence
+        run: |
+          APP003_TEST_URL="http://127.0.0.1:8765/index.html" node tests/mobile-device/webkit-print03.cjs
+      - name: Upload WebKit failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app003-webkit-print03
+          path: ${{ runner.temp }}/app003-webkit-evidence
+          retention-days: 7
+          if-no-files-found: ignore
       - name: Package isolated Web UI preview (not deployed)
         run: |
           set -euo pipefail
