@@ -32,7 +32,7 @@ function locationCard(loc,variant){
  return h('article',{class:'pl-loc pl-loc-'+variant,'data-rank':loc.rank},over,
   h('h3',{class:'pl-loc-name'},loc.name),
   h('div',{class:'pl-loc-meta'},
-   h('span',{class:'pl-loc-addr'},PD.formatAddress(loc)),
+   loc.address&&h('span',{class:'pl-loc-addr'},PD.formatAddress(loc)),
    h('strong',{class:'pl-loc-dist'},PD.formatDistance(loc)),
    loc.walkMinutes!=null&&h('span',{class:'pl-loc-walk'},PD.formatWalk(loc))),
   h('h4',{class:'pl-loc-tag'},loc.headline),

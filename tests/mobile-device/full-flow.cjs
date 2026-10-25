@@ -107,6 +107,7 @@ async function verifyFlow(browser,scenario){
   assert.equal(await page.locator('#pl-live-panel .pl-page').count()>0,true,'Print preview missing A4 paper');
   const liveText=await page.locator('#pl-live-panel').innerText();
   assert.ok(liveText.includes('試験用図書館'),'Live POI missing from A4 preview');
+  assert.doesNotMatch(liveText,/所在地詳細：公開データ未収録/,'Do not place unavailable address diagnostics in ad copy');
   assert.ok(liveText.includes(current.split('\\n')[0])||liveText.includes('架空の創作広告'),'Poem not represented');
   await page.locator('#pl-live-media').selectOption('art');
   await page.waitForFunction(()=>window.__APP003_PRINT_REPORT?.media==='independent_art',{timeout:20000});
