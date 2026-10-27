@@ -66,3 +66,9 @@ iPhone Safariで上の確認専用HTTPS previewを開き「神保町または中
 - 追加UX修正: [PR #46](https://github.com/yama-books/mansion-poet/pull/46) で公開SVG版では効かない焦点スライダーと試作ART固有の文言を非表示にし、試作環境のART操作は維持（当チェックポイント作成時の統合結果は別途確認）。
 - 進捗表現：**SVG版のコード→CI→Pages公開は完了**。旧G5が一括していた「iPhone Safari実機・ART本採用」は未達の独立受入条件として残す。全体を無条件100%とはしない。
 - 次の1操作：実機Safariの紙面・PDF保存を目視検収し、ARTの本番採用可否は別承認のうえ判断する。
+
+### 2026-10-28｜公開版UI仕上げ・最終反映
+- [PR #46](https://github.com/yama-books/mansion-poet/pull/46) **merged**：SVGのみの正式公開ページから意味のない上下焦点スライダーを取り除き、創作注記を線画仕様へ修正。ローカル/raw.githack試作環境の独立ART選択・焦点操作は従来どおり残す。
+- PR #46 HEAD `416c09743b014f9ba8dbf6c53962a69eefe81c3e` でNode/モバイルCI成功。merge SHA `8ef9ca4d32054e8afffbc289b91905cb9b8eb166`。
+- [最終Pages #40588978832](https://github.com/yama-books/mansion-poet/actions/runs/40588978832) は該当SHAで **completed/success**、Web公開後のroot・PRINT03 JS/CSS・gallery19画像・manifest SHA256 検証成功。
+- Web公開目標の必要工程は完了。iPhone Safari実機での印刷結果、未承認ARTの本番採用、極端な長名1ページ化は**別途未完了**であり、これらを検証済みとは報告しない。
