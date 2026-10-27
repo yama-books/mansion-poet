@@ -10,6 +10,14 @@
 
 > このファイルが**APP-003全体の進捗の固定入口**。既存の開発マスタープランを破棄しない。以前の資料にある当時のHEAD・未実装・進捗率を現在の事実と誤解しない。更新時は最新のmain、PR、CI、公開URL、必要なiPhone実機確認を照合する。
 
+## 最新ステータス｜2026-10-28（歴史的記載より優先）
+
+- **PRINT03-LIVE-01：SESSION COMPLETE / 5/5（このセッション内の目標のみ100%）**。コード接続、既存アプリ・画像資料19点の保全、品質/モバイルCI、main安全統合、SVG版A4印刷のPages正式配信と公開後HTTP照合が完了。
+- mainで反映されたPR：[安全統合 #45](https://github.com/yama-books/mansion-poet/pull/45)（merge `e05d8e9`）と[公開SVG UI仕上げ #46](https://github.com/yama-books/mansion-poet/pull/46)（merge `8ef9ca4`）。現在の本番URL：[POÈME / ESTATE](https://yama-books.github.io/mansion-poet/)。
+- [最終Pages CI #40588978832](https://github.com/yama-books/mansion-poet/actions/runs/40588978832) SUCCESS（Web root、PRINT03 JS/CSS、ギャラリー・manifest・代表画像を実HTTP読戻し）。モバイル/印刷結合CI #40587881902および#40588649362成功。
+- **APP-003全体は未完成**：iPhone Safari実機での印刷/PDF保存は未検収。独立ARTは本番未承認で一般公開の画像選択肢にせず、試作側の検証に限定。非常に長い施設名は2ページへ退避する場合がある。地理データの拡充や画像量産も別工程。
+- [本セッション正式完了CHECKPOINT](checkpoints/APP003_PRINT03_LIVE_SESSION_CLOSE_20261028.md) が根拠・残件・新セッションの次の1操作の正本。下記2026-10-22時点の「PRINT03未統合」等は**当時の履歴**であり、現在のmainの状態ではない。
+
 ## 1. 事業・体験としての完成像
 
 選択した地点の地理・施設情報に基づき、創作であることを保ちながら、**高級マンション広告らしい洗練されたポエム・周辺施設紹介・印刷可能な紙面**を生成する。高級広告の文体と、暗渠・側溝・ポストなどのささやかな都市設備との対比を楽しむアプリ。
@@ -50,7 +58,7 @@
 
 **注**：PR #31、#32、#34はopenでDraftではない。#30、#33、#37、#38はDraft（GitHub照合時点）。openであってもmainに取り込まれているわけではない。
 
-## 4. 開発領域ごとのマイルストーン（最新現況）
+## 4. 開発領域ごとのマイルストーン（2026-10-22時点の基準記録。現在は冒頭の最新ステータス優先）
 
 状態語彙：**公開済み／実装PRあり／設計・調査済み／制作中（報告）／未確認・未実施**。PRの存在でコードが本番稼働したと判断しない。
 
@@ -157,6 +165,7 @@
 | 2026-10-22 | REF-0001/0002の19PNGをGitHubに登録、検索ギャラリーをmain/Pages公開 | PR #35/#36、Pages Actions #39750917571 |
 | 2026-10-22 | REF-0003〜0008の説明11文書をPR #37へ、素材分離の制作契約をPR #38へ保存。独立ARTは別制作セッションで進行 | PR #37/#38、[画像案内板](APP003_ASSET_WORKBOARD.md) |
 | 2026-10-22 | 本書を設置し、アプリ全体の計画・進捗の固定入口を一本化 | このファイルのGitHubコミット |
+| 2026-10-28 | **PRINT03-LIVE-01のセッション目標5/5を正式完了**。PR #45/#46をmainへ安全統合し、SVG版A4をPages公開。ART使用/実機Safari印刷は別工程 | [完了CHECKPOINT](checkpoints/APP003_PRINT03_LIVE_SESSION_CLOSE_20261028.md)、[Pages CI #40588978832](https://github.com/yama-books/mansion-poet/actions/runs/40588978832) |
 | 2026-10-22 19:13 JST頃 | PR #37に文字なしの**参考写真切り出し3PNG**を追加（GitHub tree上で実体・容量を確認）。**元6シート＋一覧7PNGのアップロード、および独立生成ARTとは別** | [PR #37](https://github.com/yama-books/mansion-poet/pull/37)、[画像共有案内板](APP003_ASSET_WORKBOARD.md)、コミット 44e154a／672fdd8 |
 
 ## 10. 開始時の最短手順
