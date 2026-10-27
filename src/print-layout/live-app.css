@@ -1,0 +1,16 @@
+/* New A4 renderer screen preview and isolated print root. */
+.pl-live-panel{margin:24px auto;max-width:1180px;padding:14px;background:#e5e4df;color:#2b342f}
+.pl-live-panel[hidden],#pl-live-root{display:none!important}
+.pl-live-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pl-live-tools label{display:flex;gap:6px;align-items:center;font-size:13px}
+.pl-live-tools button,.pl-live-tools select{padding:10px;min-height:44px;border:1px solid #9a9f99;background:#fff;color:#2b342f;font:inherit}
+.pl-live-tools button:disabled{opacity:.4}
+.pl-live-status{font-weight:600}
+.pl-live-warning{font-size:12px;color:#606964}
+.pl-live-scroll{max-width:100%;overflow-x:auto}
+.pl-live-scroll .pl-stage{min-width:210mm}
+@media print{
+ body.pl-live-print > *:not(#pl-live-root){display:none!important}
+ body.pl-live-print #pl-live-root{display:block!important}
+ body.pl-live-print #pl-live-root .pl-stage{padding:0!important}
+}

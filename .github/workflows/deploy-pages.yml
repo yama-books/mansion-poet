@@ -55,6 +55,15 @@ jobs:
           test -s public/src/subject-policy.js
           cp src/poem-catalog.js public/src/poem-catalog.js
           cp src/location-highlights.js public/src/location-highlights.js
+          # Approved public layout: SVG only. The independent ART candidate and
+          # reference crop remain in GitHub, never in this Pages artifact.
+          mkdir -p public/src/print-layout public/tests/print-layout/img01
+          cp src/print-layout/*.js src/print-layout/*.css public/src/print-layout/
+          cp tests/print-layout/img01/img01-preview.css public/tests/print-layout/img01/
+          test -s public/src/print-layout/live-app.js
+          test -s public/src/print-layout/paginate.js
+          test -s public/src/print-layout/print-layout.css
+          test ! -e public/assets/art-candidates/asset-art-01/ART-REF0003-PHOTO-01.png
           test -s public/src/poem-catalog.js
           test -s public/src/location-highlights.js
           touch public/.nojekyll
@@ -128,6 +137,11 @@ jobs:
             curl --fail --silent --show-error --location --retry 10 --retry-delay 6 --retry-all-errors --max-time 15 "$1" -o "$2"
           }
           get "$base/" /tmp/app003-live-root.html
+          get "$base/src/print-layout/live-app.js" /tmp/app003-live-print03.js
+          grep -q 'PRINT03 live bridge' /tmp/app003-live-print03.js
+          get "$base/src/print-layout/print-layout.css" /tmp/app003-live-print03.css
+          grep -q -- '-webkit-text-size-adjust:100%' /tmp/app003-live-print03.css
+          get "$base/tests/print-layout/img01/img01-preview.css" /tmp/app003-live-print03-img.css
           grep -iq '<!doctype html' /tmp/app003-live-root.html
           get "$base/tools/reference-gallery/index.html" /tmp/app003-live-gallery.html
           grep -q 'noindex,nofollow,noarchive' /tmp/app003-live-gallery.html
