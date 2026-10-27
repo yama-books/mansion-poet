@@ -5,7 +5,7 @@ let snapshot=null,ticket=0;
 const el=id=>doc.getElementById(id);
 const panel=doc.createElement('section');panel.id='pl-live-panel';panel.className='pl-live-panel';panel.hidden=true;
 const artPreviewHost=['localhost','127.0.0.1','raw.githack.com'].includes(root.location?.hostname||'');
-panel.innerHTML='<div class="pl-live-tools"><strong>PRINT03 / A4広告</strong><label>画像 <select id="pl-live-media"><option value="svg">架空建築の線画（標準）</option>'+(artPreviewHost?'<option value="art">高解像度ART（試作・未承認）</option>':'')+'</select></label><label>上下の焦点 <input id="pl-live-focus" type="range" min="0" max="100" step="10" value="50"></label><button id="pl-live-printbtn" type="button" disabled>この紙面を印刷 / PDF</button><button id="pl-live-close" type="button">閉じる</button></div><p id="pl-live-status" class="pl-live-status" role="status"></p><p class="pl-live-warning">これは架空の創作広告です。独立ARTは架空の情景で、本番利用の承認は受けていません。</p><div class="pl-live-scroll"><div id="pl-live-stage" class="pl-stage"></div></div>';
+panel.innerHTML='<div class="pl-live-tools"><strong>PRINT03 / A4広告</strong><label>画像 <select id="pl-live-media"><option value="svg">架空建築の線画（標準）</option>'+(artPreviewHost?'<option value="art">高解像度ART（試作・未承認）</option>':'')+'</select></label>'+(artPreviewHost?'<label>上下の焦点 <input id="pl-live-focus" type="range" min="0" max="100" step="10" value="50"></label>':'')+'<button id="pl-live-printbtn" type="button" disabled>この紙面を印刷 / PDF</button><button id="pl-live-close" type="button">閉じる</button></div><p id="pl-live-status" class="pl-live-status" role="status"></p><p class="pl-live-warning">これは架空の創作広告です。'+(artPreviewHost?'独立ARTは架空の情景で、本番利用の承認は受けていません。':'線画は実在の物件・施設の外観を示すものではありません。')+'</p><div class="pl-live-scroll"><div id="pl-live-stage" class="pl-stage"></div></div>';
 const rootPrint=doc.createElement('div');rootPrint.id='pl-live-root';
 doc.body.append(panel,rootPrint);
 function clear(){
@@ -52,7 +52,7 @@ async function preview(){
   if(mine!==ticket||snapshot!==current)return;
   const r=await root.PrintImage01Preview.mount(stage,current,{expectedToken:current.generationToken,
    media:el('pl-live-media').value,assetScope:'app',mmHeight:84,
-   focus:Number(el('pl-live-focus').value),sheet:'auto'});
+   focus:Number(el('pl-live-focus')?.value??50),sheet:'auto'});
   if(mine!==ticket||snapshot!==current)return;
   root.__APP003_PRINT_DIAGNOSTICS={token:current.generationToken,preflight:r.report,media:r.mediaUsed,
    viewport:root.innerWidth,ua:root.navigator?.userAgent||'',at:new Date().toISOString()};
@@ -77,7 +77,7 @@ async function preview(){
  }
 }
 el('pl-live-media').addEventListener('change',preview);
-el('pl-live-focus').addEventListener('change',preview);
+el('pl-live-focus')?.addEventListener('change',preview);
 el('pl-live-close').addEventListener('click',()=>{panel.hidden=true;root.PrintImage01Preview.abort();++ticket});
 el('pl-live-printbtn').addEventListener('click',()=>{
  if(!snapshot||el('pl-live-printbtn').disabled||root.__APP003_PRINT_REPORT?.token!==snapshot.generationToken)return;
