@@ -4,7 +4,7 @@ const doc=root.document,PD=root.PrintPresentationData;
 let snapshot=null,ticket=0;
 const el=id=>doc.getElementById(id);
 const panel=doc.createElement('section');panel.id='pl-live-panel';panel.className='pl-live-panel';panel.hidden=true;
-const artPreviewHost=/^(?:localhost|127\\.0\\.0\\.1|raw\\.githack\\.com)$/i.test(root.location?.hostname||'');
+const artPreviewHost=['localhost','127.0.0.1','raw.githack.com'].includes(root.location?.hostname||'');
 panel.innerHTML='<div class="pl-live-tools"><strong>PRINT03 / A4広告</strong><label>画像 <select id="pl-live-media"><option value="svg">架空建築の線画（標準）</option>'+(artPreviewHost?'<option value="art">高解像度ART（試作・未承認）</option>':'')+'</select></label><label>上下の焦点 <input id="pl-live-focus" type="range" min="0" max="100" step="10" value="50"></label><button id="pl-live-printbtn" type="button" disabled>この紙面を印刷 / PDF</button><button id="pl-live-close" type="button">閉じる</button></div><p id="pl-live-status" class="pl-live-status" role="status"></p><p class="pl-live-warning">これは架空の創作広告です。独立ARTは架空の情景で、本番利用の承認は受けていません。</p><div class="pl-live-scroll"><div id="pl-live-stage" class="pl-stage"></div></div>';
 const rootPrint=doc.createElement('div');rootPrint.id='pl-live-root';
 doc.body.append(panel,rootPrint);
