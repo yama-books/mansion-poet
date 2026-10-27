@@ -55,3 +55,14 @@ iPhone Safariで上の確認専用HTTPS previewを開き「神保町または中
 - **コード上の修正候補HEAD**：`7962a90a1ea4618e717661e50f4812f9aa0d64ec`。対応する [PRINT03 #40237215560](https://github.com/yama-books/mansion-poet/actions/runs/40237215560) はSUCCESS。対応する[モバイル/WebKit #40237215559](https://github.com/yama-books/mansion-poet/actions/runs/40237215559) はこの記録時点で実行中、完了・合格を未確認。後から確認して結果を追記する。
 - 状態：**80%（G1-G4）を維持、G5はiPhone実機不合格につき未達**。main統合/Pages公開/画像本番採用は依然禁止・未実施。
 - **次の1操作**：最新コミット固定の確認用URLをiPhoneで開き、同じ手順で再生成して新しい詳細エラーを記録する。成功時は実機の印刷UI・A4 PDFページ数まで確認する。
+
+## 2026-10-28｜APP-003 PRINT03 正式Web公開達成（SVG版）
+
+- 旧PR #44をそのままマージすると現行mainの参照画像ライブラリ19点とdeploy-pagesが失われる差分があったため、そのまま統合せず、安全統合PR [#45](https://github.com/yama-books/mansion-poet/pull/45)を最新mainを親として作成。必要なアプリ/UI/印刷エンジン・Node/Chromium/WebKit試験を選択的に移植し、既存の参照ライブラリ、manifest、gallery、deploy-pagesを保持した。
+- PR #45 は **merged**、merge SHA `e05d8e9b47fb9154e63bf443c6c4f6104712b22a`。品質CI [#40587881956](https://github.com/yama-books/mansion-poet/actions/runs/40587881956) **SUCCESS**、モバイルCI [#40587881902](https://github.com/yama-books/mansion-poet/actions/runs/40587881902) **SUCCESS**：Node135/135、5幅Chromium、生成→印刷→地点変更失効、WebKit iPhoneエミュレーションでSVG/ART候補のA4組版を確認。
+- GitHub Pages [#40588185797](https://github.com/yama-books/mansion-poet/actions/runs/40588185797) **SUCCESS**、[公開URL](https://yama-books.github.io/mansion-poet/)。公開サイトのroot、PRINT03 JS/CSS、画像資料gallery、manifest、19画像のサンプルSHA256までCIがHTTPで読戻し検証した。
+- **公開境界**：承認済みの線画（SVG）A4版のみ一般向けUIで選択可能。独立ART候補はGitHubの画像試作ファイルとして残すがPagesアセットへはコピーせず、一般公開UIにその選択肢を表示しない（試作ホストのみ表示）。原画を本番採用したとは報告しない。
+- 未解決：本番のiPhone Safari実機印刷/保存はアプリ側に計測ログがなく今回未検証。WebKit Linuxエミュレーション合格を実機合格とは扱わない。極端なF03長名は本文の省略をせず2ページになる。ART使用の本番承認・権利審査は別工程。
+- 追加UX修正: [PR #46](https://github.com/yama-books/mansion-poet/pull/46) で公開SVG版では効かない焦点スライダーと試作ART固有の文言を非表示にし、試作環境のART操作は維持（当チェックポイント作成時の統合結果は別途確認）。
+- 進捗表現：**SVG版のコード→CI→Pages公開は完了**。旧G5が一括していた「iPhone Safari実機・ART本採用」は未達の独立受入条件として残す。全体を無条件100%とはしない。
+- 次の1操作：実機Safariの紙面・PDF保存を目視検収し、ARTの本番採用可否は別承認のうえ判断する。
