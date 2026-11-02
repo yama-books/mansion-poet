@@ -47,6 +47,24 @@ function fitSide(container,rendered,blocks,extra){
  }
  return null;
 }
+/* Re-measure the actual print clone. Preserve every node, including loaded
+ * raster media; only advance the same bounded density levels used by preview. */
+function fitPages(container){
+ const measurements=[];
+ for(const page of container.querySelectorAll('.pl-page')){
+  const body=page.querySelector('.pl-page-body'),flow=page.querySelector('.pl-flow');
+  const start=LEVELS.find(n=>page.classList.contains('pl-fit-'+n))??0;
+  for(let level=start;level<=4;level++){
+   LEVELS.forEach(n=>page.classList.remove('pl-fit-'+n));
+   page.classList.add('pl-fit-'+level);
+   const available=body.getBoundingClientRect().height,used=flow.getBoundingClientRect().height;
+   const ok=used<=available; // no positive overflow tolerance at the print boundary
+   measurements.push({page:measurements.filter(x=>x.final).length+1,level,available,used,ok,final:ok||level===4});
+   if(ok)break;
+  }
+ }
+ return {ok:measurements.length>0&&measurements.filter(x=>x.final).every(x=>x.ok),measurements};
+}
 function layoutMulti(container,rendered,level){
  const doc=container.ownerDocument;
  const pages=[];const warnings=[];
@@ -188,5 +206,5 @@ async function mountWithMap(container,templateId,data,opts={}){
  report.mapTiles={requested:want.mapTiles,used,tiles:urls.length,failed};
  return {...result,layout,report};
 }
-root.PrintPaginate=Object.freeze({paginate,verify,mount,mountWithMap,FINE_MIN_PT,CREATIVE_MIN_PT});
+root.PrintPaginate=Object.freeze({paginate,verify,mount,mountWithMap,fitPages,FINE_MIN_PT,CREATIVE_MIN_PT});
 })(typeof globalThis==='object'?globalThis:this);
