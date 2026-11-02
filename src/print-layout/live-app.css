@@ -9,8 +9,17 @@
 .pl-live-warning{font-size:12px;color:#606964}
 .pl-live-scroll{max-width:100%;overflow-x:auto}
 .pl-live-scroll .pl-stage{min-width:210mm}
+/* A named page prevents legacy PRINT02 margins from shrinking the A4 box.
+ * 1mm of physical slack absorbs WebKit's fractional-mm pagination rounding. */
+@page pl-live-sheet{size:A4 portrait;margin:0}
+#pl-live-root .pl-page,.pl-live-panel .pl-page{height:296mm}
+body.pl-live-preparing #pl-live-root{display:block!important;position:absolute;left:-10000px;top:0;width:210mm}
+body.pl-live-preparing #pl-live-root .pl-stage{display:block;padding:0;gap:0}
 @media print{
+ html:has(body.pl-live-print),body.pl-live-print{height:auto!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible!important}
  body.pl-live-print > *:not(#pl-live-root){display:none!important}
- body.pl-live-print #pl-live-root{display:block!important}
- body.pl-live-print #pl-live-root .pl-stage{padding:0!important}
+ body.pl-live-print #pl-live-root{display:block!important;position:static!important;width:210mm;margin:0!important;padding:0!important;min-height:0!important;overflow:visible!important;page:pl-live-sheet}
+ body.pl-live-print #pl-live-root .pl-stage{display:block!important;padding:0!important;margin:0!important;min-height:0!important;overflow:visible!important}
+ body.pl-live-print #pl-live-root .pl-page{margin:0!important;min-height:0!important;overflow:visible;break-before:auto;page-break-before:auto;break-inside:avoid;page-break-inside:avoid;break-after:auto;page-break-after:auto}
+ body.pl-live-print #pl-live-root .pl-page + .pl-page{break-before:page;page-break-before:always}
 }
