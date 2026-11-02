@@ -1024,7 +1024,7 @@ else{text=`${short}の空気に、暮らしの輪郭を重ねる。\n${motif?mot
 // POEM-01: detailed genre library overrides a generic thematic phrase only when
 // the normalized evidence matches an explicitly supported category/brand.
 const authored=verified&&chief&&window.PoemCatalog?.compose(chief,
- {style,intensity,serial:generation,location:site});
+ {style,intensity,serial:generation,location:site,seed:[selected.lat,selected.lon,selectionVersion,generationVersion].join(':')});
 if(authored){title=authored.headline;text=authored.body;}
 const prop=selected.en&&selected.en!=='THE LOCATION'?`THE ${selected.en} RESIDENCE`:`THE RESIDENCE · ${short.toUpperCase()}`;
 $('#poemHeadline').textContent=title;$('#poemBody').textContent=text;$('#poemProperty').textContent=prop;$('#generatedStatus').textContent=verified?`周辺施設 ${pois.length}件を参照して生成`:'地名のみで生成（周辺施設は未取得）';
