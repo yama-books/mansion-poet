@@ -2,6 +2,20 @@
 (function(root){'use strict';
 const doc=root.document,PD=root.PrintPresentationData;
 let snapshot=null,ticket=0;
+let printing=false,focusTimer=null;
+const printMedia=root.matchMedia?.('print');
+function restoreScreen(){
+ if(!printing&&!doc.body.classList.contains('pl-live-print')&&!doc.body.dataset.printLayout)return;
+ printing=false;root.clearTimeout(focusTimer);
+ doc.body.classList.remove('pl-live-print');
+ delete doc.body.dataset.printLayout;
+ rootPrint.textContent='';
+}
+function resumeScreen(){
+ // focus/pageshow may also fire while the print sheet is opening.
+ // Never remove its DOM while the browser still reports print media.
+ if(doc.visibilityState!=='hidden'&&!printMedia?.matches)restoreScreen();
+}
 const el=id=>doc.getElementById(id);
 const panel=doc.createElement('section');panel.id='pl-live-panel';panel.className='pl-live-panel';panel.hidden=true;
 const artPreviewHost=['localhost','127.0.0.1','raw.githack.com'].includes(root.location?.hostname||'');
@@ -9,6 +23,7 @@ panel.innerHTML='<div class="pl-live-tools"><strong>PRINT03 / A4広告</strong><
 const rootPrint=doc.createElement('div');rootPrint.id='pl-live-root';
 doc.body.append(panel,rootPrint);
 function clear(){
+ restoreScreen();
  snapshot=null;++ticket;root.PrintImage01Preview?.abort();
  panel.hidden=true;el('pl-live-stage').textContent='';
  el('pl-live-printbtn').disabled=true;doc.body.classList.remove('pl-live-print');rootPrint.textContent='';
@@ -83,9 +98,18 @@ el('pl-live-printbtn').addEventListener('click',()=>{
  if(!snapshot||el('pl-live-printbtn').disabled||root.__APP003_PRINT_REPORT?.token!==snapshot.generationToken)return;
  rootPrint.textContent='';
  const clone=el('pl-live-stage').cloneNode(true);clone.removeAttribute('id');rootPrint.appendChild(clone);
- delete doc.body.dataset.printLayout;doc.body.classList.add('pl-live-print');root.print();
+ delete doc.body.dataset.printLayout;printing=true;doc.body.classList.add('pl-live-print');
+ try{root.print()}catch(e){restoreScreen();el('pl-live-status').textContent='印刷を開始できませんでした。もう一度お試しください。';console.warn('PRINT03 print failed',e)}
 });
-root.addEventListener('afterprint',()=>{doc.body.classList.remove('pl-live-print');rootPrint.textContent=''});
+root.addEventListener('beforeprint',()=>{printing=true});
+root.addEventListener('afterprint',restoreScreen);
+root.addEventListener('pageshow',resumeScreen);
+doc.addEventListener('visibilitychange',resumeScreen);
+root.addEventListener('focus',()=>{
+ root.clearTimeout(focusTimer);
+ focusTimer=root.setTimeout(resumeScreen,200);
+});
+printMedia?.addEventListener('change',e=>{if(!e.matches)resumeScreen()});
 doc.addEventListener('click',e=>{
  if(e.target.closest('#printBtn')?.id!=='printBtn'||el('printLayout')?.value!=='print03')return;
  e.preventDefault();e.stopImmediatePropagation();if(!el('printBtn').disabled)preview();
