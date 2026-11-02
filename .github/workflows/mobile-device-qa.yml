@@ -67,7 +67,11 @@ jobs:
           curl --fail --silent http://127.0.0.1:8765/index.html >/dev/null
           CHROME_PATH="$CHROME_BIN" APP003_TEST_URL="http://127.0.0.1:8765/index.html" APP003_SCREENSHOTS="$SCREENSHOT_DIR" node tests/mobile-device/browser-smoke.cjs
           CHROME_PATH="$CHROME_BIN" APP003_TEST_URL="http://127.0.0.1:8765/index.html" APP003_SCREENSHOTS="$SCREENSHOT_DIR" node tests/mobile-device/full-flow.cjs
+<<<<<<< HEAD
           CHROME_PATH="$CHROME_BIN" APP003_PRINT_EVIDENCE="$SCREENSHOT_DIR/print-fit" node tests/mobile-device/print-fit.cjs
+=======
+          CHROME_PATH="$CHROME_BIN" APP003_PRINT_EVIDENCE="$SCREENSHOT_DIR/print-recovery" node tests/mobile-device/print-recovery.cjs
+>>>>>>> a659232 (fix(BROWSER-RECOVER-01): recover screen across print lifecycle events)
       - name: Safari WebKit engine A4 preflight regression
         env:
           APP003_WEBKIT_EVIDENCE: ${{ runner.temp }}/app003-webkit-evidence
