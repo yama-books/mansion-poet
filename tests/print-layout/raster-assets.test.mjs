@@ -39,7 +39,7 @@ test('IMG02 rejects missing asset and stale generation before image loading',asy
 test('IMG02 abandoned image loading cannot overwrite a new generation',async()=>{
  const pending=[];
  const view={setTimeout,clearTimeout,Image:class{set src(url){
-  const r=assets.get('test-01').renditions[url.includes('print')?'print':'preview'];
+  const r=assets.get('test-01').renditions[url.endsWith('/print.png')?'print':'preview'];
   this.naturalWidth=r.width;this.naturalHeight=r.height;pending.push(()=>this.onload());
  }}};
  const result=assets.mount({}, {generationToken:'current'},{assetId:'test-01',view});
