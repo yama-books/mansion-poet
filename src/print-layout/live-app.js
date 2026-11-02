@@ -83,7 +83,18 @@ el('pl-live-printbtn').addEventListener('click',()=>{
  if(!snapshot||el('pl-live-printbtn').disabled||root.__APP003_PRINT_REPORT?.token!==snapshot.generationToken)return;
  rootPrint.textContent='';
  const clone=el('pl-live-stage').cloneNode(true);clone.removeAttribute('id');rootPrint.appendChild(clone);
+ doc.body.classList.add('pl-live-preparing');
+ const fit=root.PrintPaginate.fitPages(rootPrint);
+ doc.body.classList.remove('pl-live-preparing');
+ root.__APP003_PRINT_DIAGNOSTICS={...root.__APP003_PRINT_DIAGNOSTICS,printFit:fit};
+ if(!fit.ok){rootPrint.textContent='';el('pl-live-status').textContent='印刷領域に収まりません。再生成して確認してください。';return}
  delete doc.body.dataset.printLayout;doc.body.classList.add('pl-live-print');root.print();
+});
+root.addEventListener('beforeprint',()=>{
+ if(doc.body.classList.contains('pl-live-print')){
+  const fit=root.PrintPaginate.fitPages(rootPrint);
+  root.__APP003_PRINT_DIAGNOSTICS={...root.__APP003_PRINT_DIAGNOSTICS,printFit:fit};
+ }
 });
 root.addEventListener('afterprint',()=>{doc.body.classList.remove('pl-live-print');rootPrint.textContent=''});
 doc.addEventListener('click',e=>{
