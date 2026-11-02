@@ -51,6 +51,26 @@ const pois=['library','park','museum'].map((category,i)=>({id:'test_'+category,n
    const pdf=await page.pdf({preferCSSPageSize:true,printBackground:true});
    const count=[...pdf.toString('latin1').matchAll(/\/Type\s*\/Page\b/g)].length;
    assert.equal(count,1,'native PDF must not append a blank page');
+   await page.emulateMedia({media:'screen'});
+   const constrained=await page.evaluate(()=>{
+    const root=document.querySelector('#pl-live-root');
+    root.append(document.querySelector('#pl-live-stage').cloneNode(true));
+    document.body.classList.add('pl-live-preparing');
+    const body=root.querySelector('.pl-page-body');
+    body.style.height='900px';body.style.flex='none';
+    const before=root.textContent;
+    const compact=PrintPaginate.fitPages(root);
+    body.style.height='50px';
+    const overflow=PrintPaginate.fitPages(root);
+    const retained=before===root.textContent;
+    document.body.classList.remove('pl-live-preparing');root.textContent='';
+    return {compact,overflow,retained};
+   });
+   assert.equal(constrained.compact.ok,true,'bounded density should fit the constrained box');
+   assert.ok(constrained.compact.measurements.length>1,'must actually advance density levels');
+   assert.equal(constrained.overflow.ok,false,'must refuse unfit output');
+   assert.equal(constrained.retained,true,'compaction must not delete text');
+   report.constrained=constrained;
    fs.writeFileSync(path.join(out,`a4-${width}.pdf`),pdf);
    fs.writeFileSync(path.join(out,`a4-${width}.json`),JSON.stringify(report,null,2));
    console.log(JSON.stringify({width,pdfPages:count,fit:report.fit}));
