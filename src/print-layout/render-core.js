@@ -21,6 +21,8 @@ function h(tag,attrs,...children){
 // The only URL the print layer may emit: a GSI map tile addressed by integers.
 const TILE_URL=/^https:\/\/cyberjapandata\.gsi\.go\.jp\/xyz\/pale\/\d{1,2}\/\d{1,7}\/\d{1,7}\.png$/;
 function checkAttr(name,tag,value){
+ if(((tag==='img'&&name==='src')||(tag==='source'&&name==='srcset'))&&
+  /^\.\/assets\/print-approved\/[a-zA-Z0-9_/-]+\.(?:png|jpe?g|webp)$/i.test(String(value)))return;
  if(name==='href'&&tag==='image'&&TILE_URL.test(String(value)))return;
  if(!ATTR_OK.test(name)||ATTR_DENY.test(name))throw new Error('PRINT03: attribute not allowed: '+name);
 }

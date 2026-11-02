@@ -41,6 +41,8 @@ const checkImage=(url,view)=>new Promise(resolve=>{
 });
 async function mount(container,data,opts={}){
  const ticket=++serial;
+ root.PrintRasterAssets?.abort();
+ if(opts.media==='raster')return root.PrintRasterAssets.mount(container,data,opts);
  const media=opts.media||'svg',token=opts.expectedToken??data.generationToken;
  const height=opts.mmHeight??84,focus=opts.focus??50;
  if(token!==data.generationToken)throw new Error('H-07: stale token');
@@ -80,7 +82,7 @@ async function mount(container,data,opts={}){
    photoHeightMm:photoHeight?+(photoHeight*25.4/96).toFixed(1):null,
    effectivePpiCover:cover?+(96/cover).toFixed(1):null,publishedAllowed:false}};
 }
-const api=Object.freeze({mount,REF_URL,ART_URL,ATTRIBUTION,ART_ATTRIBUTION,abort(){serial++}});
+const api=Object.freeze({mount,REF_URL,ART_URL,ATTRIBUTION,ART_ATTRIBUTION,abort(){serial++;root.PrintRasterAssets?.abort()}});
 if(typeof module==='object'&&module.exports)module.exports=api;
 root.PrintImage01Preview=api;
 })(typeof globalThis==='object'?globalThis:this);

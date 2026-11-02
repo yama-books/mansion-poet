@@ -22,6 +22,10 @@ const artPreviewHost=['localhost','127.0.0.1','raw.githack.com'].includes(root.l
 panel.innerHTML='<div class="pl-live-tools"><strong>PRINT03 / A4広告</strong><label>画像 <select id="pl-live-media"><option value="svg">架空建築の線画（標準）</option>'+(artPreviewHost?'<option value="art">高解像度ART（試作・未承認）</option>':'')+'</select></label>'+(artPreviewHost?'<label>上下の焦点 <input id="pl-live-focus" type="range" min="0" max="100" step="10" value="50"></label>':'')+'<button id="pl-live-printbtn" type="button" disabled>この紙面を印刷 / PDF</button><button id="pl-live-close" type="button">閉じる</button></div><p id="pl-live-status" class="pl-live-status" role="status"></p><p class="pl-live-warning">これは架空の創作広告です。'+(artPreviewHost?'独立ARTは架空の情景で、本番利用の承認は受けていません。':'線画は実在の物件・施設の外観を示すものではありません。')+'</p><div class="pl-live-scroll"><div id="pl-live-stage" class="pl-stage"></div></div>';
 const rootPrint=doc.createElement('div');rootPrint.id='pl-live-root';
 doc.body.append(panel,rootPrint);
+for(const asset of root.PrintRasterAssets?.list()||[]){
+ const option=doc.createElement('option');option.value='asset:'+asset.assetId;
+ option.textContent=asset.assetId;el('pl-live-media').appendChild(option);
+}
 function clear(){
  restoreScreen();
  snapshot=null;++ticket;root.PrintImage01Preview?.abort();
@@ -66,10 +70,12 @@ async function preview(){
   await (doc.fonts?.ready||Promise.resolve());
   if(mine!==ticket||snapshot!==current)return;
   const r=await root.PrintImage01Preview.mount(stage,current,{expectedToken:current.generationToken,
-   media:el('pl-live-media').value,assetScope:'app',mmHeight:84,
-   focus:Number(el('pl-live-focus')?.value??50),sheet:'auto'});
+   media:el('pl-live-media').value.startsWith('asset:')?'raster':el('pl-live-media').value,
+   assetId:el('pl-live-media').value.replace(/^asset:/,''),assetScope:'app',mmHeight:84,
+   focus:el('pl-live-focus')?Number(el('pl-live-focus').value):undefined,sheet:'auto'});
   if(mine!==ticket||snapshot!==current)return;
   root.__APP003_PRINT_DIAGNOSTICS={token:current.generationToken,preflight:r.report,media:r.mediaUsed,
+   assetId:r.assetId||null,effectivePpi:r.effectivePpi||null,
    viewport:root.innerWidth,ua:root.navigator?.userAgent||'',at:new Date().toISOString()};
   if(!r.report.ok)throw Error('A4 preflight failed '+JSON.stringify(r.report.failures));
   root.__APP003_PRINT_REPORT={token:current.generationToken,ok:true,pages:r.report.pageCount,
@@ -91,33 +97,32 @@ async function preview(){
   console.warn('PRINT03 preview error',e,root.__APP003_PRINT_DIAGNOSTICS);
  }
 }
-el('pl-live-media').addEventListener('change',preview);
+el('pl-live-media').addEventListener('change',()=>{
+ const asset=root.PrintRasterAssets?.get(el('pl-live-media').value.replace(/^asset:/,''));
+ if(asset&&el('pl-live-focus'))el('pl-live-focus').value=asset.focalPoint.y*100;
+ preview();
+});
 el('pl-live-focus')?.addEventListener('change',preview);
 el('pl-live-close').addEventListener('click',()=>{panel.hidden=true;root.PrintImage01Preview.abort();++ticket});
 el('pl-live-printbtn').addEventListener('click',()=>{
  if(!snapshot||el('pl-live-printbtn').disabled||root.__APP003_PRINT_REPORT?.token!==snapshot.generationToken)return;
  rootPrint.textContent='';
  const clone=el('pl-live-stage').cloneNode(true);clone.removeAttribute('id');rootPrint.appendChild(clone);
-<<<<<<< HEAD
  doc.body.classList.add('pl-live-preparing');
  const fit=root.PrintPaginate.fitPages(rootPrint);
  doc.body.classList.remove('pl-live-preparing');
  root.__APP003_PRINT_DIAGNOSTICS={...root.__APP003_PRINT_DIAGNOSTICS,printFit:fit};
  if(!fit.ok){rootPrint.textContent='';el('pl-live-status').textContent='印刷領域に収まりません。再生成して確認してください。';return}
- delete doc.body.dataset.printLayout;doc.body.classList.add('pl-live-print');root.print();
+ delete doc.body.dataset.printLayout;printing=true;doc.body.classList.add('pl-live-print');
+ try{root.print()}catch(e){restoreScreen();el('pl-live-status').textContent='印刷を開始できませんでした。もう一度お試しください。';console.warn('PRINT03 print failed',e)}
 });
 root.addEventListener('beforeprint',()=>{
+ printing=true;
  if(doc.body.classList.contains('pl-live-print')){
   const fit=root.PrintPaginate.fitPages(rootPrint);
   root.__APP003_PRINT_DIAGNOSTICS={...root.__APP003_PRINT_DIAGNOSTICS,printFit:fit};
  }
 });
-root.addEventListener('afterprint',()=>{doc.body.classList.remove('pl-live-print');rootPrint.textContent=''});
-=======
- delete doc.body.dataset.printLayout;printing=true;doc.body.classList.add('pl-live-print');
- try{root.print()}catch(e){restoreScreen();el('pl-live-status').textContent='印刷を開始できませんでした。もう一度お試しください。';console.warn('PRINT03 print failed',e)}
-});
-root.addEventListener('beforeprint',()=>{printing=true});
 root.addEventListener('afterprint',restoreScreen);
 root.addEventListener('pageshow',resumeScreen);
 doc.addEventListener('visibilitychange',resumeScreen);
@@ -126,7 +131,7 @@ root.addEventListener('focus',()=>{
  focusTimer=root.setTimeout(resumeScreen,200);
 });
 printMedia?.addEventListener('change',e=>{if(!e.matches)resumeScreen()});
->>>>>>> a659232 (fix(BROWSER-RECOVER-01): recover screen across print lifecycle events)
+
 doc.addEventListener('click',e=>{
  if(e.target.closest('#printBtn')?.id!=='printBtn'||el('printLayout')?.value!=='print03')return;
  e.preventDefault();e.stopImmediatePropagation();if(!el('printBtn').disabled)preview();

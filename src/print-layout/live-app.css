@@ -15,6 +15,10 @@
 #pl-live-root .pl-page,.pl-live-panel .pl-page{height:296mm}
 body.pl-live-preparing #pl-live-root{display:block!important;position:absolute;left:-10000px;top:0;width:210mm}
 body.pl-live-preparing #pl-live-root .pl-stage{display:block;padding:0;gap:0}
+.hero-frame.pl-raster-hero{position:relative;overflow:hidden;isolation:isolate}
+.hero-frame.pl-raster-hero picture{display:block;position:absolute;inset:0 0 8mm}
+.hero-frame.pl-raster-hero img{display:block;width:100%;height:100%;object-fit:cover;object-position:var(--raster-focus-x,50%) var(--raster-focus-y,50%)}
+.hero-frame.pl-raster-hero .pl-raster-caption{position:relative;margin:0;min-height:8mm;padding:1mm 2mm;background:var(--pl-paper)}
 @media print{
  html:has(body.pl-live-print),body.pl-live-print{height:auto!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible!important}
  body.pl-live-print > *:not(#pl-live-root){display:none!important}
