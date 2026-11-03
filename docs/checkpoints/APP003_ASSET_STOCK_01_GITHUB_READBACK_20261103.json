@@ -1,0 +1,166 @@
+{
+  "result": "PASS",
+  "verifiedCommit": "5fa05325bf352ecfd33bce3a28be26d57e5b06f8",
+  "verifiedAtJst": "2026-11-04T00:11:50.756657+09:00",
+  "retrieval": "HTTPS GET raw.githubusercontent.com at fixed commit; response bytes independently hashed",
+  "fileCount": 26,
+  "originalCount": 10,
+  "files": [
+    {
+      "file": "assets/stock/ASSET-STOCK-01/README.md",
+      "bytes": 917,
+      "sha256": "45cae3bb1013d19091dde53abde01fb0385f6c2a8b8f3c572c9c3322d3abdd57",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/catalog.csv",
+      "bytes": 4354,
+      "sha256": "d2a0554da4e52297e5ad16650a5ea8f93d7fb9a2cfc04a750919344791cf22ee",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/manifest.json",
+      "bytes": 16572,
+      "sha256": "6dfe9aa8473e31f6b30e2099fae7fdaed986d66749073220b1be29f2eb13444e",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/originals/APP003-STOCK-0001_urban-curved-residence.png",
+      "bytes": 3116878,
+      "sha256": "9366790b5120a1d963a5036761c21dba727971478460a9b13882be45afe7bc23",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/originals/APP003-STOCK-0002_sunlit-living-room.png",
+      "bytes": 2823286,
+      "sha256": "c988f67880b15b2d0b0e2210ab853a18668034b080f77f667882deac2c52c088",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/originals/APP003-STOCK-0003_lakeside-meadow-path.png",
+      "bytes": 2718484,
+      "sha256": "b780c9bd87ebaf1171c605fc1cfd4b493a5256645c4384095bb4bc8256b27b16",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/originals/APP003-STOCK-0004_garden-courtyard-entrance.png",
+      "bytes": 2928955,
+      "sha256": "dd0f723edcf2dbb24f862c3dbe14c0bce65a2c076233b568d1e4b3ac1dfd64b8",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/originals/APP003-STOCK-0005_lakeside-glass-villa.png",
+      "bytes": 3141829,
+      "sha256": "635e16988138f3c3436fcbe45015612996fb414dd00068dd997c11c712b145d8",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/originals/APP003-STOCK-0006_sunlit-kitchen-dining.png",
+      "bytes": 2427108,
+      "sha256": "bbbe0f61b33dd6c833522bd51450af569622a774ea54c207914f312f9ee2ddad",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/originals/APP003-STOCK-0007_morning-bedroom.png",
+      "bytes": 2709861,
+      "sha256": "8a253fe5a28fc0f4f98be184c9778f7b14c31c7dc51a1049a96da0f9294abb53",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/originals/APP003-STOCK-0008_home-library-nook.png",
+      "bytes": 2596789,
+      "sha256": "ca618dfc5a613697bd6c2ce4dd07838d4401f9bffd1407a93c5facc6fe58a897",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/originals/APP003-STOCK-0009_coastal-grass-path.png",
+      "bytes": 2985357,
+      "sha256": "e8dd7964075f9f9a0e93a0750ff496d3c3cfb690a33052702ce30b0240e59884",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/originals/APP003-STOCK-0010_sunlit-woodland-stream.png",
+      "bytes": 3085981,
+      "sha256": "0ef012a1f8c8d778be835969aefc724b5d20eb93d96b6bc5d88ea9507cce2251",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/previews/APP003-STOCK-0001_thumb.jpg",
+      "bytes": 121382,
+      "sha256": "7cb28a769169946ff496b9257512617229844b20173fb8d04524633ad48c4b6e",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/previews/APP003-STOCK-0002_thumb.jpg",
+      "bytes": 94552,
+      "sha256": "3ffc116d1712a4c7da69b7a0dad3e9bd6e6bc502becd47bedf8599c986db0581",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/previews/APP003-STOCK-0003_thumb.jpg",
+      "bytes": 98146,
+      "sha256": "dda95993c7b32d256ebeb6b618f7a1ca42805d2f2c54a79376d31d53c00fe2f8",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/previews/APP003-STOCK-0004_thumb.jpg",
+      "bytes": 117201,
+      "sha256": "d9544663fe3a4e759ed4a289672fde44a976ecf0a89361e052770a30120a1012",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/previews/APP003-STOCK-0005_thumb.jpg",
+      "bytes": 129814,
+      "sha256": "5ed80d5420d36fc310c88f0ad3fed78460eaf8ae2c39f754242a30242e5b9293",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/previews/APP003-STOCK-0006_thumb.jpg",
+      "bytes": 78239,
+      "sha256": "ede6ec21e6e57ee0803783d262b44096e9837252c029f2b61542605a68508a62",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/previews/APP003-STOCK-0007_thumb.jpg",
+      "bytes": 90094,
+      "sha256": "bba2e524d71049cf263944b57f80dc0a4c3475f010c953d5635e55f4141bf01b",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/previews/APP003-STOCK-0008_thumb.jpg",
+      "bytes": 93894,
+      "sha256": "4367b1924c74fc42b281bde53c7c614311084a6059b0eb0b5c565fd44b3f5c68",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/previews/APP003-STOCK-0009_thumb.jpg",
+      "bytes": 116844,
+      "sha256": "b2fd99aacb255a63b42d352828bcc1c79d7166f4fd37b9a1610d221cfd0d5c6c",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/previews/APP003-STOCK-0010_thumb.jpg",
+      "bytes": 127463,
+      "sha256": "19b04e15d7ef0d41a7cd14c51ed5da2c50082b4b9f8e8290532404d09f9aeeed",
+      "status": 200
+    },
+    {
+      "file": "assets/stock/ASSET-STOCK-01/previews/ASSET-STOCK-01_contact-sheet.png",
+      "bytes": 2568111,
+      "sha256": "e7a0f5e3c888b3e8c19ee1e236e9b719e258fee0a4deb0ac21836b1e4b242ced",
+      "status": 200
+    },
+    {
+      "file": "docs/APP003_ASSET-STOCK-01_HANDOFF.md",
+      "bytes": 3618,
+      "sha256": "254116113521bf33e1b18e9297966afc688d0f354ae54951289087cda234586a",
+      "status": 200
+    },
+    {
+      "file": "docs/APP003_ASSET_STOCK_01_INDEX.md",
+      "bytes": 13348,
+      "sha256": "656fdd331997d03fbef3bef7408ce508871e6be983e36ba8fc93e0866c50ac3c",
+      "status": 200
+    }
+  ]
+}
