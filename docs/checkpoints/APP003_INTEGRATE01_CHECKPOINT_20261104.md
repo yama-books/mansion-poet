@@ -27,9 +27,14 @@ GitHub fetchで最新main `ee45852d785b724f51f1f12397efaa85bf1798f1` を確認�
 - Edge `print-recovery.cjs`: 390/1280px、afterprint/pageshow/visibilitychange/focus/media-exit/print例外の6経路PASS、DOMとボタン同一性維持。再表示で文章固定、再生成で文章変化、別地点（京都）で生成可能。公開ホスト名ではSVGのみ・承認済み画像0件PASS。
 - Edge `raster-print.cjs`: 合成試験画像のみ使用。390/1280px、画面650px→印刷2600pxの画像切替、焦点30%/70%、SVG写真化なし、native A4 PDF各1ページ・全文保持PASS。本番画像の採用・画質承認ではない。
 - `node scripts/print-assets/package.cjs artifacts/package-check`: approvedAssets=0 / packagedRenditions=0、exit 0。
-- 結合CI、追加PDF文字検査、Jev完了監査の最終結果は後続追記する。
+- Edge既存viewport smoke: 320/375/390/430/1440px PASS、横スクロール・操作領域・日本語表示を確認。full-flow: 390/1440pxの検索→選択→生成→コピー→旧1ページ印刷→PRINT03→地点変更・通信断時の旧内容排除PASS。
+- reference-gallery browser smoke: 1440/390/320px、19点表示・フィルター・詳細表示・横はみ出しなしPASS。
+- 既存10 fixture × 3版型（30ケース）: `PrintFixtures` / `preview.html` / `check_pdf.py`をPlaywright起動で再利用し30/30 PASS、exit 0。全PDFがA4、DOMとページ数一致、必須文字欠落0、紙面外文字0。F03長名はtype_poem 1ページ・細字7pt/創作注記8pt、editorial/location 2ページ・細字7.5pt/創作注記8pt。長文F06は3ページで内容を保持。結果は同ディレクトリのVALIDATION JSONに保存。
+- PC/390pxの生成画面と長名PDFの表裏PNGを目視確認。文字の重なり・切れを認めない（実紙可読性の承認ではない）。
+- 初回統合HEAD `24546639b935b480ad0ceb63cadba7943f908cba`: [quality CI](https://github.com/yama-books/mansion-poet/actions/runs/41668264210) SUCCESS、[mobile/PDF/WebKit CI](https://github.com/yama-books/mansion-poet/actions/runs/41668264368) SUCCESS。
+- Draft PR [#52](https://github.com/yama-books/mansion-poet/pull/52)。最終HEADのCI・Jev監査・読戻し記録は後続追記。
 
-Windows旧PDFランチャーの直接起動ではDOM/PDF生成に失敗。PowerShell版も起動待ちになるため、同じ既存fixtureとcheck_pdf.pyをPlaywright起動で再利用する。既存viewport/full-flowのローカル別プロセス配信にも接続問題があり、結合CI結果と区別して記録する。回復済みの起動失敗をアプリの不具合やSafari不合格と断定しない。
+Windows旧PDFランチャーの直接起動ではDOM/PDF生成に失敗。PowerShell版は5ケース中4件PASS・1件起動タイムアウト。代替のPlaywright起動で同じ既存fixture・PDF検査器の30ケース全成功を確認した。viewport/full-flowのURL許可先が8765固定だったため、指定APP003_TEST_URLのoriginに追従するよう修正し、同一プロセス内配信で既存テストを全成功させた。アプリ本体の不具合やSafari不合格とは判定しない。
 
 ## 保全・未完了
 
@@ -37,4 +42,4 @@ Windows旧PDFランチャーの直接起動ではDOM/PDF生成に失敗。PowerS
 
 iPhone実機Safariの印刷/PDF保存・キャンセル・復帰、実紙での細字可読性、正式公開判断、画像の使用権・本番採用は未検収。極端な長名は既存の非破壊的複数ページ退避を許容し、任意の文章が必ず1ページとは宣言しない。単純拡大を高精細化の成功と扱わない。
 
-ロールバックは本PRを採用しない、または統合差分をrevertする。永続データ移行なし。次の操作は結合CIとPDF検査の結果を本CHECKPOINTへ追記し、GitHubから読戻すこと。
+ロールバックは本PRを採用しない、または統合差分をrevertする。永続データ移行なし。次の操作は監理APP-003/MGMT-02がDraft PR #52の差分と未検収事項をレビューし、iPhone Safari実機検収へ進むこと。

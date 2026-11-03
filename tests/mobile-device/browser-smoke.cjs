@@ -72,7 +72,7 @@ async function assertUsable(page,label,isMobile){
    // Deterministic offline state: no third-party requests, real user location or POI queries.
    await page.route('**/*',route=>{
     const url=route.request().url();
-    if(url.startsWith('http://127.0.0.1:8765/')||url.startsWith('http://localhost:8765/'))return route.continue();
+    if(url.startsWith(new URL(BASE).origin+'/'))return route.continue();
     return route.abort();
    });
    const response=await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:30000});

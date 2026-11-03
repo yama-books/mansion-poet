@@ -1,0 +1,280 @@
+{
+  "passed": 30,
+  "total": 30,
+  "rows": [
+    {
+      "name": "type_poem__F01_jimbocho_3",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "editorial__F01_jimbocho_3",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "location__F01_jimbocho_3",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "type_poem__F02_nakano_1",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "editorial__F02_nakano_1",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "location__F02_nakano_1",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "type_poem__F03_kyoto_3_longnames",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "editorial__F03_kyoto_3_longnames",
+      "ok": true,
+      "pages": 2,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "location__F03_kyoto_3_longnames",
+      "ok": true,
+      "pages": 2,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "type_poem__F04_residential_0",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "editorial__F04_residential_0",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "location__F04_residential_0",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "type_poem__F05_address_100",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "editorial__F05_address_100",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "location__F05_address_100",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "type_poem__F06_long_poem",
+      "ok": true,
+      "pages": 3,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "editorial__F06_long_poem",
+      "ok": true,
+      "pages": 3,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "location__F06_long_poem",
+      "ok": true,
+      "pages": 3,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "type_poem__F10_dense_cards",
+      "ok": true,
+      "pages": 2,
+      "minFontPt": 7,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "editorial__F10_dense_cards",
+      "ok": true,
+      "pages": 2,
+      "minFontPt": 7,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "location__F10_dense_cards",
+      "ok": true,
+      "pages": 2,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "type_poem__F07_xss",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "editorial__F07_xss",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "location__F07_xss",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "type_poem__F08_walk_verified",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "editorial__F08_walk_verified",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "location__F08_walk_verified",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "type_poem__F09_jimbocho_mono",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7.5,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "editorial__F09_jimbocho_mono",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    },
+    {
+      "name": "location__F09_jimbocho_mono",
+      "ok": true,
+      "pages": 1,
+      "minFontPt": 7,
+      "minCreativePt": 8,
+      "missing": [],
+      "outside": []
+    }
+  ],
+  "dateJst": "2026-11-04",
+  "runner": "Local Edge via Playwright, existing PrintFixtures/preview.html/check_pdf.py; map off. Original PowerShell runner separately passed 4/5 mapped F03 cases with one launch timeout.",
+  "hardwareSafariAccepted": false,
+  "stockApprovalChanged": false
+}
