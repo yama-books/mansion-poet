@@ -1,0 +1,145 @@
+{
+  "dateJst": "2026-11-04",
+  "provider": "typesafe",
+  "scope": "Task-scoped user approval for secret-free diff and test_output from integration-01; canonical standing allowlist unchanged.",
+  "initial": {
+    "tool": "jev_verify",
+    "model": "jev-1.14.0",
+    "provider": "typesafe",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 4,
+      "contradicted": 1,
+      "unsupported": 0,
+      "needs_review": 1
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The supplied actual combined Node test run exited 0 with 213 tests passing and 0 failing.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.97,
+          "contradicts": 0.03,
+          "says_nothing": 0
+        },
+        "confidence": 0.96,
+        "action": "auto",
+        "supporting_evidence": "tests",
+        "same_subject": 0.95
+      },
+      {
+        "id": "claim1",
+        "claim": "The supplied browser test output reports one-page native PDFs for SVG and synthetic raster fixtures at both 390px and 1280px.",
+        "verdict": "contradicted",
+        "probabilities": {
+          "supports": 0.37,
+          "contradicts": 0.55,
+          "says_nothing": 0.08
+        },
+        "confidence": 0.33,
+        "action": "review",
+        "supporting_evidence": "tests",
+        "same_subject": 0.74
+      },
+      {
+        "id": "claim2",
+        "claim": "The supplied browser test output reports recovery through afterprint, pageshow, visibilitychange, focus, print-media exit and print exceptions at both tested widths, while retaining the normal DOM.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.99,
+          "contradicts": 0.01,
+          "says_nothing": 0
+        },
+        "confidence": 0.98,
+        "action": "auto",
+        "supporting_evidence": "tests",
+        "same_subject": 0.96
+      },
+      {
+        "id": "claim3",
+        "claim": "The supplied diff keeps the approved raster catalogue empty, and the supplied public-host browser check reports SVG-only selection.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 0.97,
+          "contradicts": 0.03,
+          "says_nothing": 0
+        },
+        "confidence": 0.96,
+        "action": "auto",
+        "supporting_evidence": "tests",
+        "same_subject": 0.96
+      },
+      {
+        "id": "claim4",
+        "claim": "The supplied poem-catalog diff uses deterministic place/generation inputs rather than render-time randomness, and the added tests check stable same-generation output and distinct first-generation introductions.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": "diff",
+        "same_subject": 0.86
+      }
+    ],
+    "usage": {
+      "input_tokens": 8108,
+      "output_tokens": 495
+    }
+  },
+  "pdfClarification": {
+    "tool": "jev_verify",
+    "model": "jev-1.14.0",
+    "provider": "typesafe",
+    "auto_accept": 0.8,
+    "subject_at": 0.5,
+    "summary": {
+      "verified": 2,
+      "contradicted": 0,
+      "unsupported": 0,
+      "needs_review": 0
+    },
+    "results": [
+      {
+        "id": "claim0",
+        "claim": "The print-fit.cjs run logged pdfPages=1 at viewport width 390 and at width 1280.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": "tests",
+        "same_subject": 0.98
+      },
+      {
+        "id": "claim1",
+        "claim": "The raster-print.cjs run logged pdfPages=1 at viewport width 390 and at width 1280.",
+        "verdict": "verified",
+        "probabilities": {
+          "supports": 1,
+          "contradicts": 0,
+          "says_nothing": 0
+        },
+        "confidence": 1,
+        "action": "auto",
+        "supporting_evidence": "tests",
+        "same_subject": 0.98
+      }
+    ],
+    "usage": {
+      "input_tokens": 5729,
+      "output_tokens": 199
+    }
+  },
+  "resolution": "Initial compound PDF claim was withdrawn after contradicted/review. Actual print-fit/raster-print test diff was added as evidence and replaced with two narrow log-output claims; both verified. Four other original claims verified. No jev_gate used. No claim of arbitrary-content one-page output or real iPhone acceptance.",
+  "finalClaimsVerified": 6,
+  "finalClaimsContradicted": 0,
+  "finalClaimsUnsupported": 0
+}

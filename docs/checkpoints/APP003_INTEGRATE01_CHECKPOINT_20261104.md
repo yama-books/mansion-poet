@@ -32,7 +32,9 @@ GitHub fetchで最新main `ee45852d785b724f51f1f12397efaa85bf1798f1` を確認�
 - 既存10 fixture × 3版型（30ケース）: `PrintFixtures` / `preview.html` / `check_pdf.py`をPlaywright起動で再利用し30/30 PASS、exit 0。全PDFがA4、DOMとページ数一致、必須文字欠落0、紙面外文字0。F03長名はtype_poem 1ページ・細字7pt/創作注記8pt、editorial/location 2ページ・細字7.5pt/創作注記8pt。長文F06は3ページで内容を保持。結果は同ディレクトリのVALIDATION JSONに保存。
 - PC/390pxの生成画面と長名PDFの表裏PNGを目視確認。文字の重なり・切れを認めない（実紙可読性の承認ではない）。
 - 初回統合HEAD `24546639b935b480ad0ceb63cadba7943f908cba`: [quality CI](https://github.com/yama-books/mansion-poet/actions/runs/41668264210) SUCCESS、[mobile/PDF/WebKit CI](https://github.com/yama-books/mansion-poet/actions/runs/41668264368) SUCCESS。
-- Draft PR [#52](https://github.com/yama-books/mansion-poet/pull/52)。最終HEADのCI・Jev監査・読戻し記録は後続追記。
+- Draft PR [#52](https://github.com/yama-books/mansion-poet/pull/52)。最終HEADのCI URLとGitHub読戻し確認はPR本文に固定HEADと併記する。
+- Jev `typesafe`完了監査: 最終的な短い6主張はverified、contradicted/unsupported/reviewは0。初回の複合PDF主張はcontradicted/reviewだったため撤回し、実テスト差分を証拠へ追加して出力値に限定した2主張へ分割、両方verified。詳細は `APP003_INTEGRATE01_JEV_20261104.json`。同じ入力の好結果待ち再送は行っていない。
+- 今回の差分・テスト出力の送信はチャット内でユーザーが明示承認。正本のstanding allowlistは変更なし。初回全差分のscannerはJavaScriptのtoken式を5件検出し送信を止めた。関連する未改変の差分hunkのみへ絞ったaudit packはsend_allowed=true・credential hits=0であり、その証拠だけを送信した。
 
 Windows旧PDFランチャーの直接起動ではDOM/PDF生成に失敗。PowerShell版は5ケース中4件PASS・1件起動タイムアウト。代替のPlaywright起動で同じ既存fixture・PDF検査器の30ケース全成功を確認した。viewport/full-flowのURL許可先が8765固定だったため、指定APP003_TEST_URLのoriginに追従するよう修正し、同一プロセス内配信で既存テストを全成功させた。アプリ本体の不具合やSafari不合格とは判定しない。
 
