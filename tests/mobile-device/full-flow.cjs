@@ -34,7 +34,7 @@ async function verifyFlow(browser,scenario){
  });
  await page.route('**/*',async route=>{
   const u=route.request().url();
-  if(u.startsWith('http://127.0.0.1:8765/')||u.startsWith('http://localhost:8765/'))return route.continue();
+  if(u.startsWith(new URL(BASE).origin+'/'))return route.continue();
   if(u.startsWith('https://msearch.gsi.go.jp/address-search/AddressSearch')){
    lookupCount++;
    return okJson(route,[{

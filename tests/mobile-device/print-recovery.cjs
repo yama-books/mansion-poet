@@ -36,6 +36,12 @@ const pois=['library','park','museum'].map((category,i)=>({id:'test_'+category,n
    await page.waitForFunction(()=>!document.querySelector('#printBtn').disabled);
    await page.locator('#printBtn').click();
    await page.waitForFunction(()=>!document.querySelector('#pl-live-printbtn').disabled);
+   const first=await page.locator('#poemBody').innerText();
+   await page.evaluate(()=>PrintLive.preview());
+   await page.waitForFunction(()=>!document.querySelector('#pl-live-printbtn').disabled);
+   assert.equal(await page.locator('#poemBody').innerText(),first,'preview preserves generation copy');
+   assert.ok((await page.locator('#pl-live-stage').innerText()).replace(/\\n|\s/g,'').includes(first.replace(/\\n|\s/g,'')),
+    'SVG paper preserves copy');
    await page.evaluate(()=>{
     window.__originalBody=document.body;window.__generate=document.querySelector('#generateBtn');
     window.print=()=>{};
@@ -64,8 +70,30 @@ const pois=['library','park','museum'].map((category,i)=>({id:'test_'+category,n
    await page.locator('#regenerateBtn').click();
    await page.waitForFunction(()=>!document.querySelector('#printBtn').disabled);
    assert.equal(await page.evaluate(()=>PrintLive.hasSnapshot()),true,'generation listeners survive recovery');
+   assert.notEqual(await page.locator('#poemBody').innerText(),first,'regeneration changes copy');
+   await page.locator('[data-preset="kyoto"]').click();
+   assert.equal(await page.evaluate(()=>PrintLive.hasSnapshot()),false,'place change invalidates old print');
+   await page.locator('#generateBtn').click();
+   await page.waitForFunction(()=>!document.querySelector('#printBtn').disabled);
+   assert.equal(await page.evaluate(()=>PrintLive.hasSnapshot()),true,'different place can generate after recovery');
+   assert.match(await page.locator('#selectedPlace').innerText(),/京都/);
    console.log(JSON.stringify({width,recovered:['afterprint','pageshow','visibilitychange','focus','media-exit','throw'],normalDOMRetained:true}));
    await page.close();
   }
+  const publicPage=await browser.newPage();
+  const publicBase='https://yama-books.github.io/mansion-poet/';
+  await publicPage.route('**/*',route=>{
+   const u=route.request().url();
+   if(!u.startsWith(publicBase))return route.abort();
+   const file=path.resolve(base,decodeURIComponent(u.slice(publicBase.length).split('?')[0]||'index.html'));
+   if(!file.startsWith(base+path.sep))return route.abort();
+   return route.fulfill({contentType:types[path.extname(file)]||'application/octet-stream',body:fs.readFileSync(file)});
+  });
+  await publicPage.goto(publicBase);
+  assert.deepEqual(await publicPage.locator('#pl-live-media option').evaluateAll(xs=>xs.map(x=>x.value)),['svg'],
+   'public hostname must expose no unapproved ART or raster candidates');
+  assert.equal(await publicPage.evaluate(()=>PrintRasterAssets.list().length),0);
+  console.log('PUBLIC MEDIA BOUNDARY OK: SVG only, approved raster catalogue empty');
+  await publicPage.close();
  }finally{await browser.close();server.close()}
 })().catch(err=>{console.error(err);server.close();process.exitCode=1});
