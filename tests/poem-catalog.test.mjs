@@ -204,8 +204,8 @@ test('POEM-01 exactly 200 different advertisement openings, independently of ten
   assert.ok(all.every(x=>!forbidden.test(x.body)),'Explanatory or unsupported copy returned');
   assert.ok(all.every(x=>x.body.length<=180),'Unexpectedly long prose may overflow A4');
   assert.notEqual(intros[0],intros[10],'Regeneration #11 must not replay opening #1');
-  assert.equal(lib.compose(subject,{serial:201,intensity:85}).body,all[0].body,'Only #201 wraps 200-opening cycle');
-  assert.equal(lib.compose(subject,{serial:401,intensity:85}).body,all[0].body);
+  assert.equal(lib.compose(subject,{serial:201,intensity:85,location:'神保町'}).body,all[0].body,'Only #201 wraps 200-opening cycle');
+  assert.equal(lib.compose(subject,{serial:401,intensity:85,location:'神保町'}).body,all[0].body);
   for(const intensity of [20,95]){
    for(let serial=1;serial<=200;serial++){
     const result=lib.compose(subject,{serial,intensity,location:'神保町'});
@@ -214,6 +214,17 @@ test('POEM-01 exactly 200 different advertisement openings, independently of ten
    }
   }
  }
+});
+
+test('POEM-RAND-01 first introductions depend on place and token, and stay stable within a generation',()=>{
+ const subject=poi({name:'試験公園',tags:{leisure:'park'},theme:'green'});
+ const options={serial:1,location:'中野',seed:'selection-1:generation-1'};
+ const first=lib.compose(subject,options);
+ for(let i=0;i<10;i++)assert.deepEqual(lib.compose(subject,options),first);
+ const intros=new Set(Array.from({length:40},(_,i)=>lib.compose(
+  {...subject,sourceId:'node/'+i},{...options,location:'地点'+i,seed:'generation-'+i}).body.split('\n')[0]));
+ assert.ok(intros.size>=20,'fresh sessions must not all start at the first catalogue entry');
+ assert.notEqual(lib.compose(subject,{...options,serial:2}).body.split('\n')[0],first.body.split('\n')[0]);
 });
 
 test('POEM-01 editorial upgrade: every style and density remains succinct and distinct',()=>{

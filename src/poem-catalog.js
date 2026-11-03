@@ -253,10 +253,19 @@
   "「{name}」。次の言葉を待つ、街の一景。",
   "街をもう一度見つめたくなる。その入口に「{name}」。" // 191–200
  ]);
- function compose(p,{style='heritage',intensity=85,serial=1,location='この街'}={}){
+ function openingIndex(p,location,seed,serial){
+  // FNV-1a: stable across preview, copy and print. No render-time randomness.
+  const key=JSON.stringify([p.source,p.sourceId,p.name,p.lat,p.lon,location,seed??'']);
+  let hash=2166136261;
+  for(const ch of key)hash=Math.imul(hash^ch.charCodeAt(0),16777619)>>>0;
+  const sequence=Number.isFinite(serial)?Math.trunc(serial)-1:0;
+  // 73 is coprime with 200, so a fixed place traverses all openings before repeating.
+  return ((hash%adOpenings.length+sequence*73)%adOpenings.length+adOpenings.length)%adOpenings.length;
+ }
+ function compose(p,{style='heritage',intensity=85,serial=1,location='この街',seed}={}){
   const genre=resolve(p);if(!genre)return null;
   const position=((Math.trunc(serial)-1)%10+10)%10;
-  const openingPosition=((Math.trunc(serial)-1)%adOpenings.length+adOpenings.length)%adOpenings.length;
+  const openingPosition=openingIndex(p,location,seed,serial);
   const headline=genre.variants[position]+'。';
   const second=genre.variants[(position+3)%10]+'。';
   const last=endings[style]||endings.heritage;

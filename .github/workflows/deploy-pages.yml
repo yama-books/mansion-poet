@@ -10,6 +10,7 @@ on:
       - tools/reference-gallery/**
       - research/visual-reference-manifest.json
       - assets/reference-images/**
+      - assets/print-approved/**
       - .github/workflows/deploy-pages.yml
   workflow_dispatch:
 
@@ -59,6 +60,7 @@ jobs:
           # reference crop remain in GitHub, never in this Pages artifact.
           mkdir -p public/src/print-layout public/tests/print-layout/img01
           cp src/print-layout/*.js src/print-layout/*.css public/src/print-layout/
+          node scripts/print-assets/package.cjs public
           cp tests/print-layout/img01/img01-preview.css public/tests/print-layout/img01/
           test -s public/src/print-layout/live-app.js
           test -s public/src/print-layout/paginate.js
