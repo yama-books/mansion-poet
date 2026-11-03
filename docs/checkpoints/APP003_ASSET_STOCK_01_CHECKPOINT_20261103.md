@@ -28,4 +28,16 @@ manifestの原画10点すべてについてSHA-256、サイズ、PNGチャンク
 
 原画はAI生成の架空表現であり、実在物件・所在地・眺望の証拠ではない。原画1055×1491pxはA4全面で約127.5ppiであり、300ppiの印刷原画とは扱わない。権利・広告採用・印刷品質の審査は独立工程。
 
-GitHub読戻しとDraft PRの結果は検証完了後に追記する。main統合、GitHub Pages公開、広告への本番採用は行わない。
+## GitHub保存・読戻し・Draft PR
+
+- 素材保存commit：[5fa05325bf352ecfd33bce3a28be26d57e5b06f8](https://github.com/yama-books/mansion-poet/commit/5fa05325bf352ecfd33bce3a28be26d57e5b06f8)
+- Draft PR：[PR #51](https://github.com/yama-books/mansion-poet/pull/51)（base: main／Draft、未マージ）
+- [原画保存先（固定commit）](https://github.com/yama-books/mansion-poet/tree/5fa05325bf352ecfd33bce3a28be26d57e5b06f8/assets/stock/ASSET-STOCK-01/originals)
+- [画像目録（固定commit）](https://github.com/yama-books/mansion-poet/blob/5fa05325bf352ecfd33bce3a28be26d57e5b06f8/docs/APP003_ASSET_STOCK_01_INDEX.md)
+- GitHub読戻し：2026-11-04 00:11 JST、固定commitのraw URLから納品26ファイルをHTTPS GETで取得。全26件のバイト数・SHA-256一致、原画10/10一致。記録：[GitHub読戻しJSON](APP003_ASSET_STOCK_01_GITHUB_READBACK_20261103.json)。
+- 既存原画の上書き、画像再生成、main統合、GitHub Pages公開、広告への本番採用：すべて未実施。
+- コード変更なし。アプリ機能テストは対象外。実施した検証はZIP・PNG・ハッシュ・既存ファイル非変更・相対リンク・GitHub読戻しであり、印刷品質や権利審査の合格を意味しない。
+- 納品HANDOFF原文の行末2スペースはMarkdown改行のため保持。差分検査ではこの行末形式を許容した。
+- PCのGit認証は別アカウントでpush権限がなかったため、接続済み`yama-books`アカウントのGitHub Git Data APIで同じ指定ブランチへ保存した。権限設定・認証設定の変更なし。
+
+未保存の納品素材：なし。次の1操作：監理担当がこのCHECKPOINTとPR #51を確認し、素材保管の受領を記録する。main統合・公開・本番採用は本引継ぎの対象外かつ禁止。
