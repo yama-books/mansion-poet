@@ -1,0 +1,57 @@
+name: Assemble ASSET-ART-01 original PNGs
+
+on:
+  push:
+    branches:
+      - assets/app003-asset-art-01-photo-trial-20261023
+    paths:
+      - '_asset_transfer/app003-art01/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize-originals:
+    if: github.ref == 'refs/heads/assets/app003-asset-art-01-photo-trial-20261023'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Reconstruct byte-for-byte originals and validate
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,hashlib,json,struct
+          manifest=json.loads(Path('research/asset-art-01-manifest.json').read_text())
+          for entry in manifest['images']:
+              target=Path(entry['filePath'])
+              if not target.exists():
+                  source=Path('_asset_transfer/app003-art01') / target.name
+                  pieces=sorted(source.glob('part-*.b64'))
+                  if not pieces:
+                      raise RuntimeError('No chunks for '+str(target))
+                  b64=b''.join(p.read_bytes().strip() for p in pieces)
+                  raw=base64.b64decode(b64,validate=True)
+                  target.parent.mkdir(parents=True,exist_ok=True)
+                  target.write_bytes(raw)
+              raw=target.read_bytes()
+              assert len(raw)==entry['bytes'],target
+              assert hashlib.sha256(raw).hexdigest()==entry['sha256'],target
+              assert hashlib.sha1(('blob '+str(len(raw))+'\0').encode()+raw).hexdigest()==entry['gitBlobSha1'],target
+              assert raw[:8]==b'\x89PNG\r\n\x1a\n' and raw[12:16]==b'IHDR',target
+              wh=struct.unpack('>II',raw[16:24])
+              assert wh==(entry['width'],entry['height']),target
+              print('PASS',target,wh,'bytes',len(raw),'sha256',entry['sha256'])
+          PY
+      - name: Save exact originals, remove temporary chunks
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/art-candidates/asset-art-01/
+          git rm -r -q -- _asset_transfer/app003-art01
+          git diff --cached --check
+          git commit -m "assets(APP-003): preserve 3 original photo-style ART candidates"
+          git push origin HEAD:assets/app003-asset-art-01-photo-trial-20261023

@@ -106,3 +106,17 @@ GitHub [commit `44e154abf79b`](https://github.com/yama-books/mansion-poet/commit
 - 2026-10-22 19:13 JST頃：PR #37に参考画像由来の写真切り出し3PNGがpushされたことをGitHubのtree/commit/manifestで確認。独立ARTと7枚の元参考画像は別ステータスに分離。
 
 > 表のPR HEADや状態は最終確認時点のスナップショット。最新状態はGitHubで必ず再照合する。
+
+### 2026-10-25｜ASSET-ART-01 新規原画3/3保全（Draft PRの成果）
+
+**参照用REF切り出し3点とは別の独立生成原画**。画像制作の初回3テーマを保存し、原画の byte長・Git blob SHA1・SHA256・1672×941px寸法を3件すべて検証した。GitHub Actions [#40141561698](https://github.com/yama-books/mansion-poet/actions/runs/40141561698) 成功、[固定原画コミット `134f5d9`](https://github.com/yama-books/mansion-poet/commit/134f5d986359a359e391997731978b0ad16200ca)。
+
+| ART-ID（未承認の独立素材候補） | テーマ | GitHub原画 |
+|---|---|---|
+| ART-REF0003-PHOTO-01 | 文教・図書館 | [1672×941 PNG](../assets/art-candidates/asset-art-01/ART-REF0003-PHOTO-01.png) |
+| ART-REF0004-PHOTO-01 | 公園・緑地 | [1672×941 PNG](../assets/art-candidates/asset-art-01/ART-REF0004-PHOTO-01.png) |
+| ART-REF0008-PHOTO-01 | ポスト・路地 | [1672×941 PNG](../assets/art-candidates/asset-art-01/ART-REF0008-PHOTO-01.png) |
+
+正確なhash/byte数：`research/asset-art-01-manifest.json`。初回成果・非対象・後続担当：[CHECKPOINT](checkpoints/APP003_ASSET_ART_01_CHECKPOINT.md)。
+
+**状態**：ART原画制作・GitHub保存は完了。素材権利審査と印刷採用は未承認、PR #39への差替え試験は後続。今後の大量制作はユーザーレビューまで保留。

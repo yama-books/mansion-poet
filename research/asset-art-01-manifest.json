@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "app003.art-candidate.v1",
+  "workId": "APP-003/ASSET-ART-01",
+  "purpose": "Preview-only photo-style original images; NOT production ART approved",
+  "assetStatus": "preserved_review_candidate",
+  "publishedAllowed": false,
+  "rightsStatus": "review_required",
+  "createdFor": "reference image library and PRINT03 visual pilot, not real property/POI evidence",
+  "images": [
+    {
+      "assetId": "ART-REF0003-PHOTO-01",
+      "parentReferenceId": "REF-0003",
+      "theme": "文教・書店・図書館",
+      "tags": [
+        "fit:bookstore",
+        "fit:knowledge",
+        "fit:library"
+      ],
+      "classification": "ART independent original, AI-generated fictitious single-scene photo-style",
+      "filePath": "assets/art-candidates/asset-art-01/ART-REF0003-PHOTO-01.png",
+      "sourceLocalName": "陽光に包まれた空のモダン図書館.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2767065,
+      "sha256": "8cdcf7cbd361d4387a95e5b06eb0e5112cb3c4846f326b2847af7cc178ff7b57",
+      "gitBlobSha1": "2ee714f8e57193c2e4af3406c7f92a9a33d8bde0",
+      "focalPoint": {
+        "x": 0.64,
+        "y": 0.45
+      },
+      "sceneDescription": "架空のガラス張り図書空間。陽光、木製書架、階段、無文字の蔵書を主景とする。",
+      "containsAdvertisementCopy": false,
+      "depictsVerifiedRealPOI": false,
+      "sourceKind": "generated_single_scene",
+      "modelOrMethod": "ChatGPT image generation, raster PNG output",
+      "permissionToRedistribute": "reference_repository_only",
+      "publishedAllowed": false,
+      "productionApproval": "pending",
+      "printSuitability": "pending_layout_qa",
+      "notes": "Visual check: no visible ad headline, numeric price, map, logo or information card; book spines remain abstract. Real-world property/facility evidence: none.",
+      "githubPreservationStatus": "verified_original_bytes",
+      "githubVerifiedCommit": "134f5d986359a359e391997731978b0ad16200ca",
+      "rightsStatus": "review_required"
+    },
+    {
+      "assetId": "ART-REF0004-PHOTO-01",
+      "parentReferenceId": "REF-0004",
+      "theme": "公園・緑地・並木道",
+      "tags": [
+        "fit:park",
+        "fit:green",
+        "fit:tree-lined"
+      ],
+      "classification": "ART independent original, AI-generated fictitious single-scene photo-style",
+      "filePath": "assets/art-candidates/asset-art-01/ART-REF0004-PHOTO-01.png",
+      "sourceLocalName": "湖畔の木陰道と遠_skyline.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 3291920,
+      "sha256": "950c0af7b3bd22a258827b091a0e404ae44197d18271109d8464ec1a70b7b31f",
+      "gitBlobSha1": "fe6b625959d7dd39838af8736f3d8e2f579f9226",
+      "focalPoint": {
+        "x": 0.76,
+        "y": 0.57
+      },
+      "sceneDescription": "架空の水辺の散歩道。木陰とベンチ、遠景の都市景観。",
+      "containsAdvertisementCopy": false,
+      "depictsVerifiedRealPOI": false,
+      "sourceKind": "generated_single_scene",
+      "modelOrMethod": "ChatGPT image generation, raster PNG output",
+      "permissionToRedistribute": "reference_repository_only",
+      "publishedAllowed": false,
+      "productionApproval": "pending",
+      "printSuitability": "pending_layout_qa",
+      "notes": "Visual check: no ad headline, numeric price, map, logo or information card; fictional lakeside urban park scene.",
+      "githubPreservationStatus": "verified_original_bytes",
+      "githubVerifiedCommit": "134f5d986359a359e391997731978b0ad16200ca",
+      "rightsStatus": "review_required"
+    },
+    {
+      "assetId": "ART-REF0008-PHOTO-01",
+      "parentReferenceId": "REF-0008",
+      "theme": "ポスト・路地・都市の小設備",
+      "tags": [
+        "fit:postbox",
+        "fit:alley",
+        "fit:street-detail"
+      ],
+      "classification": "ART independent original, AI-generated fictitious single-scene photo-style",
+      "filePath": "assets/art-candidates/asset-art-01/ART-REF0008-PHOTO-01.png",
+      "sourceLocalName": "陽だまりの路地と赤い丸型ポスト.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 3020565,
+      "sha256": "df820aff2121482a28c1ff1673f6d3894a2554a30a9c145053a787967de0b97c",
+      "gitBlobSha1": "e8f46c2e70206df29de5e25c66694b155128d202",
+      "focalPoint": {
+        "x": 0.78,
+        "y": 0.49
+      },
+      "sceneDescription": "架空の石畳の路地と赤い丸型ポスト。看板文字や地図なし。",
+      "containsAdvertisementCopy": false,
+      "depictsVerifiedRealPOI": false,
+      "sourceKind": "generated_single_scene",
+      "modelOrMethod": "ChatGPT image generation, raster PNG output",
+      "permissionToRedistribute": "reference_repository_only",
+      "publishedAllowed": false,
+      "productionApproval": "pending",
+      "printSuitability": "pending_layout_qa",
+      "notes": "Visual check: no ad headline, numeric price, map, logo or information card; fictional quiet alley and red postbox.",
+      "githubPreservationStatus": "verified_original_bytes",
+      "githubVerifiedCommit": "134f5d986359a359e391997731978b0ad16200ca",
+      "rightsStatus": "review_required"
+    }
+  ],
+  "storage": {
+    "githubVerified": true,
+    "verifiedCount": 3,
+    "immutableVerificationCommit": "134f5d986359a359e391997731978b0ad16200ca",
+    "validationRunUrl": "https://github.com/yama-books/mansion-poet/actions/runs/40141561698",
+    "checks": [
+      "PNG source bytes",
+      "byte size",
+      "SHA-256",
+      "git blob SHA-1",
+      "PNG IHDR dimensions"
+    ],
+    "publicRepoReferenceOnly": true,
+    "productionApproved": false,
+    "appIntegrated": false
+  }
+}
